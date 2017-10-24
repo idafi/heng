@@ -12,3 +12,4 @@ obj/
 *.VC*.db
 *.suo
 *.opendb
+*.user
