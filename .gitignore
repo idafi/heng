@@ -1,0 +1,14 @@
+bin/
+lib/
+obj/
+.vs/
+*.tlog/
+*.idb
+*.log
+*.pdb
+*.mdb
+*.obj
+*.VC
+*.VC*.db
+*.suo
+*.opendb
