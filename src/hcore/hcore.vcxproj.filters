@@ -21,9 +21,27 @@
     <ClInclude Include="hassert.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="log.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="log_console.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="log_console_win.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="log_file.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

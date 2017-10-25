@@ -174,11 +174,17 @@ DEL $(OUTDIR)*.tmp</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="core.h" />
     <ClInclude Include="hassert.h" />
+    <ClInclude Include="log.h" />
     <ClInclude Include="_shared.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core.c" />
+    <ClCompile Include="log.c" />
+    <ClCompile Include="log_console.c" />
+    <ClCompile Include="log_console_win.c" />
+    <ClCompile Include="log_file.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

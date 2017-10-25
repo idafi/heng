@@ -58,3 +58,4 @@ typedef uint64_t uint64;
 
 // shared hcore includes
 #include "hassert.h"
+#include "log.h"
