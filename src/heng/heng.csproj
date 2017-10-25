@@ -65,6 +65,14 @@
   <ItemGroup>
     <Compile Include="CoreTester.cs" />
     <Compile Include="Core\Core.cs" />
+    <Compile Include="Core\CoreConfig.cs" />
+    <Compile Include="Core\Log.cs" />
+    <Compile Include="Engine.cs" />
+    <Compile Include="Log\ConsoleLogger.cs" />
+    <Compile Include="Log\FileLogger.cs" />
+    <Compile Include="Log\ILogger.cs" />
+    <Compile Include="Log\Log.cs" />
+    <Compile Include="Log\LogLevel.cs" />
     <Compile Include="_Shared\Assert.cs" />
   </ItemGroup>
   <ItemGroup>
