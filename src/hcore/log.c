@@ -13,11 +13,11 @@ bool Log_Init(log_config config)
 {
 	initTime = time(NULL);
 
+	Log_Console_SetMinLevel(config.minLevelConsole);
+	Log_File_SetMinLevel(config.minLevelFile);
+
 	if(Log_File_Init())
 	{
-		Log_Console_SetMinLevel(config.minLevelConsole);
-		Log_File_SetMinLevel(config.minLevelFile);
-
 		LogNote("log successfully initialized");
 		return true;
 	}
