@@ -101,6 +101,12 @@
       <AdditionalDependencies>SDL2main.lib;SDL2.lib;libogg.lib;libvorbis.lib;libvorbisfile.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\SDL2-2.0.5\lib\x86;$(SolutionDir)lib\vorbis\lib\x86</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>DEL $(OUTDIR)*.ilk
+DEL $(OUTDIR)*.lib
+DEL $(OUTDIR)*.exp
+DEL $(OUTDIR)*.tmp</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -114,6 +120,12 @@
       <AdditionalDependencies>SDL2main.lib;SDL2.lib;libogg.lib;libvorbis.lib;libvorbisfile.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\SDL2-2.0.5\lib\x64;$(SolutionDir)lib\vorbis\lib\x64</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>DEL $(OUTDIR)*.ilk
+DEL $(OUTDIR)*.lib
+DEL $(OUTDIR)*.exp
+DEL $(OUTDIR)*.tmp</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -131,6 +143,12 @@
       <AdditionalDependencies>SDL2main.lib;SDL2.lib;libogg.lib;libvorbis.lib;libvorbisfile.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\SDL2-2.0.5\lib\x86;$(SolutionDir)lib\vorbis\lib\x86</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>DEL $(OUTDIR)*.ilk
+DEL $(OUTDIR)*.lib
+DEL $(OUTDIR)*.exp
+DEL $(OUTDIR)*.tmp</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -148,6 +166,12 @@
       <AdditionalDependencies>SDL2main.lib;SDL2.lib;libogg.lib;libvorbis.lib;libvorbisfile.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\SDL2-2.0.5\lib\x64;$(SolutionDir)lib\vorbis\lib\x64</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>DEL $(OUTDIR)*.ilk
+DEL $(OUTDIR)*.lib
+DEL $(OUTDIR)*.exp
+DEL $(OUTDIR)*.tmp</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="hassert.h" />
