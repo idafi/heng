@@ -35,15 +35,20 @@ HEXPORT(void) Log_File_Print(log_level level, char *msg)
 {
 	if(level >= minLevel)
 	{
-		if(logFile)
+		if(msg)
 		{
-			char timestamp[13];
-			Log_GetTimestamp(timestamp);
+			if(logFile)
+			{
+				char timestamp[13];
+				Log_GetTimestamp(timestamp);
 
-			fprintf(logFile, "%s: %s\n", timestamp, msg);
+				fprintf(logFile, "%s: %s\n", timestamp, msg);
+			}
+			else
+			{ Log_Console_Print(LOG_ERROR, "can't print to log file: log file is closed"); }
 		}
 		else
-		{ Log_Console_Print(LOG_ERROR, "can't print to log file: log file is closed"); }
+		{ LogError("couldn't print message to file: message is null"); }
 	}
 }
 
