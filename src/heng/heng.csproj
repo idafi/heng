@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="CoreTester.cs" />
     <Compile Include="Core\Core.cs" />
+    <Compile Include="_Shared\Assert.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
