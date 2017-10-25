@@ -22,6 +22,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <DocumentationFile>..\..\bin\x64\heng.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>..\..\bin\x64\</OutputPath>
@@ -68,11 +69,11 @@
     <Compile Include="Core\CoreConfig.cs" />
     <Compile Include="Core\Log.cs" />
     <Compile Include="Engine.cs" />
-    <Compile Include="Log\ConsoleLogger.cs" />
-    <Compile Include="Log\FileLogger.cs" />
-    <Compile Include="Log\ILogger.cs" />
-    <Compile Include="Log\Log.cs" />
-    <Compile Include="Log\LogLevel.cs" />
+    <Compile Include="Logging\ConsoleLogger.cs" />
+    <Compile Include="Logging\FileLogger.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\Log.cs" />
+    <Compile Include="Logging\LogLevel.cs" />
     <Compile Include="_Shared\Assert.cs" />
   </ItemGroup>
   <ItemGroup>
