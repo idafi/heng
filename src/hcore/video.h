@@ -55,12 +55,6 @@ void Video_Quit();
 
 typedef struct
 {
-	char title[VIDEO_WINDOWS_TITLE_MAX];
-	screen_rect windowRect;
-} window_config;
-
-typedef struct
-{
 	int id;
 	char title[VIDEO_WINDOWS_TITLE_MAX];
 
@@ -72,9 +66,23 @@ typedef struct
 	screen_rect viewportRect;
 } window_info;
 
+typedef enum
+{
+	POINTS_DRAW_POINTS,
+	POINTS_DRAW_LINES
+} points_draw_mode;
+
 HEXPORT(int) Video_Windows_OpenWindow(char *title, screen_rect rect, uint32 windowFlags, uint32 rendererFlags);
 HEXPORT(void) Video_Windows_CloseWindow(int windowID);
 HEXPORT(bool) Video_Windows_CheckWindow(int windowID);
+
+HEXPORT(void) Video_Windows_SetWindowColor(int windowID, color color);
+HEXPORT(void) Video_Windows_ClearWindow(int windowID);
+HEXPORT(void) Video_Windows_PresentWindow(int windowID);
+
+HEXPORT(void) Video_Windows_DrawPoint(int windowID, screen_point point);
+HEXPORT(void) Video_Windows_DrawLine(int windowID, screen_line line);
+HEXPORT(void) Video_Windows_DrawPoints(int windowID, points_draw_mode mode, screen_point *points, int count);
 
 // - - - - - -
 // state snapshot

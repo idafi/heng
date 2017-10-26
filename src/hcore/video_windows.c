@@ -168,6 +168,108 @@ HEXPORT(bool) Video_Windows_CheckWindow(int windowID)
 	return true;
 }
 
+HEXPORT(void) Video_Windows_SetWindowColor(int windowID, color color)
+{
+	if(Video_Windows_CheckWindow(windowID))
+	{
+		window *w = &windows[windowID];
+		SDL_SetRenderDrawColor(w->renderer, color.r, color.g, color.b, color.a);
+	}
+	else
+	{ LogError("couldn't set color for window %i", windowID); }
+}
+
+HEXPORT(void) Video_Windows_ClearWindow(int windowID)
+{
+	if(Video_Windows_CheckWindow(windowID))
+	{
+		window *w = &windows[windowID];
+		SDL_RenderClear(w->renderer);
+	}
+	else
+	{ LogError("couldn't clear window %i", windowID); }
+}
+
+HEXPORT(void) Video_Windows_PresentWindow(int windowID)
+{
+	if(Video_Windows_CheckWindow(windowID))
+	{
+		window *w = &windows[windowID];
+		SDL_RenderPresent(w->renderer);
+	}
+	else
+	{ LogError("couldn't present window %i", windowID); }
+}
+
+HEXPORT(void) Video_Windows_DrawPoint(int windowID, screen_point point)
+{
+	if(Video_Windows_CheckWindow(windowID))
+	{
+		window *w = &windows[windowID];
+
+		// convert to sdl coordinates (y-down)
+		point.y = w->info.viewportRect.h - point.y;
+		SDL_RenderDrawPoint(w->renderer, point.x, point.y);
+	}
+	else
+	{ LogError("couldn't draw point on window %i", windowID); }
+}
+
+HEXPORT(void) Video_Windows_DrawLine(int windowID, screen_line line)
+{
+	if(Video_Windows_CheckWindow(windowID))
+	{
+		window *w = &windows[windowID];
+		int h = w->info.viewportRect.h;
+
+		// convert to sdl coordinates (y-down)
+		line.start.y = h - line.start.y;
+		line.end.y = h - line.end.y;
+
+		SDL_RenderDrawLine(w->renderer, line.start.x, line.start.y, line.end.x, line.end.y);
+	}
+	else
+	{ LogError("couldn't draw line on window %i", windowID); }
+}
+
+HEXPORT(void) Video_Windows_DrawPoints(int windowID, points_draw_mode mode, screen_point *points, int count)
+{
+	if(Video_Windows_CheckWindow(windowID))
+	{
+		if(points)
+		{
+			if(count > 0)
+			{
+				window *w = &windows[windowID];
+				int h = w->info.viewportRect.h;
+
+				// convert to sdl coordinates (y-down)
+				for(int i = 0; i < count; i++)
+				{ points[i].y = h - points[i].y; }
+
+				// HACK: this is probably less evil than other alternatives
+				SDL_Point *sdlPoints = (SDL_Point *)(points);
+
+				switch(mode)
+				{
+					case POINTS_DRAW_POINTS:
+						SDL_RenderDrawPoints(w->renderer, sdlPoints, count);
+						break;
+					case POINTS_DRAW_LINES:
+						SDL_RenderDrawLines(w->renderer, sdlPoints, count);
+						break;
+				}
+			}
+			else
+			{ LogError("couldn't draw points on window %i: point count (%i) is less than 0", windowID, count); }
+		}
+		else
+		{ LogError("couldn't draw points on window %i: points array is null", windowID); }
+	}
+	else
+	{ LogError("couldn't draw points on window %i", windowID); }
+}
+
 struct video_windows_state Video_Windows_GetSnapshot()
 {
 	struct video_windows_state state;
