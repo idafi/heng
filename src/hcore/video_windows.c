@@ -84,11 +84,15 @@ intern void DestroyWindow(int windowID)
 	SDL_DestroyWindow(w->window);
 
 	memset(&w->info, 0, sizeof(window_info));
+	w->info.id = -1;
 	w->isOpen = false;
 }
 
 bool Video_Windows_Init()
 {
+	for(int i = 0; i < VIDEO_WINDOWS_MAX; i++)
+	{ windows[i].info.id = -1; }
+
 	LogNote("video windows successfully initialized");
 	return true;
 }
