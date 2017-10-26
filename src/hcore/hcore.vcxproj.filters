@@ -27,6 +27,9 @@
     <ClInclude Include="core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="video.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core.c">
@@ -42,6 +45,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="log_file.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="video.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="video_windows.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
