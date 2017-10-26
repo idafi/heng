@@ -41,7 +41,7 @@ void Log_FormatToAll(log_level level, char *msg, ...)
 	va_start(args, msg);
 
 	vsnprintf(out, MAX_MSG_LENGTH, msg, args);
-	Log_PrintToAll(level, msg);
+	Log_PrintToAll(level, out);
 
 	va_end(args);
 }
