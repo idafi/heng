@@ -39,6 +39,12 @@ namespace heng
 					public readonly ScreenRect ViewportRect;
 				};
 
+				public enum PointsDrawMode
+				{
+					Points,
+					Lines
+				};
+
 				public const int TitleMax = 128;
 				public const int Max = 4;
 
@@ -51,6 +57,24 @@ namespace heng
 				[DllImport(coreLib, EntryPoint = "Video_Windows_CheckWindow")]
 				[return: MarshalAs(UnmanagedType.U1)]
 				public static extern bool CheckWindow(int windowID);
+
+				[DllImport(coreLib, EntryPoint = "Video_Windows_SetWindowColor")]
+				public static extern void SetWindowColor(int windowID, Color color);
+
+				[DllImport(coreLib, EntryPoint = "Video_Windows_ClearWindow")]
+				public static extern void ClearWindow(int windowID);
+
+				[DllImport(coreLib, EntryPoint = "Video_Windows_PresentWindow")]
+				public static extern void PresentWindow(int windowID);
+
+				[DllImport(coreLib, EntryPoint = "Video_Windows_DrawPoint")]
+				public static extern void DrawPoint(int windowID, ScreenPoint point);
+
+				[DllImport(coreLib, EntryPoint = "Video_Windows_DrawLine")]
+				public static extern void DrawLine(int windowID, ScreenLine line);
+
+				[DllImport(coreLib, EntryPoint = "Video_Windows_DrawPoints")]
+				public static extern void DrawPoints(int windowID, PointsDrawMode mode, ScreenPoint[] points, int count);
 			};
 
 			[DllImport(coreLib, EntryPoint = "Video_GetSnapshot")]
