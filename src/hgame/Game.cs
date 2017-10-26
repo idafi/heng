@@ -1,5 +1,4 @@
-﻿using System;
-using heng;
+﻿using heng;
 using heng.Logging;
 using heng.Time;
 using heng.Video;
@@ -53,12 +52,14 @@ namespace hgame
 
 		static bool ShouldQuit()
 		{
-			return false;
+			return Engine.IsQuitRequested();
 		}
 
 		static void Frame()
 		{
 			time = new TimeState();
+			Engine.PumpEvents();
+
 			video = new VideoState();
 
 			time.DelayToTarget();
@@ -69,7 +70,6 @@ namespace hgame
 			Log.ClearLoggers();
 			Engine.Quit();
 
-			Console.ReadLine();
 			return code;
 		}
 	};
