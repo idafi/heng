@@ -1,7 +1,7 @@
 ﻿namespace heng
 {
 	/// <summary>
-	/// Entry point for engine initialization and shutdown.
+	/// Entry point for engine initialization, shutdown, and event handling.
 	/// <para>Most heng systems require the engine to be properly initialized; expect errors if you
 	/// try to use them without calling <see cref="Init(CoreConfig)"/>.</para>
 	/// While the engine will try to clean up as gracefully as possible when the program exits, you should
