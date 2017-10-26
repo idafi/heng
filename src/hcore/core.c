@@ -23,12 +23,3 @@ HEXPORT(void) Core_Quit()
 
 	SDL_Quit();
 }
-
-HEXPORT(void) Core_Test()
-{
-	LogDebug("core: psst");
-	LogNote("core: hello");
-	LogWarning("core: uh");
-	LogError("core: oh no");
-	LogFailure("core: whoops");
-}
