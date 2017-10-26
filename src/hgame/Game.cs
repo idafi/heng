@@ -1,11 +1,14 @@
 ﻿using System;
 using heng;
 using heng.Logging;
+using heng.Video;
 
 namespace hgame
 {
 	static class Game
 	{
+		static VideoState video;
+
 		static int Main(string[] args)
 		{
 			if(Init())
@@ -19,6 +22,7 @@ namespace hgame
 				Log.Error("hgame: oh no");
 				Log.Failure("hgame: whoops");
 
+				Console.ReadLine();
 				return Quit(0);
 			}
 
@@ -35,6 +39,15 @@ namespace hgame
 			{
 				Log.AddLogger(new ConsoleLogger(), LogLevel.Debug);
 				Log.AddLogger(new FileLogger(), LogLevel.Warning);
+
+				video = new VideoState();
+
+				ScreenRect rect = new ScreenRect(805240832, 805240832, 640, 480);
+				WindowFlags wFlags = WindowFlags.Shown;
+				RendererFlags rFlags = RendererFlags.Accelerated | RendererFlags.PresentVSync;
+				video.OpenWindow("heng", rect, wFlags, rFlags);
+
+				video = new VideoState();
 
 				return true;
 			}
