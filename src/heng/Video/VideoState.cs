@@ -13,9 +13,9 @@ namespace heng.Video
 	{
 		/// <summary>
 		/// All <see cref="Window"/>s currently open.
-		/// <para>The window's ID (<see cref="Window.ID"/>) is an index into this collection.</para>
+		/// <para>The window's ID (<see cref="Window.ID"/>) is a key into this collection.</para>
 		/// </summary>
-		public readonly IReadOnlyList<Window> Windows;
+		public readonly IReadOnlyDictionary<int, Window> Windows;
 		
 		/// <summary>
 		/// Constructs a new snapshot of the video system's state.
@@ -23,14 +23,15 @@ namespace heng.Video
 		public VideoState()
 		{
 			Core.Video.GetSnapshot(out Core.Video.State coreState);
-			
-			Window[] windows = new Window[coreState.Windows.WindowInfo.Length];
-			for(int i = 0; i < windows.Length; i++)
+
+			Dictionary<int, Window> windows = new Dictionary<int, Window>();
+			for(int i = 0; i < coreState.Windows.WindowInfo.Length; i++)
 			{
-				if(coreState.Windows.WindowInfo[i].ID > -1)
-				{ windows[i] = new Window(coreState.Windows.WindowInfo[i]); }
+				ref Core.Video.Windows.WindowInfo info = ref coreState.Windows.WindowInfo[i];
+				if(info.ID > -1)
+				{ windows.Add(info.ID, new Window(info)); }
 			}
-		
+
 			Windows = windows;
 		}
 		

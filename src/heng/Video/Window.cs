@@ -11,7 +11,7 @@
 		
 		/// <summary>
 		/// The window's ID.
-		/// <para>This is an index into the <see cref="VideoState"/>'s <see cref="VideoState.Windows"/> collection.</para>
+		/// <para>This can be used to find this window through the <see cref="VideoState"/>'s <see cref="VideoState.Windows"/> collection.</para>
 		/// </summary>
 		public int ID => info.ID;
 
