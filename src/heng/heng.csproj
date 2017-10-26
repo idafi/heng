@@ -68,6 +68,7 @@
     <Compile Include="Core\Core.cs" />
     <Compile Include="Core\CoreConfig.cs" />
     <Compile Include="Core\Log.cs" />
+    <Compile Include="Core\Time.cs" />
     <Compile Include="Core\Video.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\LogLevel.cs" />
+    <Compile Include="Time\TimeState.cs" />
     <Compile Include="Video\RendererFlags.cs" />
     <Compile Include="Video\Structures\Color.cs" />
     <Compile Include="Video\Structures\ScreenLine.cs" />
