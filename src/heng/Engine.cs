@@ -22,5 +22,19 @@
 		/// <para>Duplicate calls shouldn't have adverse effects, but try to avoid them anyway.</para>
 		/// </summary>
 		public static void Quit() => Core.Quit();
+
+		/// <summary>
+		/// Pumps the engine core's event queue.
+		/// <para>Most engine systems rely on the event queue to function, so be sure to call this
+		/// at the start of every frame.</para>
+		/// </summary>
+		public static void PumpEvents() => Core.Events.Pump();
+
+		/// <summary>
+		/// Checks if the engine core received a quit request from the user.
+		/// <para>By default, this triggers when all open windows are closed.</para>
+		/// </summary>
+		/// <returns>True if a quit request was issued; false if not.</returns>
+		public static bool IsQuitRequested() => Core.Events.IsQuitRequested();
 	};
 }

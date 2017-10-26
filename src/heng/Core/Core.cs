@@ -6,6 +6,16 @@ namespace heng
 	{
 		const string coreLib = "hcore";
 
+		public static class Events
+		{
+			[DllImport(coreLib, EntryPoint = "Core_Events_Pump")]
+			public static extern void Pump();
+
+			[DllImport(coreLib, EntryPoint = "Core_Events_IsQuitRequested")]
+			[return: MarshalAs(UnmanagedType.U1)]
+			public static extern bool IsQuitRequested();
+		};
+
 		[DllImport(coreLib, EntryPoint = "Core_Init")]
 		[return: MarshalAs(UnmanagedType.U1)]
 		public static extern bool Init(CoreConfig config);
