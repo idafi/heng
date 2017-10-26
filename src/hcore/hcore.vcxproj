@@ -183,6 +183,7 @@ DEL $(OUTDIR)*.tmp</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core.c" />
+    <ClCompile Include="core_events.c" />
     <ClCompile Include="log.c" />
     <ClCompile Include="log_console.c" />
     <ClCompile Include="log_console_win.c" />
