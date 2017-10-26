@@ -62,6 +62,17 @@ namespace hgame
 
 			video = new VideoState();
 
+			ScreenPoint[] points =
+			{
+				new ScreenPoint(320, 240),
+				new ScreenPoint(160, 120),
+				new ScreenPoint(480, 360)
+			};
+
+			video.Windows[0].Clear(Color.White);
+			video.Windows[0].DrawPoints(points, Color.Blue);
+			video.Windows[0].Present();
+
 			time.DelayToTarget();
 		}
 
