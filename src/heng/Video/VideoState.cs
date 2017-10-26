@@ -26,7 +26,10 @@ namespace heng.Video
 			
 			Window[] windows = new Window[coreState.Windows.WindowInfo.Length];
 			for(int i = 0; i < windows.Length; i++)
-			{ windows[i] = new Window(coreState.Windows.WindowInfo[i]); }
+			{
+				if(coreState.Windows.WindowInfo[i].ID > -1)
+				{ windows[i] = new Window(coreState.Windows.WindowInfo[i]); }
+			}
 		
 			Windows = windows;
 		}
