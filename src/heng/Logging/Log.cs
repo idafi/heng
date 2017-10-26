@@ -4,9 +4,9 @@ using heng.Logging;
 namespace heng
 {
 	/// <summary>
-	/// Global static wrapper for engine logging systems.
+	/// Provides globally-available logging systems.
 	/// <para>An arbitrary number of log destinations are supported via the <see cref="ILogger"/> interface.</para>
-	/// <see cref="ILogger"/>s are matched with a minimum <see cref="LogLevel"/> - messages print only if the message
+	/// <see cref="ILogger"/>s are registered with a minimum <see cref="LogLevel"/> - messages print only if the message
 	/// level matches or exceeds the logger's minimum level.
 	/// </summary>
 	public static class Log
