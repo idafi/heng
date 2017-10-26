@@ -1,6 +1,7 @@
 ﻿using System;
 using heng;
 using heng.Logging;
+using heng.Time;
 using heng.Video;
 
 namespace hgame
@@ -8,21 +9,15 @@ namespace hgame
 	static class Game
 	{
 		static VideoState video;
+		static TimeState time;
 
 		static int Main(string[] args)
 		{
 			if(Init())
 			{
-				CoreTester tester = new CoreTester();
-				tester.Test();
+				while(!ShouldQuit())
+				{ Frame(); }
 
-				Log.Debug("hgame: psst");
-				Log.Note("hgame: hello");
-				Log.Warning("hgame: uh");
-				Log.Error("hgame: oh no");
-				Log.Failure("hgame: whoops");
-
-				Console.ReadLine();
 				return Quit(0);
 			}
 
@@ -40,6 +35,9 @@ namespace hgame
 				Log.AddLogger(new ConsoleLogger(), LogLevel.Debug);
 				Log.AddLogger(new FileLogger(), LogLevel.Warning);
 
+				time = new TimeState();
+				time.TargetFrametime = 16;
+
 				video = new VideoState();
 
 				ScreenRect rect = new ScreenRect(805240832, 805240832, 640, 480);
@@ -47,12 +45,23 @@ namespace hgame
 				RendererFlags rFlags = RendererFlags.Accelerated | RendererFlags.PresentVSync;
 				video.OpenWindow("heng", rect, wFlags, rFlags);
 
-				video = new VideoState();
-
 				return true;
 			}
 
 			return false;
+		}
+
+		static bool ShouldQuit()
+		{
+			return false;
+		}
+
+		static void Frame()
+		{
+			time = new TimeState();
+			video = new VideoState();
+
+			time.DelayToTarget();
 		}
 
 		static int Quit(int code)
