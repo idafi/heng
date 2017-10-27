@@ -177,6 +177,7 @@ DEL $(OUTDIR)*.tmp</Command>
     <ClInclude Include="core.h" />
     <ClInclude Include="hassert.h" />
     <ClInclude Include="log.h" />
+    <ClInclude Include="resource_map.h" />
     <ClInclude Include="time.h" />
     <ClInclude Include="video.h" />
     <ClInclude Include="_shared.h" />
@@ -188,6 +189,7 @@ DEL $(OUTDIR)*.tmp</Command>
     <ClCompile Include="log_console.c" />
     <ClCompile Include="log_console_win.c" />
     <ClCompile Include="log_file.c" />
+    <ClCompile Include="resource_map.c" />
     <ClCompile Include="time.c" />
     <ClCompile Include="video.c" />
     <ClCompile Include="video_windows.c" />
