@@ -47,9 +47,11 @@ namespace heng.Video
 		}
 
 		/// <summary>
-		/// Draws the <see cref="Sprite"/> to the given window.
+		/// Draws this <see cref="Sprite"/> to the given <see cref="Window"/>.
+		/// <para>This is functionally equivalent to calling <see cref="Window"/>.<see cref="Window.DrawSprite(Sprite)"/>
+		/// with this <see cref="Sprite"/> as an argument.</para>
 		/// </summary>
-		/// <param name="window">The window to which the <see cref="Sprite"/> should be drawn.</param>
+		/// <param name="window">The <see cref="Window"/> to which the <see cref="Sprite"/> should be drawn.</param>
 		public void Draw(Window window)
 		{
 			window.DrawTexture(textureID, Position, Rotation);
