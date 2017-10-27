@@ -44,5 +44,23 @@
 			W = w;
 			H = h;
 		}
+
+		/// <inheritdoc />
+		public static bool operator ==(ScreenRect a, ScreenRect b)
+		{
+			return (a.X == b.X && a.Y == b.Y && a.W == b.W && a.H == b.H);
+		}
+
+		/// <inheritdoc />
+		public static bool operator !=(ScreenRect a, ScreenRect b)
+		{
+			return (a.X == b.X && a.Y == b.Y && a.W == b.W && a.H == b.H);
+		}
+
+		/// <inheritdoc />
+		public override bool Equals(object obj) => base.Equals(obj);
+
+		/// <inheritdoc />
+		public override int GetHashCode() => base.GetHashCode();
 	};
 }

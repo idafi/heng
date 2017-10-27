@@ -25,5 +25,17 @@
 			Start = start;
 			End = end;
 		}
+
+		/// <inheritdoc />
+		public static bool operator ==(ScreenLine a, ScreenLine b) => (a.Start == b.Start) && (a.End == b.End);
+
+		/// <inheritdoc />
+		public static bool operator !=(ScreenLine a, ScreenLine b) => (a.Start != b.Start) || (a.End != b.End);
+
+		/// <inheritdoc />
+		public override bool Equals(object obj) => base.Equals(obj);
+
+		/// <inheritdoc />
+		public override int GetHashCode() => base.GetHashCode();
 	};
 }

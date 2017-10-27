@@ -84,5 +84,23 @@
 			B = b;
 			A = a;
 		}
+
+		/// <inheritdoc />
+		public static bool operator ==(Color a, Color b)
+		{
+			return (a.R == b.R) && (a.G == b.G) && (a.B == b.B) && (a.A == b.A);
+		}
+
+		/// <inheritdoc />
+		public static bool operator !=(Color a, Color b)
+		{
+			return (a.R != b.R) || (a.G != b.G) || (a.B != b.B) || (a.A != b.A);
+		}
+
+		/// <inheritdoc />
+		public override bool Equals(object obj) => base.Equals(obj);
+
+		/// <inheritdoc />
+		public override int GetHashCode() => base.GetHashCode();
 	};
 }
