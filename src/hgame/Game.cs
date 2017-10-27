@@ -7,6 +7,11 @@ namespace hgame
 {
 	static class Game
 	{
+		const int windowID = 0;
+
+		static Sprite sprite;
+		static ScreenPoint[] points;
+
 		static VideoState video;
 		static TimeState time;
 
@@ -34,6 +39,21 @@ namespace hgame
 				Log.AddLogger(new ConsoleLogger(), LogLevel.Debug);
 				Log.AddLogger(new FileLogger(), LogLevel.Warning);
 
+				ScreenRect wRect = new ScreenRect(805240832, 805240832, 640, 480);
+				WindowFlags wFlags = WindowFlags.Shown;
+				RendererFlags rFlags = RendererFlags.Accelerated | RendererFlags.PresentVSync;
+				Window w = new Window(windowID, "heng", wRect, wFlags, rFlags);
+
+				sprite = new Sprite("../../data/textest.bmp", new ScreenPoint(320 - 16, 240 - 16), 0);
+
+				points = new ScreenPoint[]
+				{
+					new ScreenPoint(320, 240),
+					new ScreenPoint(160, 120),
+					new ScreenPoint(480, 360)
+				};
+
+				video = new VideoState(new Window[] { w });
 				time = new TimeState(0, 0);
 
 				return true;
@@ -50,24 +70,11 @@ namespace hgame
 		static void Frame()
 		{
 			Engine.PumpEvents();
-
-			ScreenPoint[] points =
-			{
-				new ScreenPoint(320, 240),
-				new ScreenPoint(160, 120),
-				new ScreenPoint(480, 360)
-			};
-
-			ScreenRect wRect = new ScreenRect(805240832, 805240832, 640, 480);
-			WindowFlags wFlags = WindowFlags.Shown;
-			RendererFlags rFlags = RendererFlags.Accelerated | RendererFlags.PresentVSync;
-
-			Sprite spr = new Sprite("../../data/textest.bmp", new ScreenPoint(320 - 16, 240 - 16), 0);
-
-			Window w = new Window(0, "heng", wRect, wFlags, rFlags);
+			
+			Window w = new Window(video.Windows[windowID]);
 			w.Clear(Color.White);
 			w.DrawPoints(points, Color.Blue);
-			w.DrawSprite(spr);
+			w.DrawSprite(sprite);
 
 			video = new VideoState(new Window[] { w });
 			time = new TimeState(time.TotalTicks, 16);
