@@ -8,6 +8,8 @@ extern bool Video_Textures_Init();
 extern void Video_Textures_Quit();
 extern struct video_textures_state Video_Textures_GetSnapshot();
 
+extern struct video_queue_state Video_Queue_GetSnapshot();
+
 bool Video_Init()
 {
 	if(SDL_InitSubSystem(SDL_INIT_VIDEO) >= 0)
@@ -39,6 +41,7 @@ HEXPORT(void) Video_GetSnapshot(video_state *state)
 	*state = (video_state)
 	{
 		.windows = Video_Windows_GetSnapshot(),
-		.textures = Video_Textures_GetSnapshot()
+		.textures = Video_Textures_GetSnapshot(),
+		.queue = Video_Queue_GetSnapshot()
 	};
 }

@@ -71,5 +71,8 @@
     <ClCompile Include="resource_map.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="video_queue.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

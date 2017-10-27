@@ -98,6 +98,42 @@ HEXPORT(bool) Video_Textures_CheckTexture(int textureID);
 HEXPORT(void) Video_Textures_ClearCache();
 
 // - - - - - -
+// command queue
+// - - - - - -
+
+typedef enum
+{
+	VID_COMMAND_INVALID,
+	VID_COMMAND_OPEN,
+	VID_COMMAND_CLOSE,
+	VID_COMMAND_MODE,
+	VID_COMMAND_CLEAR,
+	VID_COMMAND_POINTS,
+	VID_COMMAND_LINE,
+	VID_COMMAND_POLYGON,
+	VID_COMMAND_TEXTURE
+} vid_command_type;
+
+#define VIDEO_QUEUE_SIZE 1024
+
+HEXPORT(void) Video_Queue_OpenWindow(int windowID, char *title, screen_rect rect, uint32 windowFlags, uint32 rendererFlags);
+HEXPORT(void) Video_Queue_CloseWindow(int windowID);
+HEXPORT(void) Video_Queue_ChangeWindowMode(int windowID, screen_rect window, screen_rect viewport);
+
+HEXPORT(void) Video_Queue_ClearWindow(int windowID, color color);
+HEXPORT(void) Video_Queue_DrawPoint(int windowID, color color, screen_point point);
+HEXPORT(void) Video_Queue_DrawLine(int windowID, color color, screen_line line);
+HEXPORT(void) Video_Queue_DrawPoints(int windowID, color color, screen_point *points, int count);
+HEXPORT(void) Video_Queue_DrawPolygon(int windowID, color color, screen_point *points, int count);
+HEXPORT(void) Video_Queue_DrawTexture(int windowID, int textureID, screen_point position, float rotation);
+
+HEXPORT(void) Video_Queue_Pump(int windowID);
+HEXPORT(void) Video_Queue_ClearQueue(int windowID);
+
+HEXPORT(void) Video_Queue_PumpAll();
+HEXPORT(void) Video_Queue_ClearAll();
+
+// - - - - - -
 // state snapshot
 // - - - - - -
 
@@ -116,6 +152,15 @@ typedef struct
 		int cacheSize;
 		int cacheUsage;
 	} textures;
+
+	struct video_queue_state
+	{
+		struct video_queue_info
+		{
+			int commandCount;
+			uint8 commands[VIDEO_QUEUE_SIZE];
+		} queues[VIDEO_WINDOWS_MAX];
+	} queue;
 } video_state;
 
 HEXPORT(void) Video_GetSnapshot(video_state *state);
