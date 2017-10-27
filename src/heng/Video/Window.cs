@@ -62,8 +62,7 @@
 		/// <param name="color">The color used to clear the <see cref="Window"/>.</param>
 		public void Clear(Color color)
 		{
-			Core.Video.Windows.SetWindowColor(ID, color);
-			Core.Video.Windows.ClearWindow(ID);
+			Core.Video.Queue.ClearWindow(ID, color);
 		}
 
 		/// <summary>
@@ -73,8 +72,7 @@
 		/// <param name="color">The color of the point.</param>
 		public void DrawPoint(ScreenPoint point, Color color)
 		{
-			Core.Video.Windows.SetWindowColor(ID, color);
-			Core.Video.Windows.DrawPoint(ID, point);
+			Core.Video.Queue.DrawPoint(ID, color, point);
 		}
 
 		/// <summary>
@@ -84,8 +82,7 @@
 		/// <param name="color">The color of the line.</param>
 		public void DrawLine(ScreenLine line, Color color)
 		{
-			Core.Video.Windows.SetWindowColor(ID, color);
-			Core.Video.Windows.DrawLine(ID, line);
+			Core.Video.Queue.DrawLine(ID, color, line);
 		}
 
 		/// <summary>
@@ -97,8 +94,7 @@
 		/// <param name="color">The color of the points.</param>
 		public void DrawPoints(ScreenPoint[] points, Color color)
 		{
-			Core.Video.Windows.SetWindowColor(ID, color);
-			Core.Video.Windows.DrawPoints(ID, Core.Video.Windows.PointsDrawMode.Points, points, points.Length);
+			Core.Video.Queue.DrawPoints(ID, color, points, points.Length);
 		}
 
 		/// <summary>
@@ -109,7 +105,7 @@
 		/// <param name="rotation">The rotation, in degrees, with which to draw the texture.</param>
 		public void DrawTexture(int textureID, ScreenPoint position, float rotation)
 		{
-			Core.Video.Windows.DrawTexture(ID, textureID, position, rotation);
+			Core.Video.Queue.DrawTexture(ID, textureID, position, rotation);
 		}
 	};
 }

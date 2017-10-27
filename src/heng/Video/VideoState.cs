@@ -38,7 +38,8 @@ namespace heng.Video
 					if(coreState.Windows.WindowInfo[w.ID].ID < 0)
 					{ Core.Video.Windows.OpenWindow(w.ID, w.Title, w.Rect, (UInt32)(w.WindowFlags), (UInt32)(w.RendererFlags)); }
 
-					Core.Video.Windows.PresentWindow(w.ID);
+					// and only then execute its command queue
+					Core.Video.Queue.Pump(w.ID);
 				}
 				else
 				{ Log.Error($"can't use window with ID {w.ID}: ID is invalid"); }
