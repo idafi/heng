@@ -1,83 +1,63 @@
 ﻿namespace heng.Video
 {
 	/// <summary>
-	/// Represents an engine-managed window.
-	/// <para>Direct drawing to the window (through methods like <see cref="DrawPoint"/>) will not be
-	/// reflected on-screen until you <see cref="Present"/> the window.</para>
+	/// Represents an engine-managed window, for use by a <see cref="VideoState"/> instance.
+	/// <para>Each frame, you should use construct new <see cref="Window"/>s, draw what needs to be drawn,
+	/// and use those <see cref="Window"/>s to construct a new <see cref="VideoState"/> instance for the frame.</para>
+	/// The underlying engine then uses each <see cref="Window"/>'s <see cref="ID"/> to automatically handle
+	/// OS-level window management.
 	/// </summary>
 	public class Window
 	{
-		readonly Core.Video.Windows.WindowInfo info;
-		
 		/// <summary>
-		/// The window's ID.
-		/// <para>This can be used to find this window through the <see cref="VideoState"/>'s <see cref="VideoState.Windows"/> collection.</para>
+		/// Unique ID of this window.
+		/// <para>The engine uses window IDs to manage opening and closing actual OS windows. If a window
+		/// with the same ID already exists when a new <see cref="VideoState"/> is constructed, 
+		/// the OS window will simply be modified to reflect the new <see cref="Window"/> instance's
+		/// settings, rather than literally closing and reconstructing the OS window anew.</para>
 		/// </summary>
-		public int ID => info.ID;
+		public readonly int ID;
 
 		/// <summary>
-		/// The window's title.
+		/// Title text of this window.
 		/// </summary>
-		public string Title => info.Title;
-		
-		/// <summary>
-		/// The index of the system display to which the window belongs.
-		/// </summary>
-		public int DisplayIndex => info.DisplayIndex;
+		public readonly string Title;
 
 		/// <summary>
-		/// The refresh rate of the system display to which the window belongs.
+		/// Dimensions of this window.
 		/// </summary>
-		public int RefreshRate => info.RefreshRate;
-		
-		/// <summary>
-		/// The dimensions of the system display to which the window belongs.
-		/// </summary>
-		public ScreenRect DisplayRect => info.DisplayRect;
+		public readonly ScreenRect Rect;
 
 		/// <summary>
-		/// The dimensions of the window itself.
+		/// Configuration settings of this window.
 		/// </summary>
-		public ScreenRect WindowRect => info.WindowRect;
+		public readonly WindowFlags WindowFlags;
 
 		/// <summary>
-		/// The dimensions of the viewport inside the window.
+		/// Configuration settings of this window's renderer.
 		/// </summary>
-		public ScreenRect ViewportRect => info.ViewportRect;
-		
+		public readonly RendererFlags RendererFlags;
+
 		/// <summary>
-		/// Closes the window.
+		/// Constructs a new Window instance.
 		/// </summary>
-		public void Close()
+		/// <param name="id">The unique ID of the window.</param>
+		/// <param name="title">The title of the window.</param>
+		/// <param name="rect">The dimensions of the window.</param>
+		/// <param name="windowFlags">Configuration settings for the window.</param>
+		/// <param name="rendererFlags">Configuration settings for the window's renderer.</param>
+		/// <param name="clearColor">Which color the window should clear to, before anything is drawn to it.</param>
+		public Window(int id, string title, ScreenRect rect, WindowFlags windowFlags, RendererFlags rendererFlags, Color clearColor)
 		{
-			Core.Video.Windows.CloseWindow(ID);
-		}
-		
-		/// <summary>
-		/// Checks that the window is open and valid.
-		/// </summary>
-		/// <returns>True if the window is open and valid; false if not.</returns>
-		public bool Check()
-		{
-			return Core.Video.Windows.CheckWindow(ID);
-		}
-		
-		/// <summary>
-		/// Clears the entire window, setting all pixels to the given color.
-		/// </summary>
-		/// <param name="color">The color used to clear the window.</param>
-		public void Clear(Color color)
-		{
-			Core.Video.Windows.SetWindowColor(ID, color);
+			ID = id;
+			Title = title;
+
+			Rect = rect;
+			WindowFlags = windowFlags;
+			RendererFlags = rendererFlags;
+
+			Core.Video.Windows.SetWindowColor(ID, clearColor);
 			Core.Video.Windows.ClearWindow(ID);
-		}
-
-		/// <summary>
-		/// Finalizes and presents all draw operations to the window since the last call to Present.
-		/// </summary>
-		public void Present()
-		{
-			Core.Video.Windows.PresentWindow(ID);
 		}
 
 		/// <summary>
@@ -115,9 +95,15 @@
 			Core.Video.Windows.DrawPoints(ID, Core.Video.Windows.PointsDrawMode.Points, points, points.Length);
 		}
 
-		internal Window(Core.Video.Windows.WindowInfo info)
+		/// <summary>
+		/// Draws a texture to the window.
+		/// </summary>
+		/// <param name="textureID">The ID of the texture.</param>
+		/// <param name="position">The position at which to draw the texture.</param>
+		/// <param name="rotation">The rotation, in degrees, with which to draw the texture.</param>
+		public void DrawTexture(int textureID, ScreenPoint position, float rotation)
 		{
-			this.info = info;
+			Core.Video.Windows.DrawTexture(ID, textureID, position, rotation);
 		}
 	};
 }

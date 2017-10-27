@@ -5,55 +5,45 @@ namespace heng.Video
 {
 	/// <summary>
 	/// Represents an immutable snapshot of the video system's current state.
-	/// <para>Since the snapshot is immutable, operations that mutate the video system
-	/// won't have their effects represented in the <see cref="VideoState"/> instance that called them!</para>
-	/// Instead, they will be represented the next time you construct a <see cref="VideoState"/> snapshot.
+	/// <para>Each frame, new <see cref="Window"/> instances are constructed, drawn to,
+	/// and used to build a new <see cref="VideoState"/>, representing that frame.</para>
+	/// The engine will then automatically deal with any OS window management and hardware
+	/// rendering necessary to properly reflect the constructed <see cref="VideoState"/>.
 	/// </summary>
 	public class VideoState
 	{
 		/// <summary>
 		/// All <see cref="Window"/>s currently open.
-		/// <para>The window's ID (<see cref="Window.ID"/>) is a key into this collection.</para>
+		/// <para>A <see cref="Window"/>'s <see cref="Window.ID"/> is an index into this collection.</para>
 		/// </summary>
-		public readonly IReadOnlyDictionary<int, Window> Windows;
-		
+		public readonly IReadOnlyList<Window> Windows;
+
 		/// <summary>
 		/// Constructs a new snapshot of the video system's state.
 		/// </summary>
-		public VideoState()
+		/// <param name="windows">The fully-constructed <see cref="Window"/>s to be shown this frame.</param>
+		public VideoState(IEnumerable<Window> windows)
 		{
 			Core.Video.GetSnapshot(out Core.Video.State coreState);
 
-			Dictionary<int, Window> windows = new Dictionary<int, Window>();
-			for(int i = 0; i < coreState.Windows.WindowInfo.Length; i++)
+			List<Window> wnd = new List<Window>();
+
+			foreach(Window w in windows)
 			{
-				ref Core.Video.Windows.WindowInfo info = ref coreState.Windows.WindowInfo[i];
-				if(info.ID > -1)
-				{ windows.Add(info.ID, new Window(info)); }
+				if(w.ID > -1 && w.ID < Core.Video.Windows.Max)
+				{
+					wnd.Add(w);
+
+					if(coreState.Windows.WindowInfo[w.ID].ID < 0)
+					{ Core.Video.Windows.OpenWindow(w.Title, w.Rect, (UInt32)(w.WindowFlags), (UInt32)(w.RendererFlags)); }
+
+					Core.Video.Windows.PresentWindow(w.ID);
+				}
+				else
+				{ Log.Error($"can't use window with ID {w.ID}: ID is invalid"); }
 			}
 
-			Windows = windows;
-		}
-		
-		/// <summary>
-		/// Opens a new window.
-		/// </summary>
-		/// <param name="title">The title of the window.</param>
-		/// <param name="rect">The dimensions of the window.</param>
-		/// <param name="windowFlags">Configuration flags for the window.</param>
-		/// <param name="rendererFlags">Configuration flags for the window's renderer.</param>
-		/// <returns>
-		/// The window's ID.
-		/// <para>Remember: the new window will not be represented in this <see cref="VideoState"/>instance!</para>
-		/// Wait until you're ready to get a new snapshot to start operating on the window.
-		/// </returns>
-		public int OpenWindow(string title, ScreenRect rect, WindowFlags windowFlags, RendererFlags rendererFlags)
-		{
-			if(title != null)
-			{ return Core.Video.Windows.OpenWindow(title, rect, (UInt32)(windowFlags), (UInt32)(rendererFlags)); }
-			
-			Log.Error("couldn't open window: title is null");
-			return -1;
+			Windows = wnd;
 		}
 	};
 }

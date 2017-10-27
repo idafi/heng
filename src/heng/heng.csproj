@@ -78,6 +78,7 @@
     <Compile Include="Logging\LogLevel.cs" />
     <Compile Include="Time\TimeState.cs" />
     <Compile Include="Video\RendererFlags.cs" />
+    <Compile Include="Video\Sprite.cs" />
     <Compile Include="Video\Structures\Color.cs" />
     <Compile Include="Video\Structures\ScreenLine.cs" />
     <Compile Include="Video\Structures\ScreenPoint.cs" />
