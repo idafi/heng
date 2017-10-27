@@ -12,6 +12,7 @@ namespace heng
 			public struct State
 			{
 				public readonly Windows.State Windows;
+				public readonly Textures.State Textures;
 			};
 
 			public static class Windows
@@ -75,6 +76,35 @@ namespace heng
 
 				[DllImport(coreLib, EntryPoint = "Video_Windows_DrawPoints")]
 				public static extern void DrawPoints(int windowID, PointsDrawMode mode, ScreenPoint[] points, int count);
+
+				[DllImport(coreLib, EntryPoint = "Video_Windows_DrawTexture")]
+				public static extern void DrawTexture(int windowID, int textureID, ScreenPoint position, float rotation);
+			};
+
+			public static class Textures
+			{
+				[StructLayout(LayoutKind.Sequential)]
+				public struct State
+				{
+					public readonly int MaxSurfaces;
+					public readonly int SurfaceCount;
+
+					public readonly int CacheSize;
+					public readonly int CacheUsage;
+				};
+
+				[DllImport(coreLib, EntryPoint = "Video_Textures_LoadTexture")]
+				public static extern int LoadTexture(string filePath);
+
+				[DllImport(coreLib, EntryPoint = "Video_Textures_FreeTexture")]
+				public static extern void FreeTexture(int textureID);
+
+				[DllImport(coreLib, EntryPoint = "Video_Textures_CheckTexture")]
+				[return: MarshalAs(UnmanagedType.U1)]
+				public static extern bool CheckTexture(int textureID);
+
+				[DllImport(coreLib, EntryPoint = "Video_Textures_ClearCache")]
+				public static extern void ClearCache();
 			};
 
 			[DllImport(coreLib, EntryPoint = "Video_GetSnapshot")]
