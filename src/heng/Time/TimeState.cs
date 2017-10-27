@@ -9,17 +9,15 @@ namespace heng.Time
 	/// </summary>
 	public class TimeState
 	{
-		readonly Core.Time.State coreState;
-
 		/// <summary>
 		/// Milliseconds elapsed since the <see cref="Engine"/> was initialized.
 		/// </summary>
-		public UInt32 TotalTicks => coreState.TotalTicks;
+		public readonly UInt32 TotalTicks;
 
 		/// <summary>
-		/// Milliseconds elapsed since the last <see cref="TimeState"/> snapshot was constructed.
+		/// Milliseconds elapsed since the last <see cref="TimeState"/> was constructed.
 		/// </summary>
-		public UInt32 DeltaTicks => coreState.DeltaTicks;
+		public readonly UInt32 DeltaTicks;
 
 		/// <summary>
 		/// Seconds elapsed since the <see cref="Engine"/> was initialized.
@@ -27,44 +25,30 @@ namespace heng.Time
 		public float Total => (float)(TotalTicks) / 1000;
 
 		/// <summary>
-		/// Seconds elapsed since the last <see cref="TimeState"/> snapshot was constructed.
+		/// Seconds elapsed since the last <see cref="TimeState"/> was constructed.
 		/// </summary>
 		public float Delta => (float)(DeltaTicks) / 1000;
 
-		/// <summary>
-		/// How long <see cref="DelayToTarget"/> should halt the current thread, if not yet reached.
-		/// <para>If this is 0, <see cref="DelayToTarget"/> will have no effect.</para>
-		/// </summary>
-		public UInt32 TargetFrametime
-		{
-			get => coreState.TargetFrametime;
-			set => Core.Time.SetTargetFrametime(value);
-		}
 
 		/// <summary>
-		/// Constructs a new snapshot of the timekeeping system's state.
+		/// Constructs a new <see cref="TimeState"/>.
+		/// <para>The current thread will optionally be delayed, if the given target frametime is not yet reached.</para>
 		/// </summary>
-		public TimeState()
+		/// <param name="previousTotal">The <see cref="TotalTicks"/> from the previous <see cref="TimeState"/>.
+		/// <para>Set this to 0 if this is the first <see cref="TimeState"/> to be constructed.</para></param>
+		/// <param name="targetFrametime">If the number of ticks between now and the previous total is less than this,
+		/// the current thread will be delayed until the target is reached.
+		/// <para>If set to 0, the new <see cref="TimeState"/> will always be constructed immediately.</para></param>
+		public TimeState(UInt32 previousTotal, UInt32 targetFrametime)
 		{
-			Core.Time.GetSnapshot(out coreState);
-		}
+			long newTicks = Core.Time.GetTicks();
+			long diff = newTicks - previousTotal;
 
-		/// <summary>
-		/// Halt the current thread for the given number of milliseconds.
-		/// </summary>
-		/// <param name="ms">The number of milliseconds to wait.</param>
-		public void Delay(UInt32 ms)
-		{
-			Core.Time.Delay(ms);
-		}
+			if(diff < targetFrametime)
+			{ Core.Time.Delay((UInt32)(targetFrametime - diff)); }
 
-		/// <summary>
-		/// If called before the <see cref="TargetFrametime"/> is reached, halt the current thread until then.
-		/// <para>If the <see cref="TargetFrametime"/> is 0, this will have no effect.</para>
-		/// </summary>
-		public void DelayToTarget()
-		{
-			Core.Time.DelayToTarget();
+			TotalTicks = Core.Time.GetTicks();
+			DeltaTicks = TotalTicks - previousTotal;
 		}
 	};
 }
