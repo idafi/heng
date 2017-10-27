@@ -105,25 +105,17 @@ void Video_Windows_Quit()
 	{ DestroyWindow(i); }
 }
 
-HEXPORT(int) Video_Windows_OpenWindow(char *title, screen_rect rect, uint32 windowFlags, uint32 rendererFlags)
+HEXPORT(void) Video_Windows_OpenWindow(int windowID, char *title, screen_rect rect, uint32 windowFlags, uint32 rendererFlags)
 {
 	if(title)
 	{
-		for(int i = 0; i < VIDEO_WINDOWS_MAX; i++)
-		{
-			if(!windows[i].isOpen)
-			{
-				CreateWindow(i, title, rect, windowFlags, rendererFlags);
-				return i;
-			}
-		}
-
-		LogError("couldn't create window: max number of windows (%i) already open", VIDEO_WINDOWS_MAX);
+		if(!windows[windowID].isOpen)
+		{ CreateWindow(windowID, title, rect, windowFlags, rendererFlags); }
+		else
+		{ LogError("couldn't create window %i: window is already open", windowID); }
 	}
 	else
-	{ LogError("couldn't create window: title is null"); }
-
-	return -1;
+	{ LogError("couldn't create window %i: title is null", windowID); }
 }
 
 HEXPORT(void) Video_Windows_CloseWindow(int windowID)

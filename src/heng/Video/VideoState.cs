@@ -34,8 +34,9 @@ namespace heng.Video
 				{
 					wnd.Add(w);
 
+					// open the window if it's not yet open
 					if(coreState.Windows.WindowInfo[w.ID].ID < 0)
-					{ Core.Video.Windows.OpenWindow(w.Title, w.Rect, (UInt32)(w.WindowFlags), (UInt32)(w.RendererFlags)); }
+					{ Core.Video.Windows.OpenWindow(w.ID, w.Title, w.Rect, (UInt32)(w.WindowFlags), (UInt32)(w.RendererFlags)); }
 
 					Core.Video.Windows.PresentWindow(w.ID);
 				}

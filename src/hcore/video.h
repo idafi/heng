@@ -72,7 +72,7 @@ typedef enum
 	POINTS_DRAW_LINES
 } points_draw_mode;
 
-HEXPORT(int) Video_Windows_OpenWindow(char *title, screen_rect rect, uint32 windowFlags, uint32 rendererFlags);
+HEXPORT(void) Video_Windows_OpenWindow(int windowID, char *title, screen_rect rect, uint32 windowFlags, uint32 rendererFlags);
 HEXPORT(void) Video_Windows_CloseWindow(int windowID);
 HEXPORT(bool) Video_Windows_CheckWindow(int windowID);
 

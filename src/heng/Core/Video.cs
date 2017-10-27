@@ -50,7 +50,7 @@ namespace heng
 				public const int Max = 4;
 
 				[DllImport(coreLib, EntryPoint = "Video_Windows_OpenWindow")]
-				public static extern int OpenWindow(string title, ScreenRect rect, UInt32 windowFlags, UInt32 rendererFlags);
+				public static extern void OpenWindow(int windowID, string title, ScreenRect rect, UInt32 windowFlags, UInt32 rendererFlags);
 
 				[DllImport(coreLib, EntryPoint = "Video_Windows_CloseWindow")]
 				public static extern void CloseWindow(int windowID);
