@@ -1,4 +1,5 @@
 ﻿using heng;
+using heng.Input;
 using heng.Logging;
 using heng.Time;
 using heng.Video;
@@ -9,9 +10,11 @@ namespace hgame
 	{
 		const int windowID = 0;
 
+		static InputDevice device;
 		static Sprite sprite;
 		static ScreenPoint[] points;
-
+		
+		static InputState input;
 		static VideoState video;
 		static TimeState time;
 
@@ -38,6 +41,11 @@ namespace hgame
 			{
 				Log.AddLogger(new ConsoleLogger(), LogLevel.Debug);
 				Log.AddLogger(new FileLogger(), LogLevel.Warning);
+
+				input = new InputState();
+				device = new InputDevice(input, input);
+				device.RemapAxis("Horizontal", new ButtonAxis(new Key(KeyCode.Left), new Key(KeyCode.Right)));
+				device.RemapAxis("Vertical", new ButtonAxis(new Key(KeyCode.Down), new Key(KeyCode.Up)));
 
 				ScreenRect wRect = new ScreenRect(805240832, 805240832, 640, 480);
 				WindowFlags wFlags = WindowFlags.Shown;
@@ -70,7 +78,16 @@ namespace hgame
 		static void Frame()
 		{
 			Engine.PumpEvents();
-			
+
+			input = new InputState();
+			device = new InputDevice(device, input);
+
+			int x = (int)(System.Math.Ceiling(device.GetAxisFrac("Horizontal")));
+			int y = (int)(System.Math.Ceiling(device.GetAxisFrac("Vertical")));
+			ScreenPoint move = new ScreenPoint(x, y);
+
+			sprite = new Sprite(sprite, sprite.Position + move);
+
 			Window w = new Window(video.Windows[windowID]);
 			w.Clear(Color.White);
 			w.DrawPoints(points, Color.Blue);
