@@ -37,6 +37,21 @@ namespace heng.Video
 		}
 
 		/// <summary>
+		/// Constructs a new Sprite instance, based on an old instance.
+		/// <para>The Sprite's texture resource is always kept, but any other parameters set to null
+		/// will carry settings over from the old instance.</para>
+		/// </summary>
+		/// <param name="oldSprite">The old instance upon which the new Sprite is based.</param>
+		/// <param name="position">The position at which to draw the texture.</param>
+		/// <param name="rotation">The texture will be rotated by this many degrees when it is drawn.</param>
+		public Sprite(Sprite oldSprite, ScreenPoint? position = null, float? rotation = null)
+		{
+			textureID = oldSprite.textureID;
+			Position = position ?? oldSprite.Position;
+			Rotation = rotation ?? oldSprite.Rotation;
+		}
+
+		/// <summary>
 		/// Releases the texture resource used by this <see cref="Sprite"/>.
 		/// <para>When multiple <see cref="Sprite"/>s share the same texture file, the underlying resource map
 		/// will only free the texture file when all of those <see cref="Sprite"/>s are disposed.</para>

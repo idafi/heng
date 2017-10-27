@@ -57,6 +57,26 @@
 		}
 
 		/// <summary>
+		/// Constructs a new Window instance, based on an old instance.
+		/// <para>The window's ID is always kept, but any other parameters set to null
+		/// will carry settings over from the old instance.</para>
+		/// </summary>
+		/// <param name="old">The old instance upon which the new Window is based.</param>
+		/// <param name="title">The title of the window.</param>
+		/// <param name="rect">The dimensions of the window.</param>
+		/// <param name="windowFlags">Configuration settings for the window.</param>
+		/// <param name="rendererFlags">Configuration settings for the window's renderer.</param>
+		public Window(Window old, string title = null, ScreenRect? rect = null,
+			WindowFlags? windowFlags = null, RendererFlags? rendererFlags = null)
+		{
+			ID = old.ID;
+			Title = title ?? old.Title;
+			Rect = rect ?? old.Rect;
+			WindowFlags = windowFlags ?? old.WindowFlags;
+			RendererFlags = rendererFlags ?? old.RendererFlags;
+		}
+
+		/// <summary>
 		/// Clears the window, setting each pixel to the given color.
 		/// </summary>
 		/// <param name="color">The color used to clear the <see cref="Window"/>.</param>
