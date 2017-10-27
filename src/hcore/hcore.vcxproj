@@ -192,6 +192,7 @@ DEL $(OUTDIR)*.tmp</Command>
     <ClCompile Include="resource_map.c" />
     <ClCompile Include="time.c" />
     <ClCompile Include="video.c" />
+    <ClCompile Include="video_textures.c" />
     <ClCompile Include="video_windows.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

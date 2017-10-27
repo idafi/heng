@@ -65,6 +65,9 @@
     <ClCompile Include="core_events.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="video_textures.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="resource_map.c">
       <Filter>Source Files</Filter>
     </ClCompile>

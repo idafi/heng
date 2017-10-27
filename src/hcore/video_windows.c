@@ -1,5 +1,7 @@
 #include "video.h"
 
+extern void Video_Textures_DrawToRenderer(int windowID, int textureID, SDL_Renderer *renderer, screen_rect viewport, screen_point position, float rotation);
+
 typedef struct
 {
 	window_info info;
@@ -268,6 +270,22 @@ HEXPORT(void) Video_Windows_DrawPoints(int windowID, points_draw_mode mode, scre
 	}
 	else
 	{ LogError("couldn't draw points on window %i", windowID); }
+}
+
+HEXPORT(void) Video_Windows_DrawTexture(int windowID, int textureID, screen_point position, float rotation)
+{
+	if(Video_Windows_CheckWindow(windowID))
+	{
+		if(Video_Textures_CheckTexture(textureID))
+		{
+			window *w = &windows[windowID];
+			Video_Textures_DrawToRenderer(windowID, textureID, w->renderer, w->info.viewportRect, position, rotation);
+		}
+		else
+		{ LogError("couldn't draw texture %i on window %i", textureID, windowID); }
+	}
+	else
+	{ LogError("couldn't draw texture %i on window %i", textureID, windowID); }
 }
 
 struct video_windows_state Video_Windows_GetSnapshot()

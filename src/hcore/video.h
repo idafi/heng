@@ -83,6 +83,19 @@ HEXPORT(void) Video_Windows_PresentWindow(int windowID);
 HEXPORT(void) Video_Windows_DrawPoint(int windowID, screen_point point);
 HEXPORT(void) Video_Windows_DrawLine(int windowID, screen_line line);
 HEXPORT(void) Video_Windows_DrawPoints(int windowID, points_draw_mode mode, screen_point *points, int count);
+HEXPORT(void) Video_Windows_DrawTexture(int windowID, int textureID, screen_point position, float rotation);
+
+// - - - - - -
+// textures
+// - - - - - -
+
+#define AssertTexture(id) Assert(Video_Textures_CheckTexture(id), "texture %i is invalid", id)
+
+HEXPORT(int) Video_Textures_LoadTexture(char *filePath);
+HEXPORT(void) Video_Textures_FreeTexture(int textureID);
+HEXPORT(bool) Video_Textures_CheckTexture(int textureID);
+
+HEXPORT(void) Video_Textures_ClearCache();
 
 // - - - - - -
 // state snapshot
@@ -94,6 +107,15 @@ typedef struct
 	{
 		window_info windowInfo[VIDEO_WINDOWS_MAX];
 	} windows;
+
+	struct video_textures_state
+	{
+		int maxSurfaces;
+		int surfaceCount;
+
+		int cacheSize;
+		int cacheUsage;
+	} textures;
 } video_state;
 
 HEXPORT(void) Video_GetSnapshot(video_state *state);
