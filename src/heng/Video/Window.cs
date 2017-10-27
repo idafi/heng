@@ -46,8 +46,7 @@
 		/// <param name="rect">The dimensions of the window.</param>
 		/// <param name="windowFlags">Configuration settings for the window.</param>
 		/// <param name="rendererFlags">Configuration settings for the window's renderer.</param>
-		/// <param name="clearColor">Which color the window should clear to, before anything is drawn to it.</param>
-		public Window(int id, string title, ScreenRect rect, WindowFlags windowFlags, RendererFlags rendererFlags, Color clearColor)
+		public Window(int id, string title, ScreenRect rect, WindowFlags windowFlags, RendererFlags rendererFlags)
 		{
 			ID = id;
 			Title = title;
@@ -55,8 +54,15 @@
 			Rect = rect;
 			WindowFlags = windowFlags;
 			RendererFlags = rendererFlags;
+		}
 
-			Core.Video.Windows.SetWindowColor(ID, clearColor);
+		/// <summary>
+		/// Clears the window, setting each pixel to the given color.
+		/// </summary>
+		/// <param name="color">The color used to clear the <see cref="Window"/>.</param>
+		public void Clear(Color color)
+		{
+			Core.Video.Windows.SetWindowColor(ID, color);
 			Core.Video.Windows.ClearWindow(ID);
 		}
 
