@@ -107,5 +107,16 @@
 		{
 			Core.Video.Queue.DrawTexture(ID, textureID, position, rotation);
 		}
+
+		/// <summary>
+		/// Draws a <see cref="Sprite"/> to the window.
+		/// <para>This is functionally equivalent to calling <see cref="Sprite"/>.<see cref="Sprite.Draw"/>
+		/// with this <see cref="Window"/> as an argument.</para>
+		/// </summary>
+		/// <param name="spr"></param>
+		public void DrawSprite(Sprite spr)
+		{
+			spr.Draw(this);
+		}
 	};
 }

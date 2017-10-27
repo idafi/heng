@@ -67,7 +67,7 @@ namespace hgame
 			Window w = new Window(0, "heng", wRect, wFlags, rFlags);
 			w.Clear(Color.White);
 			w.DrawPoints(points, Color.Blue);
-			spr.Draw(w);
+			w.DrawSprite(spr);
 
 			video = new VideoState(new Window[] { w });
 			time = new TimeState(time.TotalTicks, 16);
