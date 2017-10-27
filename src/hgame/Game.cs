@@ -64,7 +64,8 @@ namespace hgame
 
 			Sprite spr = new Sprite("../../data/textest.bmp", new ScreenPoint(320 - 16, 240 - 16), 0);
 
-			Window w = new Window(0, "heng", wRect, wFlags, rFlags, Color.White);
+			Window w = new Window(0, "heng", wRect, wFlags, rFlags);
+			w.Clear(Color.White);
 			w.DrawPoints(points, Color.Blue);
 			spr.Draw(w);
 
