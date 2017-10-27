@@ -24,6 +24,7 @@
     <Prefer32Bit>true</Prefer32Bit>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <DocumentationFile>..\..\bin\x64\heng.xml</DocumentationFile>
+    <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>..\..\bin\x64\</OutputPath>
@@ -67,10 +68,24 @@
   <ItemGroup>
     <Compile Include="Core\Core.cs" />
     <Compile Include="Core\CoreConfig.cs" />
+    <Compile Include="Core\Input.cs" />
     <Compile Include="Core\Log.cs" />
     <Compile Include="Core\Time.cs" />
     <Compile Include="Core\Video.cs" />
     <Compile Include="Engine.cs" />
+    <Compile Include="Input\Axes\ButtonAxis.cs" />
+    <Compile Include="Input\Axes\ControllerAxis.cs" />
+    <Compile Include="Input\Axes\IAxis.cs" />
+    <Compile Include="Input\Buttons\ControllerButton.cs" />
+    <Compile Include="Input\Buttons\IButton.cs" />
+    <Compile Include="Input\Buttons\Key.cs" />
+    <Compile Include="Input\Buttons\MouseButton.cs" />
+    <Compile Include="Input\Codes\AxisCode.cs" />
+    <Compile Include="Input\Codes\ControllerButtonCode.cs" />
+    <Compile Include="Input\Codes\KeyCode.cs" />
+    <Compile Include="Input\Codes\MouseButtonCode.cs" />
+    <Compile Include="Input\InputDevice.cs" />
+    <Compile Include="Input\InputState.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\FileLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
