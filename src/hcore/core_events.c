@@ -8,6 +8,27 @@ intern void HandleEvent(SDL_Event *ev)
 
 	switch(ev->type)
 	{
+		case SDL_KEYDOWN:
+		case SDL_KEYUP:
+			Input_KeyEvent(&ev->key);
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+		case SDL_MOUSEBUTTONUP:
+			Input_MButtonEvent(&ev->button);
+			break;
+		case SDL_CONTROLLERBUTTONDOWN:
+		case SDL_CONTROLLERBUTTONUP:
+			Input_CButtonEvent(&ev->cbutton);
+			break;
+		case SDL_CONTROLLERAXISMOTION:
+			Input_AxisEvent(&ev->caxis);
+			break;
+		case SDL_JOYDEVICEADDED:
+			Input_JoystickOpenEvent(&ev->jdevice);
+			break;
+		case SDL_JOYDEVICEREMOVED:
+			Input_JoystickCloseEvent(&ev->jdevice);
+			break;
 		case SDL_QUIT:
 			quitRequested = true;
 			break;

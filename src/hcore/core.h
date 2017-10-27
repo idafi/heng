@@ -1,6 +1,7 @@
 #pragma once
 
 #include "_shared.h"
+#include "input.h"
 #include "video.h"
 
 typedef struct

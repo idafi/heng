@@ -176,6 +176,7 @@ DEL $(OUTDIR)*.tmp</Command>
   <ItemGroup>
     <ClInclude Include="core.h" />
     <ClInclude Include="hassert.h" />
+    <ClInclude Include="input.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="resource_map.h" />
     <ClInclude Include="time.h" />
@@ -185,6 +186,7 @@ DEL $(OUTDIR)*.tmp</Command>
   <ItemGroup>
     <ClCompile Include="core.c" />
     <ClCompile Include="core_events.c" />
+    <ClCompile Include="input.c" />
     <ClCompile Include="log.c" />
     <ClCompile Include="log_console.c" />
     <ClCompile Include="log_console_win.c" />
