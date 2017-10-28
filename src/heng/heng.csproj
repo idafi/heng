@@ -102,6 +102,7 @@
     <Compile Include="Video\Window.cs" />
     <Compile Include="Video\WindowFlags.cs" />
     <Compile Include="_Shared\Assert.cs" />
+    <Compile Include="_Shared\Vector2.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

@@ -180,6 +180,7 @@ DEL $(OUTDIR)*.tmp</Command>
     <ClInclude Include="log.h" />
     <ClInclude Include="resource_map.h" />
     <ClInclude Include="time.h" />
+    <ClInclude Include="vector.h" />
     <ClInclude Include="video.h" />
     <ClInclude Include="_shared.h" />
   </ItemGroup>
