@@ -57,6 +57,19 @@
 		/// <param name="b">The second <see cref="ScreenPoint"/> to test.</param>
 		/// <returns>True if the <see cref="ScreenPoint"/>s do not represent the same positio; false if they do.</returns>
 		public static bool operator !=(ScreenPoint a, ScreenPoint b) => (a.X != b.X || a.Y != b.Y);
+
+		/// <summary>
+		/// Converts a <see cref="ScreenPoint"/> to a <see cref="Vector2"/>.
+		/// </summary>
+		/// <param name="p">The <see cref="ScreenPoint"/> to convert to a <see cref="Vector2"/>.</param>
+		public static explicit operator Vector2(ScreenPoint p) => new Vector2(p.X, p.Y);
+
+		/// <summary>
+		/// Converts a <see cref="Vector2"/> to a <see cref="ScreenPoint"/>.
+		/// <para>This is a float-to-int conversion, so expect data loss.</para>
+		/// </summary>
+		/// <param name="v">The <see cref="Vector2"/> to convert to a <see cref="ScreenPoint"/>.</param>
+		public static explicit operator ScreenPoint(Vector2 v) => new ScreenPoint((int)(v.X), (int)(v.Y));
 	
 		/// <inheritdoc />
 		public override bool Equals(object obj) => base.Equals(obj);
