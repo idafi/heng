@@ -1,8 +1,9 @@
 ﻿namespace heng.Input
 {
-		/// <summary>
+	/// <summary>
 	/// Codes representing readable keys on the keyboard.
 	/// <para>These directly mirror SDL2's key scancodes - don't mess with them.</para>
+	/// </summary>
 	public enum KeyCode
 	{
 		Unknown = 0,
