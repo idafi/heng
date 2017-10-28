@@ -9,6 +9,7 @@ namespace hgame
 	static class Game
 	{
 		const int windowID = 0;
+		const float speed = 150;	// pixels per second
 
 		static InputDevice device;
 		static Sprite sprite;
@@ -82,11 +83,12 @@ namespace hgame
 			input = new InputState();
 			device = new InputDevice(device, input);
 
-			int x = (int)(System.Math.Ceiling(device.GetAxisFrac("Horizontal")));
-			int y = (int)(System.Math.Ceiling(device.GetAxisFrac("Vertical")));
-			ScreenPoint move = new ScreenPoint(x, y);
-
-			sprite = new Sprite(sprite, sprite.Position + move);
+			float x = device.GetAxisFrac("Horizontal");
+			float y = device.GetAxisFrac("Vertical");
+			float spd = speed * time.Delta;
+			Vector2 move = new Vector2(x, y).ClampMagnitude(0, 1) * spd;
+			
+			sprite = new Sprite(sprite, sprite.Position + (ScreenPoint)(move));
 
 			Window w = new Window(video.Windows[windowID]);
 			w.Clear(Color.White);
@@ -94,7 +96,7 @@ namespace hgame
 			w.DrawSprite(sprite);
 
 			video = new VideoState(new Window[] { w });
-			time = new TimeState(time.TotalTicks, 16);
+			time = new TimeState(time.TotalTicks, 0);
 		}
 
 		static int Quit(int code)
