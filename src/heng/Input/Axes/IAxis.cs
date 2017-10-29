@@ -9,8 +9,8 @@
 		/// <summary>
 		/// Reads the current value of the axis.
 		/// </summary>
-		/// <param name="state">The <see cref="InputData"/> which this <see cref="IAxis"/> will read.</param>
+		/// <param name="data">The <see cref="InputData"/> which this <see cref="IAxis"/> will read.</param>
 		/// <returns>The current value of the axis, as a signed 16-bit integer.</returns>
-		short GetValue(InputData state);
+		short GetValue(InputData data);
 	};
 }
