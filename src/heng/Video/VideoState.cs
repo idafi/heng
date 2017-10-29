@@ -17,16 +17,18 @@ namespace heng.Video
 		/// <para>A <see cref="Window"/>'s <see cref="Window.ID"/> is an index into this collection.</para>
 		/// </summary>
 		public readonly IReadOnlyList<Window> Windows;
+		public readonly IReadOnlyList<Sprite> Sprites;
 
 		/// <summary>
 		/// Constructs a new snapshot of the video system's state.
 		/// </summary>
 		/// <param name="windows">The fully-constructed <see cref="Window"/>s to be shown this frame.</param>
-		public VideoState(IEnumerable<Window> windows)
+		public VideoState(IEnumerable<Window> windows, IEnumerable<Sprite> sprites)
 		{
 			Core.Video.GetSnapshot(out Core.Video.State coreState);
 
 			List<Window> wnd = new List<Window>();
+			Sprites = new List<Sprite>(sprites);
 
 			foreach(Window w in windows)
 			{
@@ -38,7 +40,11 @@ namespace heng.Video
 					if(coreState.Windows.WindowInfo[w.ID].ID < 0)
 					{ Core.Video.Windows.OpenWindow(w.ID, w.Title, w.Rect, (UInt32)(w.WindowFlags), (UInt32)(w.RendererFlags)); }
 
-					// and only then execute its command queue
+					w.Clear(Color.White);
+
+					foreach(Sprite spr in sprites)
+					{ w.DrawSprite(spr); }
+
 					Core.Video.Queue.Pump(w.ID);
 				}
 				else
