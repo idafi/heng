@@ -7,24 +7,24 @@ namespace hgame
 {
 	public class Gamestate
 	{
+		public readonly PlayerUnit PlayerUnit;
+		public readonly Scenery Scenery;
+
 		public readonly InputState Input;
 		public readonly PhysicsState Physics;
 		public readonly VideoState Video;
 		public readonly TimeState Time;
-
-		public readonly PlayerUnit PlayerUnit;
-		public readonly Scenery Scenery;
 	
-		public Gamestate(InputState input, PhysicsState physics, VideoState video, TimeState time,
-			PlayerUnit playerUnit, Scenery scenery)
+		public Gamestate(PlayerUnit playerUnit, Scenery scenery,
+			InputState input, PhysicsState physics, VideoState video, TimeState time)
 		{
+			PlayerUnit = playerUnit;
+			Scenery = scenery;
+
 			Input = input;
 			Physics = physics;
 			Video = video;
 			Time = time;
-
-			PlayerUnit = playerUnit;
-			Scenery = scenery;
 		}
 	};
 }

@@ -85,7 +85,7 @@ namespace hgame
 
 			sprites.Clear();
 
-			return new Gamestate(input, physics, video, time, playerUnit, scenery);
+			return new Gamestate(playerUnit, scenery, input, physics, video, time);
 		}
 	};
 }
