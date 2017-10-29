@@ -12,18 +12,16 @@ namespace hgame
 
 		readonly List<RigidBody> rigidBodies;
 		readonly List<StaticBody> staticBodies;
-
-		Window window;
+		
 		readonly List<Sprite> sprites;
-
-		PlayerUnit playerUnit;
-		Scenery scenery;
 	
 		public GamestateBuilder()
 		{
 			inputDevices = new List<InputDevice>();
+
 			rigidBodies = new List<RigidBody>();
 			staticBodies = new List<StaticBody>();
+
 			sprites = new List<Sprite>();
 		}
 
@@ -53,6 +51,10 @@ namespace hgame
 	
 		public Gamestate Build(Gamestate old)
 		{
+			PlayerUnit playerUnit;
+			Scenery scenery;
+			Window window;
+
 			if(old == null)
 			{
 				playerUnit = new PlayerUnit(this);
@@ -77,8 +79,10 @@ namespace hgame
 			TimeState time = new TimeState((old != null) ? old.Time.TotalTicks : 0, 0);
 
 			inputDevices.Clear();
+
 			rigidBodies.Clear();
 			staticBodies.Clear();
+
 			sprites.Clear();
 
 			return new Gamestate(input, physics, video, time, playerUnit, scenery);
