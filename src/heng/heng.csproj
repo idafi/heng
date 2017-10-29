@@ -92,6 +92,15 @@
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\LogLevel.cs" />
+    <Compile Include="Physics\Collision\ColliderProjection.cs" />
+    <Compile Include="Physics\Collision\CollisionData.cs" />
+    <Compile Include="Physics\Collision\CollisionTester.cs" />
+    <Compile Include="Physics\Collision\ConvexCollider.cs" />
+    <Compile Include="Physics\Collision\ICollider.cs" />
+    <Compile Include="Physics\IPhysicsObject.cs" />
+    <Compile Include="Physics\PhysicsState.cs" />
+    <Compile Include="Physics\RigidBody.cs" />
+    <Compile Include="Physics\StaticBody.cs" />
     <Compile Include="Time\TimeState.cs" />
     <Compile Include="Video\RendererFlags.cs" />
     <Compile Include="Video\Sprite.cs" />
