@@ -17,11 +17,11 @@
 		}
 
 		/// <inheritdoc />
-		public bool GetValue(InputState state)
+		public bool GetValue(InputData data)
 		{
-			Assert.Ref(state);
+			Assert.Ref(data);
 
-			return state.GetKeyDown(code);
+			return data.GetKeyDown(code);
 		}
 	};
 }

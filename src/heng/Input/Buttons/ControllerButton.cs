@@ -23,11 +23,11 @@
 		}
 
 		/// <inheritdoc />
-		public bool GetValue(InputState state)
+		public bool GetValue(InputData data)
 		{
-			Assert.Ref(state);
+			Assert.Ref(data);
 
-			return state.GetControllerButtonDown(controller, code);
+			return data.GetControllerButtonDown(controller, code);
 		}
 	};
 }

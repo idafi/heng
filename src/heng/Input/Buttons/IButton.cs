@@ -9,8 +9,8 @@
 		/// <summary>
 		/// Reads the current down state of the button.
 		/// </summary>
-		/// <param name="state">The <see cref="InputState"/> which this <see cref="IButton"/> will read.</param>
+		/// <param name="data">The <see cref="InputData"/> which this <see cref="IButton"/> will read.</param>
 		/// <returns>True if the button is currently down; false if not.</returns>
-		bool GetValue(InputState state);
+		bool GetValue(InputData data);
 	};
 }

@@ -3,33 +3,25 @@
 namespace heng.Input
 {
 	/// <summary>
-	/// A "virtual device" that can be used to interpret <see cref="InputState"/>.
+	/// A "virtual device" that can be used to interpret <see cref="InputData"/>.
 	/// <para>An <see cref="InputDevice"/> consists of string-keyed sets of virtual buttons and axes.</para>
 	/// The <see cref="IButton"/> and <see cref="IAxis"/> interfaces can be used to construct new button/axis
 	/// representations, if existing implementations like <see cref="Key"/> and <see cref="ButtonAxis"/> aren't enough.
 	/// </summary>
 	public class InputDevice
 	{
-		readonly InputState lastState;
-		readonly InputState newState;
-		
 		readonly Dictionary<string, IButton> buttons;
 		readonly Dictionary<string, IAxis> axes;
+
+		InputData lastData;
+		InputData newData;
 		
 		/// <summary>
 		/// Constructs a new <see cref="InputDevice"/>, which will read the provided state objects.
 		/// <para>Methods such as <see cref="GetButtonPressed(string)"/> interpolated between old and new state.</para>
 		/// </summary>
-		/// <param name="lastState"></param>
-		/// <param name="newState"></param>
-		public InputDevice(InputState lastState, InputState newState)
+		public InputDevice()
 		{
-			Assert.Ref(lastState);
-			Assert.Ref(newState);
-			
-			this.lastState = lastState;
-			this.newState = newState;
-			
 			buttons = new Dictionary<string, IButton>();
 			axes = new Dictionary<string, IAxis>();
 		}
@@ -38,22 +30,27 @@ namespace heng.Input
 		/// Constructs a new <see cref="InputDevice"/> using an old device as a base.
 		/// <para>All mapped buttons and axes will be preserved.</para>
 		/// The device will now interpolated between what used to be its current state, and the
-		/// new <see cref="InputState"/> provided.
+		/// new <see cref="InputData"/> provided.
 		/// </summary>
 		/// <param name="oldDevice"></param>
-		/// <param name="newState"></param>
-		public InputDevice(InputDevice oldDevice, InputState newState)
+		public InputDevice(InputDevice oldDevice)
 		{
 			Assert.Ref(oldDevice);
-			Assert.Ref(newState);
+			Assert.Ref(newData);
 
-			this.lastState = oldDevice.newState;
-			this.newState = newState;
+			lastData = oldDevice.newData;
+			newData = oldDevice.newData;
 
 			buttons = oldDevice.buttons;
 			axes = oldDevice.axes;
 		}
 		
+		public void UpdateData(InputData newData)
+		{
+			this.lastData = this.newData ?? newData;
+			this.newData = newData;
+		}
+
 		/// <summary>
 		/// Remaps the given string to the given virtual button.
 		/// <para>If the string is not yet mapped, a new mapping will be created.</para>
@@ -84,7 +81,7 @@ namespace heng.Input
 		public bool GetButtonDown(string name)
 		{
 			if(TryGetButton(name, out IButton button))
-			{ return button.GetValue(newState); }
+			{ return button.GetValue(newData); }
 		
 			return false;
 		}
@@ -97,7 +94,7 @@ namespace heng.Input
 		public bool GetButtonPressed(string name)
 		{
 			if(TryGetButton(name, out IButton button))
-			{ return (!button.GetValue(lastState) && button.GetValue(newState)); }
+			{ return (!button.GetValue(lastData) && button.GetValue(newData)); }
 		
 			return false;
 		}
@@ -110,7 +107,7 @@ namespace heng.Input
 		public bool GetButtonReleased(string name)
 		{
 			if(TryGetButton(name, out IButton button))
-			{ return (button.GetValue(lastState) && !button.GetValue(newState)); }
+			{ return (button.GetValue(lastData) && !button.GetValue(newData)); }
 		
 			return false;
 		}
@@ -123,7 +120,7 @@ namespace heng.Input
 		public short GetAxisValue(string name)
 		{
 			if(TryGetAxis(name, out IAxis axis))
-			{ return axis.GetValue(newState); }
+			{ return axis.GetValue(newData); }
 		
 			return 0;
 		}
@@ -137,7 +134,7 @@ namespace heng.Input
 		public short GetAxisDelta(string name)
 		{
 			if(TryGetAxis(name, out IAxis axis))
-			{ return (short)(axis.GetValue(newState) - axis.GetValue(lastState)); }
+			{ return (short)(axis.GetValue(newData) - axis.GetValue(lastData)); }
 		
 			return 0;
 		}

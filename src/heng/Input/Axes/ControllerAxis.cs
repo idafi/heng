@@ -23,11 +23,11 @@
 		}
 
 		/// <inheritdoc />
-		public short GetValue(InputState state)
+		public short GetValue(InputData data)
 		{
-			Assert.Ref(state);
+			Assert.Ref(data);
 
-			return state.GetAxisValue(controller, code);
+			return data.GetAxisValue(controller, code);
 		}
 	};
 }

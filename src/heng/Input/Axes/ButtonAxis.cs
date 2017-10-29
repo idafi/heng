@@ -23,12 +23,12 @@
 		}
 
 		/// <inheritdoc />
-		public short GetValue(InputState state)
+		public short GetValue(InputData data)
 		{
-			Assert.Ref(state);
+			Assert.Ref(data);
 
-			bool neg = negative.GetValue(state);
-			bool pos = positive.GetValue(state);
+			bool neg = negative.GetValue(data);
+			bool pos = positive.GetValue(data);
 			short val = 0;
 		
 			if(neg)

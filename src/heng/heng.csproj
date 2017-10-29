@@ -85,6 +85,7 @@
     <Compile Include="Input\Codes\KeyCode.cs" />
     <Compile Include="Input\Codes\MouseButtonCode.cs" />
     <Compile Include="Input\InputDevice.cs" />
+    <Compile Include="Input\InputData.cs" />
     <Compile Include="Input\InputState.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\FileLogger.cs" />
