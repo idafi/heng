@@ -68,6 +68,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game.cs" />
+    <Compile Include="Gamestate.cs" />
+    <Compile Include="GamestateBuilder.cs" />
+    <Compile Include="PlayerUnit.cs" />
+    <Compile Include="Scenery.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
