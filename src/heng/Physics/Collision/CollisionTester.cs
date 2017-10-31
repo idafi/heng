@@ -69,9 +69,9 @@ namespace heng.Physics
 		
 		IEnumerable<Vector2> GetAllSeperatingAxes(ICollider a, ICollider b)
 		{
-			foreach(Vector2 v in a.GetSeperatingAxes(b))
+			foreach(Vector2 v in a.GetSeperatingAxes())
 			{ yield return v; }
-			foreach(Vector2 v in b.GetSeperatingAxes(a))
+			foreach(Vector2 v in b.GetSeperatingAxes())
 			{ yield return v; }
 		}
 	};
