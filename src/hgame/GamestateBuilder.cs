@@ -115,7 +115,7 @@ namespace hgame
 			PhysicsState physics = new PhysicsState(rigidBodies, staticBodies);
 			VideoState video = new VideoState(new Window[] { window }, sprites);
 			AudioState audio = new AudioState(soundInstances, soundSources, new Vector2(320, 240));
-			TimeState time = new TimeState((old != null) ? old.Time.TotalTicks : 0, 0);
+			TimeState time = old?.Time.Update(0) ?? new TimeState();
 
 			return new Gamestate(playerUnit, scenery, input, physics, video, audio, time);
 		}
