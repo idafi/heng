@@ -54,7 +54,7 @@ namespace hgame
 
 			if(device.GetButtonPressed("SoundTest"))
 			{
-				Sound sound = new Sound("../../data/whuthem.wav");
+				Sound sound = new Sound("../../data/sto.ogg");
 				SoundInstance instc = new SoundInstance(sound);
 
 				int instcID = newState.AddSoundInstance(instc);
