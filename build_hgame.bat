@@ -12,7 +12,6 @@ ECHO.
 	-debug -d:DEBUG ^
 	-platform:%CPU% -t:exe ^
 	-r:%HENG_OUT%\heng.dll ^
-	-r:%HENG_JSONNET_DLL% ^
 	-out:"%HENG_OUT%\hgame.exe" ^
 	-recurse:"src\hgame\*.cs"
 

@@ -73,10 +73,5 @@
     <Compile Include="PlayerUnit.cs" />
     <Compile Include="Scenery.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\lib\Newtonsoft.Json-10.0.3\Bin\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
