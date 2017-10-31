@@ -31,7 +31,7 @@ typedef struct
 	struct audio_mixer_config
 	{
 		int channelCount;
-		int attenuationThreshold;
+		float attenuationThreshold;
 		float stereoFalloffExponent;
 	} mixer;
 } audio_config;

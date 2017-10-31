@@ -59,7 +59,7 @@ namespace heng
 				/// <summary>
 				/// The minimum distance of a sound source before attenuation will apply.
 				/// </summary>
-				public int AttenuationThreshold;
+				public float AttenuationThreshold;
 
 				/// <summary>
 				/// The exponent describing the speed with which multi-channel sounds will converge into a single channel.
