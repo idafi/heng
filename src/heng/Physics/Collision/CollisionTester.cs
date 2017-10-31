@@ -15,14 +15,19 @@ namespace heng.Physics
 				{
 					IPhysicsObject oa = objects[a];
 
-					for(int b = a + 1; b < objects.Count; b++)
+					if(oa.Collider != null)
 					{
-						IPhysicsObject ob = objects[b];
-
-						if(TestPair(oa, ob, out Vector2 mtv))
+						for(int b = a + 1; b < objects.Count; b++)
 						{
-							yield return new CollisionData(oa, mtv);
-							yield return new CollisionData(ob, -mtv);
+							IPhysicsObject ob = objects[b];
+							if(ob.Collider != null)
+							{
+								if(TestPair(oa, ob, out Vector2 mtv))
+								{
+									yield return new CollisionData(oa, mtv);
+									yield return new CollisionData(ob, -mtv);
+								}
+							}
 						}
 					}
 				}
