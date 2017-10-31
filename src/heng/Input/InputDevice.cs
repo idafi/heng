@@ -27,24 +27,7 @@ namespace heng.Input
 		}
 
 		/// <summary>
-		/// Constructs a new <see cref="InputDevice"/> using an old device as a base.
-		/// <para>All mapped buttons and axes will be preserved.</para>
-		/// The device will now interpolated between what used to be its current state, and the
-		/// new <see cref="InputData"/> provided.
 		/// </summary>
-		/// <param name="oldDevice"></param>
-		public InputDevice(InputDevice oldDevice)
-		{
-			Assert.Ref(oldDevice);
-			Assert.Ref(newData);
-
-			lastData = oldDevice.newData;
-			newData = oldDevice.newData;
-
-			buttons = oldDevice.buttons;
-			axes = oldDevice.axes;
-		}
-		
 		public void UpdateData(InputData newData)
 		{
 			this.lastData = this.newData ?? newData;
