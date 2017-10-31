@@ -6,7 +6,7 @@ namespace heng.Physics
 	{
 		public readonly Polygon Shape;
 
-		public IEnumerable<Vector2> GetSeperatingAxes(ICollider other)
+		public IEnumerable<Vector2> GetSeperatingAxes()
 		{
 			// TODO: handle single-point shapes
 			if(Shape.Points.Count > 1)
