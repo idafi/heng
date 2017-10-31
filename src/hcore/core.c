@@ -7,7 +7,7 @@ HEXPORT(bool) Core_Init(core_config config)
 {
 	if(SDL_Init(0) >= 0)
 	{
-		if(Log_Init(config.log) && Core_Events_Init() && Video_Init())
+		if(Log_Init(config.log) && Core_Events_Init() && Video_Init() && Audio_Init(config.audio))
 		{
 			LogNote("core successfully initialized");
 			return true;
@@ -21,9 +21,10 @@ HEXPORT(bool) Core_Init(core_config config)
 
 HEXPORT(void) Core_Quit()
 {
+	Audio_Quit();
 	Video_Quit();
-	Log_Quit();
 	Core_Events_Quit();
+	Log_Quit();
 
 	SDL_Quit();
 }

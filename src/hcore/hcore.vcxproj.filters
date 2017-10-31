@@ -42,6 +42,9 @@
     <ClInclude Include="vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="audio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core.c">
@@ -81,6 +84,27 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="input.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="audio_mixer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="audio_mixer_channels.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="audio_mixer_mix.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="audio_sounds.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="audio_sounds_ogg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="audio_sounds_wav.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="audio.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
