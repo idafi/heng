@@ -18,7 +18,10 @@
 		/// </summary>
 		public readonly ICollider Collider;
 
+		/// <inheritdoc />
 		Vector2 IPhysicsObject.Position => Position;
+
+		/// <inheritdoc />
 		ICollider IPhysicsObject.Collider => Collider;
 	
 		/// <summary>

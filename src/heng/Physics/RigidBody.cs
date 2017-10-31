@@ -24,7 +24,10 @@
 		/// </summary>
 		public readonly Vector2 TotalImpulse;
 
+		/// <inheritdoc />
 		Vector2 IPhysicsObject.Position => Position;
+
+		/// <inheritdoc />
 		ICollider IPhysicsObject.Collider => Collider;
 	
 		/// <summary>

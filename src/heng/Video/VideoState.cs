@@ -17,12 +17,17 @@ namespace heng.Video
 		/// <para>A <see cref="Window"/>'s <see cref="Window.ID"/> is an index into this collection.</para>
 		/// </summary>
 		public readonly IReadOnlyList<Window> Windows;
+		
+		/// <summary>
+		/// All sprites that were drawn to the open <see cref="Window"/>s.
+		/// </summary>
 		public readonly IReadOnlyList<Sprite> Sprites;
 
 		/// <summary>
 		/// Constructs a new snapshot of the video system's state.
 		/// </summary>
 		/// <param name="windows">The fully-constructed <see cref="Window"/>s to be shown this frame.</param>
+		/// <param name="sprites">All <see cref="Sprite"/>s to be drawn.</param>
 		public VideoState(IEnumerable<Window> windows, IEnumerable<Sprite> sprites)
 		{
 			Core.Video.GetSnapshot(out Core.Video.State coreState);
