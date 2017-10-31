@@ -1,4 +1,5 @@
-﻿using heng.Input;
+﻿using heng.Audio;
+using heng.Input;
 using heng.Physics;
 using heng.Time;
 using heng.Video;
@@ -13,10 +14,11 @@ namespace hgame
 		public readonly InputState Input;
 		public readonly PhysicsState Physics;
 		public readonly VideoState Video;
+		public readonly AudioState Audio;
 		public readonly TimeState Time;
 	
 		public Gamestate(PlayerUnit playerUnit, Scenery scenery,
-			InputState input, PhysicsState physics, VideoState video, TimeState time)
+			InputState input, PhysicsState physics, VideoState video, AudioState audio, TimeState time)
 		{
 			PlayerUnit = playerUnit;
 			Scenery = scenery;
@@ -24,6 +26,7 @@ namespace hgame
 			Input = input;
 			Physics = physics;
 			Video = video;
+			Audio = audio;
 			Time = time;
 		}
 	};

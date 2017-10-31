@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using heng;
+using heng.Audio;
 using heng.Input;
 using heng.Physics;
 using heng.Time;
@@ -14,7 +16,10 @@ namespace hgame
 		readonly List<StaticBody> staticBodies;
 		
 		readonly List<Sprite> sprites;
-	
+
+		readonly List<SoundSource> soundSources;
+		readonly List<SoundInstance> soundInstances;
+
 		public GamestateBuilder()
 		{
 			inputDevices = new List<InputDevice>();
@@ -23,6 +28,9 @@ namespace hgame
 			staticBodies = new List<StaticBody>();
 
 			sprites = new List<Sprite>();
+
+			soundSources = new List<SoundSource>();
+			soundInstances = new List<SoundInstance>();
 		}
 
 		public int AddInputDevice(InputDevice device)
@@ -48,36 +56,72 @@ namespace hgame
 			sprites.Add(spr);
 			return sprites.Count - 1;
 		}
-	
+
+		public int AddSoundSource(SoundSource source)
+		{
+			soundSources.Add(source);
+			return soundSources.Count - 1;
+		}
+
+		public int AddSoundInstance(SoundInstance instc)
+		{
+			soundInstances.Add(instc);
+			return instc.ID;
+		}
+
 		public Gamestate Build(Gamestate old)
 		{
-			PlayerUnit playerUnit;
-			Scenery scenery;
-			Window window;
+			PlayerUnit playerUnit = BuildPlayerUnit(old);
+			Scenery scenery = BuildScenery(old);
+			Window window = BuildWindow(old);
+
+			Gamestate g = BuildGamestate(old, playerUnit, scenery, window);
+
+			Clear();
+			return g;
+		}
+
+		PlayerUnit BuildPlayerUnit(Gamestate old)
+		{
+			return (old != null) ? new PlayerUnit(old, this) : new PlayerUnit(this);
+		}
+
+		Scenery BuildScenery(Gamestate old)
+		{
+			return (old != null) ? new Scenery(old, this) : new Scenery(this);
+		}
+
+		Window BuildWindow(Gamestate old)
+		{
+			const int windowID = 0;
 
 			if(old == null)
 			{
-				playerUnit = new PlayerUnit(this);
-				scenery = new Scenery(this);
-
-				ScreenRect wRect = new ScreenRect(805240832, 805240832, 640, 480);
+				ScreenRect wRect = new ScreenRect(Window.Center, Window.Center, 640, 480);
 				WindowFlags wFlags = WindowFlags.Shown;
 				RendererFlags rFlags = RendererFlags.Accelerated | RendererFlags.PresentVSync;
-				window = new Window(0, "heng", wRect, wFlags, rFlags);
+				return new Window(windowID, "heng", wRect, wFlags, rFlags);
 			}
 			else
-			{
-				playerUnit = new PlayerUnit(old, this);
-				scenery = new Scenery(old, this);
+			{ return old.Video.Windows[windowID]; }
+		}
 
-				window = old.Video.Windows[0];
-			}
+		Gamestate BuildGamestate(Gamestate old, PlayerUnit playerUnit, Scenery scenery, Window window)
+		{
+			if(old != null)
+			{ soundInstances.AddRange(old.Audio.SoundInstances.Values); }
 
 			InputState input = new InputState(inputDevices);
 			PhysicsState physics = new PhysicsState(rigidBodies, staticBodies);
 			VideoState video = new VideoState(new Window[] { window }, sprites);
+			AudioState audio = new AudioState(soundInstances, soundSources, new Vector2(320, 240));
 			TimeState time = new TimeState((old != null) ? old.Time.TotalTicks : 0, 0);
 
+			return new Gamestate(playerUnit, scenery, input, physics, video, audio, time);
+		}
+
+		void Clear()
+		{
 			inputDevices.Clear();
 
 			rigidBodies.Clear();
@@ -85,7 +129,8 @@ namespace hgame
 
 			sprites.Clear();
 
-			return new Gamestate(playerUnit, scenery, input, physics, video, time);
+			soundSources.Clear();
+			soundInstances.Clear();
 		}
 	};
 }
