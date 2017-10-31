@@ -1,7 +1,7 @@
 ﻿namespace heng.Logging
 {
 	/// <summary>
-	/// Describes the severity of a message.
+	/// Describes the severity of a <see cref="Log"/> message.
 	/// <para>The <see cref="Log"/> system routes messages only to the <see cref="ILogger"/>s
 	/// which accept the given <see cref="LogLevel"/>.</para>
 	/// </summary>

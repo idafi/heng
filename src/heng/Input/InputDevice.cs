@@ -2,8 +2,11 @@
 
 namespace heng.Input
 {
+	// TODO: InputDevice should be immutable, but, a dictionary reinstantiation for every reamp?
+	// consider trying System.Collections.Immutable again, i guess
+
 	/// <summary>
-	/// A "virtual device" that can be used to interpret <see cref="InputData"/>.
+	/// A "virtual device" that can be used with the <see cref="InputState"/>to interpret <see cref="InputData"/>.
 	/// <para>An <see cref="InputDevice"/> consists of string-keyed sets of virtual buttons and axes.</para>
 	/// The <see cref="IButton"/> and <see cref="IAxis"/> interfaces can be used to construct new button/axis
 	/// representations, if existing implementations like <see cref="Key"/> and <see cref="ButtonAxis"/> aren't enough.
@@ -27,7 +30,10 @@ namespace heng.Input
 		}
 
 		/// <summary>
+		/// Updates the <see cref="InputData"/> read by the <see cref="InputDevice"/>, allowing methods like
+		/// <see cref="GetButtonPressed(string)"/> to interpolate between the previous and current <see cref="InputData"/>.
 		/// </summary>
+		/// <param name="newData"></param>
 		public void UpdateData(InputData newData)
 		{
 			this.lastData = this.newData ?? newData;

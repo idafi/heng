@@ -1,9 +1,9 @@
 ﻿namespace heng.Input
 {
 	/// <summary>
-	/// Represents an immutable snapshot of the engine's internal input state.
+	/// An immutable snapshot of all physical input devices' current state.
 	/// <para>You can read directly from here using codes such as <see cref="KeyCode"/>, but
-	/// it's recommend you use an <see cref="InputDevice"/> as an intepreter.</para>
+	/// it's recommend you use a virtual <see cref="InputDevice"/> as an intepreter.</para>
 	/// </summary>
 	public class InputData
 	{
