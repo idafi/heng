@@ -66,6 +66,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Audio\AudioFormat.cs" />
+    <Compile Include="Audio\AudioState.cs" />
+    <Compile Include="Audio\Sound.cs" />
+    <Compile Include="Audio\SoundInstance.cs" />
+    <Compile Include="Audio\SoundSource.cs" />
+    <Compile Include="Core\Audio.cs" />
     <Compile Include="Core\Core.cs" />
     <Compile Include="Core\CoreConfig.cs" />
     <Compile Include="Core\Input.cs" />
