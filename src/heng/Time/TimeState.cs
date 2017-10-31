@@ -53,6 +53,7 @@ namespace heng.Time
 		/// <param name="targetFrametime">If the number of ticks between now and the previous total is less than this,
 		/// the current thread will be delayed until the target is reached.
 		/// <para>If set to 0, the new <see cref="TimeState"/> will be returned immediately.</para></param>
+		/// <returns>A new, updated <see cref="TimeState"/> snapshot.</returns>
 		public TimeState Update(UInt32 targetFrametime)
 		{
 			long newTicks = Core.Time.GetTicks();

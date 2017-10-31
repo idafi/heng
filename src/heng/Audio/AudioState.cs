@@ -2,6 +2,13 @@
 
 namespace heng.Audio
 {
+	/// <summary>
+	/// Represents an immutable snapshot of the audio system's current state.
+	/// <para>Each frame, <see cref="SoundInstance"/>s are attached to <see cref="SoundSource"/>s,
+	/// which are then automatically played, and attenuated relative to the <see cref="ListenerPosition"/>.</para>
+	/// Each extant <see cref="SoundInstance"/> should be carried over to new <see cref="AudioState"/> snapshots;
+	/// any instances that expire will then automatically be culled from the new state.
+	/// </summary>
 	public class AudioState
 	{
 		/// <summary>

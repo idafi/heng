@@ -45,10 +45,10 @@ namespace heng.Physics
 		}
 
 		/// <inheritdoc />
-		public ColliderProjection Project(Vector2 offset, Vector2 axis)
+		public ColliderProjection Project(Vector2 position, Vector2 axis)
 		{
 			// move shape into whatever local space the collision checker is wanting
-			Polygon shape = Shape.Translate(offset);
+			Polygon shape = Shape.Translate(position);
 
 			float min = float.MaxValue;
 			float max = float.MinValue;

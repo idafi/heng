@@ -28,7 +28,7 @@
 		/// </summary>
 		/// <param name="id">The device ID of the controller to check.</param>
 		/// <param name="code">The <see cref="ControllerButtonCode"/> representing the button to check.</param>
-		/// <returns></returns>
+		/// <returns>True if the controller button is currently down; false if not.</returns>
 		public bool GetControllerButtonDown(int id, ControllerButtonCode code) => coreState.Controllers[id].Buttons[(int)(code)];
 
 		/// <summary>
@@ -36,7 +36,7 @@
 		/// </summary>
 		/// <param name="id">The device ID of the controller to read.</param>
 		/// <param name="axis">The <see cref="AxisCode"/> representing the axis to read.</param>
-		/// <returns></returns>
+		/// <returns>The current position value of the axis.</returns>
 		public short GetAxisValue(int id, AxisCode axis) => coreState.Controllers[id].Axes[(int)(axis)];
 
 		/// <summary>

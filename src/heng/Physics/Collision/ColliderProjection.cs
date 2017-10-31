@@ -4,8 +4,8 @@ namespace heng.Physics
 {
 	/// <summary>
 	/// Represents the projection of an <see cref="ICollider"/> along a 1-dimensional axis.
-	/// <para>The <see cref="CollisionTester"/> uses these projections, produced by
-	/// <see cref="ICollider"/>.<see cref="ICollider.Project"/>, to test for collisions.</para>
+	/// <para>The physics system uses these projections, produced by <see cref="ICollider"/>s,
+	/// to test for collisions.</para>
 	/// </summary>
 	public struct ColliderProjection
 	{
@@ -21,7 +21,7 @@ namespace heng.Physics
 		/// </summary>
 		/// <param name="a">The first <see cref="ColliderProjection"/>.</param>
 		/// <param name="b">The second <see cref="ColliderProjection"/>.</param>
-		/// <returns></returns>
+		/// <returns>The total overlap between the two projections.</returns>
 		public static float GetOverlap(ColliderProjection a, ColliderProjection b)
 		{
 			if((a.Min <= b.Max) && (b.Min <= a.Max))
