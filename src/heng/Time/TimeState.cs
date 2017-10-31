@@ -29,26 +29,42 @@ namespace heng.Time
 		/// </summary>
 		public float Delta => (float)(DeltaTicks) / 1000;
 
+		/// <summary>
+		/// Constructs an initial <see cref="TimeState"/> snapshot.
+		/// <para>After this, recreate the <see cref="TimeState"/> each frame using <see cref="Update"/>,
+		/// which will provide accurate <see cref="Delta"/>s and target-frametime services.</para>
+		/// </summary>
+		public TimeState()
+		{
+			TotalTicks = Core.Time.GetTicks();
+			DeltaTicks = 0;
+		}
+
+		TimeState(UInt32 totalTicks, UInt32 deltaTicks)
+		{
+			TotalTicks = totalTicks;
+			DeltaTicks = deltaTicks;
+		}
 
 		/// <summary>
-		/// Constructs a new <see cref="TimeState"/>.
+		/// Creates a new, updated <see cref="TimeState"/> snapshot.
 		/// <para>The current thread will optionally be delayed, if the given target frametime is not yet reached.</para>
 		/// </summary>
-		/// <param name="previousTotal">The <see cref="TotalTicks"/> from the previous <see cref="TimeState"/>.
-		/// <para>Set this to 0 if this is the first <see cref="TimeState"/> to be constructed.</para></param>
 		/// <param name="targetFrametime">If the number of ticks between now and the previous total is less than this,
 		/// the current thread will be delayed until the target is reached.
-		/// <para>If set to 0, the new <see cref="TimeState"/> will always be constructed immediately.</para></param>
-		public TimeState(UInt32 previousTotal, UInt32 targetFrametime)
+		/// <para>If set to 0, the new <see cref="TimeState"/> will be returned immediately.</para></param>
+		public TimeState Update(UInt32 targetFrametime)
 		{
 			long newTicks = Core.Time.GetTicks();
-			long diff = newTicks - previousTotal;
+			long diff = newTicks - TotalTicks;
 
 			if(diff < targetFrametime)
 			{ Core.Time.Delay((UInt32)(targetFrametime - diff)); }
 
-			TotalTicks = Core.Time.GetTicks();
-			DeltaTicks = TotalTicks - previousTotal;
+			UInt32 newTotal = Core.Time.GetTicks();
+			UInt32 newDelta = newTotal - TotalTicks;
+
+			return new TimeState(newTotal, newDelta);
 		}
 	};
 }
