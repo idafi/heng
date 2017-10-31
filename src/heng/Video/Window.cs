@@ -10,6 +10,13 @@
 	public class Window
 	{
 		/// <summary>
+		/// Use this magic SDL2 constant in the window's <see cref="Rect"/> to specify a centered window coordinate.
+		/// <para>E.g., setting the rect's position to (<see cref="Center"/>, <see cref="Center"/>) will position the
+		/// window in the center of the screen.</para>
+		/// </summary>
+		public const int Center = 805240832;
+
+		/// <summary>
 		/// Unique ID of this window.
 		/// <para>The engine uses window IDs to manage opening and closing actual OS windows. If a window
 		/// with the same ID already exists when a new <see cref="VideoState"/> is constructed, 
