@@ -30,28 +30,25 @@ IF NOT DEFINED HENG_DOTNET (GOTO envmissing)
 REM - set output dir
 SET HENG_OUT=%HENG_HOME%\bin\%CPU%
 
-REM - set platform args for compiler
+REM - set other platform aliases
 if %CPU% == x86 ( 
-	SET PLTDEF="WIN_X86" 
 	SET ARCH="i386"
+	SET PLATFORM=Win32
 ) ELSE ( 
-	SET PLTDEF="WIN_X64"
 	SET ARCH="x86_64"
+	SET PLATFORM=x64
 )
 
 REM - set up lib dependencies
-SET HENG_SDL2=%HENG_HOME%\lib\SDL2-2.0.5
-SET HENG_VORBIS=%HENG_HOME%\lib\vorbis
-SET HENG_JSONNET=%HENG_HOME%\lib\Newtonsoft.Json-10.0.3\Bin\net45
+SET HENG_SDL2_INC=%HENG_HOME%\lib\sdl2.2.0.5\build\native\include
+SET HENG_SDL2_LIB=%HENG_HOME%\lib\sdl2.2.0.5\build\native\lib\%PLATFORM%\dynamic
+SET HENG_SDL2_DLL=%HENG_HOME%\lib\sdl2.redist.2.0.5\build\native\bin\%PLATFORM%\dynamic
 
-SET HENG_SDL2_INC=%HENG_SDL2%\include
-SET HENG_VORBIS_INC=%HENG_VORBIS%\include
+SET HENG_OGG_INC=%HENG_HOME%\lib\ogg-msvc-%CPU%.1.3.2.8787\build\native\include
+SET HENG_OGG_LIB=%HENG_HOME%\lib\ogg-msvc-%CPU%.1.3.2.8787\build\native\lib_release
 
-SET HENG_SDL2_LIB=%HENG_SDL2%\lib\%CPU%
-SET HENG_VORBIS_LIB=%HENG_VORBIS%\lib\%CPU%
-
-SET HENG_SDL2_DLL=%HENG_SDL2%\bin\%CPU%\SDL2.dll
-SET HENG_JSONNET_DLL=%HENG_JSONNET%\Newtonsoft.Json.dll
+SET HENG_VORBIS_INC=%HENG_HOME%\lib\vorbis-msvc-%CPU%.1.3.5.8787\build\native\include
+SET HENG_VORBIS_LIB=%HENG_HOME%\lib\vorbis-msvc-%CPU%.1.3.5.8787\build\native\lib_release
 
 ECHO done
 GOTO :EOF

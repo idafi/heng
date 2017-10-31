@@ -24,9 +24,6 @@ ECHO.
 XCOPY /Q /Y %HENG_SDL2_DLL% %HENG_OUT%
 IF ERRORLEVEL 1 GOTO fail
 
-XCOPY /Q /Y %HENG_JSONNET_DLL% %HENG_OUT%
-IF ERRORLEVEL 1 GOTO fail
-
 ECHO.
 ECHO ----------------------
 ECHO cleaning garbage

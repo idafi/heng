@@ -94,12 +94,15 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\SDL2-2.0.5\include;$(SolutionDir)lib\vorbis\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN_X86</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL2main.lib;SDL2.lib;libogg.lib;libvorbis.lib;libvorbisfile.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\SDL2-2.0.5\lib\x86;$(SolutionDir)lib\vorbis\lib\x86</AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>DEL $(OUTDIR)*.ilk
@@ -113,12 +116,16 @@ DEL $(OUTDIR)*.tmp</Command>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\SDL2-2.0.5\include;$(SolutionDir)lib\vorbis\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN_X64</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL2main.lib;SDL2.lib;libogg.lib;libvorbis.lib;libvorbisfile.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\SDL2-2.0.5\lib\x64;$(SolutionDir)lib\vorbis\lib\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <ShowProgress>LinkVerboseLib</ShowProgress>
     </Link>
     <PostBuildEvent>
       <Command>DEL $(OUTDIR)*.ilk
@@ -134,14 +141,17 @@ DEL $(OUTDIR)*.tmp</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\SDL2-2.0.5\include;$(SolutionDir)lib\vorbis\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN_X86</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>SDL2main.lib;SDL2.lib;libogg.lib;libvorbis.lib;libvorbisfile.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\SDL2-2.0.5\lib\x86;$(SolutionDir)lib\vorbis\lib\x86</AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>DEL $(OUTDIR)*.ilk
@@ -157,14 +167,17 @@ DEL $(OUTDIR)*.tmp</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\SDL2-2.0.5\include;$(SolutionDir)lib\vorbis\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN_X64</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>SDL2main.lib;SDL2.lib;libogg.lib;libvorbis.lib;libvorbisfile.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\SDL2-2.0.5\lib\x64;$(SolutionDir)lib\vorbis\lib\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>DEL $(OUTDIR)*.ilk
@@ -207,7 +220,27 @@ DEL $(OUTDIR)*.tmp</Command>
     <ClCompile Include="video_textures.c" />
     <ClCompile Include="video_windows.c" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\..\lib\sdl2.redist.2.0.5\build\native\sdl2.redist.targets" Condition="Exists('..\..\lib\sdl2.redist.2.0.5\build\native\sdl2.redist.targets')" />
+    <Import Project="..\..\lib\sdl2.2.0.5\build\native\sdl2.targets" Condition="Exists('..\..\lib\sdl2.2.0.5\build\native\sdl2.targets')" />
+    <Import Project="..\..\lib\ogg-msvc-x86.1.3.2.8787\build\native\ogg-msvc-x86.targets" Condition="Exists('..\..\lib\ogg-msvc-x86.1.3.2.8787\build\native\ogg-msvc-x86.targets')" />
+    <Import Project="..\..\lib\ogg-msvc-x64.1.3.2.8787\build\native\ogg-msvc-x64.targets" Condition="Exists('..\..\lib\ogg-msvc-x64.1.3.2.8787\build\native\ogg-msvc-x64.targets')" />
+    <Import Project="..\..\lib\vorbis-msvc-x64.1.3.5.8787\build\native\vorbis-msvc-x64.targets" Condition="Exists('..\..\lib\vorbis-msvc-x64.1.3.5.8787\build\native\vorbis-msvc-x64.targets')" />
+    <Import Project="..\..\lib\vorbis-msvc-x86.1.3.5.8787\build\native\vorbis-msvc-x86.targets" Condition="Exists('..\..\lib\vorbis-msvc-x86.1.3.5.8787\build\native\vorbis-msvc-x86.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\lib\sdl2.redist.2.0.5\build\native\sdl2.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\lib\sdl2.redist.2.0.5\build\native\sdl2.redist.targets'))" />
+    <Error Condition="!Exists('..\..\lib\sdl2.2.0.5\build\native\sdl2.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\lib\sdl2.2.0.5\build\native\sdl2.targets'))" />
+    <Error Condition="!Exists('..\..\lib\ogg-msvc-x86.1.3.2.8787\build\native\ogg-msvc-x86.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\lib\ogg-msvc-x86.1.3.2.8787\build\native\ogg-msvc-x86.targets'))" />
+    <Error Condition="!Exists('..\..\lib\ogg-msvc-x64.1.3.2.8787\build\native\ogg-msvc-x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\lib\ogg-msvc-x64.1.3.2.8787\build\native\ogg-msvc-x64.targets'))" />
+    <Error Condition="!Exists('..\..\lib\vorbis-msvc-x64.1.3.5.8787\build\native\vorbis-msvc-x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\lib\vorbis-msvc-x64.1.3.5.8787\build\native\vorbis-msvc-x64.targets'))" />
+    <Error Condition="!Exists('..\..\lib\vorbis-msvc-x86.1.3.5.8787\build\native\vorbis-msvc-x86.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\lib\vorbis-msvc-x86.1.3.5.8787\build\native\vorbis-msvc-x86.targets'))" />
+  </Target>
 </Project>

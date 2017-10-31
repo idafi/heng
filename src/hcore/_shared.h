@@ -1,5 +1,14 @@
 #pragma once
 
+// UGH - SDL will shit warnings all day if we don't undef these callous redefinitions
+#if defined(_MSC_VER) && (_MSC_VER >= 1500) && (defined(_M_IX86) || defined(_M_X64))
+#ifndef _WIN64
+#undef __MMX__
+#endif
+#undef __SSE__
+#undef __SSE2__
+#endif
+
 // shared includes
 #include <float.h>
 #include <limits.h>
@@ -13,7 +22,7 @@
 #include <string.h>
 #include <SDL.h>
 
-// keyword re/definitions
+// keyword aliases
 #define noop ((void)0)
 #define intern static
 typedef int8_t sbyte;
@@ -35,9 +44,9 @@ typedef uint64_t uint64;
 #endif
 
 // platform specifics
-#ifdef WIN_X64
+#ifdef _WIN64
 #define HEXPORT(type) __declspec(dllexport) type __cdecl
-#elif WIN_X86
+#elif _WIN32
 #define HEXPORT(type) __declspec(dllexport) type __stdcall
 #else
 #define HEXPORT(type) type	// linux

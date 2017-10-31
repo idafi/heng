@@ -2,6 +2,7 @@ bin/
 doc/
 lib/
 obj/
+util/*.exe
 .vs/
 *.idb
 *.log

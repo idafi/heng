@@ -1,6 +1,6 @@
 #include "log.h"
 
-#if defined(WIN_X64) || defined(WIN_X86)
+#if defined(_WIN64) || defined(_WIN32)
 #include <windows.h>
 
 intern WORD GetForegroundColor(console_color color)
