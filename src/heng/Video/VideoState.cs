@@ -30,33 +30,48 @@ namespace heng.Video
 		/// <param name="sprites">All <see cref="Sprite"/>s to be drawn.</param>
 		public VideoState(IEnumerable<Window> windows, IEnumerable<Sprite> sprites)
 		{
-			Core.Video.GetSnapshot(out Core.Video.State coreState);
-
-			List<Window> wnd = new List<Window>();
-			Sprites = new List<Sprite>(sprites);
-
-			foreach(Window w in windows)
+			if(windows != null)
 			{
-				if(w.ID > -1 && w.ID < Core.Video.Windows.Max)
+				if(sprites != null)
 				{
-					wnd.Add(w);
+					Core.Video.GetSnapshot(out Core.Video.State coreState);
 
-					// open the window if it's not yet open
-					if(coreState.Windows.WindowInfo[w.ID].ID < 0)
-					{ Core.Video.Windows.OpenWindow(w.ID, w.Title, w.Rect, (UInt32)(w.WindowFlags), (UInt32)(w.RendererFlags)); }
+					List<Window> wnd = new List<Window>();
+					Sprites = new List<Sprite>(sprites);
 
-					w.Clear(Color.White);
+					foreach(Window w in windows)
+					{
+						if(w != null)
+						{
+							if(w.ID > -1 && w.ID < Core.Video.Windows.Max)
+							{
+								wnd.Add(w);
 
-					foreach(Sprite spr in sprites)
-					{ w.DrawSprite(spr); }
+								// open the window if it's not yet open
+								if(coreState.Windows.WindowInfo[w.ID].ID < 0)
+								{ Core.Video.Windows.OpenWindow(w.ID, w.Title, w.Rect, (UInt32)(w.WindowFlags), (UInt32)(w.RendererFlags)); }
 
-					Core.Video.Queue.Pump(w.ID);
+								w.Clear(Color.White);
+
+								foreach(Sprite spr in sprites)
+								{ w.DrawSprite(spr); }
+
+								Core.Video.Queue.Pump(w.ID);
+							}
+							else
+							{ Log.Error($"can't use window with ID {w.ID}: ID is invalid"); }
+						}
+						else
+						{ Log.Error("couldn't add Window to VideoState: window is null"); }
+					}
+
+					Windows = wnd;
 				}
 				else
-				{ Log.Error($"can't use window with ID {w.ID}: ID is invalid"); }
+				{ Log.Error("couldn't construct VideoState: sprites collection is null"); }
 			}
-
-			Windows = wnd;
+			else
+			{ Log.Error("couldn't construct VideoState: windows collection is null"); }
 		}
 	};
 }

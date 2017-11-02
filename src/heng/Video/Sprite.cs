@@ -21,6 +21,7 @@ namespace heng.Video
 		public readonly float Rotation;
 
 		readonly int textureID;
+		bool isDisposed;
 
 		/// <summary>
 		/// Constructs a new <see cref="Sprite"/>.
@@ -34,6 +35,8 @@ namespace heng.Video
 			Rotation = rotation;
 
 			textureID = Core.Video.Textures.LoadTexture(textureFile);
+			if(textureID < 0)
+			{ isDisposed = true; }
 		}
 
 		/// <summary>
@@ -46,9 +49,19 @@ namespace heng.Video
 		/// <param name="rotation">The texture will be rotated by this many degrees when it is drawn.</param>
 		public Sprite(Sprite oldSprite, ScreenPoint? position = null, float? rotation = null)
 		{
-			textureID = oldSprite.textureID;
-			Position = position ?? oldSprite.Position;
-			Rotation = rotation ?? oldSprite.Rotation;
+			if(oldSprite != null)
+			{
+				textureID = oldSprite.textureID;
+				Position = position ?? oldSprite.Position;
+				Rotation = rotation ?? oldSprite.Rotation;
+
+				isDisposed = oldSprite.isDisposed;
+			}
+			else
+			{
+				Log.Error("couldn't construct Sprite: oldSprite is null");
+				isDisposed = true;
+			}
 		}
 
 		/// <summary>
@@ -58,7 +71,13 @@ namespace heng.Video
 		/// </summary>
 		public void Dispose()
 		{
-			Core.Video.Textures.FreeTexture(textureID);
+			if(!isDisposed)
+			{
+				Core.Video.Textures.FreeTexture(textureID);
+				isDisposed = true;
+			}
+			else
+			{ Log.Warning("tried to Dispose of an already-disposed Sprite"); }
 		}
 
 		/// <summary>
@@ -69,7 +88,10 @@ namespace heng.Video
 		/// <param name="window">The <see cref="Window"/> to which the <see cref="Sprite"/> should be drawn.</param>
 		public void Draw(Window window)
 		{
-			window.DrawTexture(textureID, Position, Rotation);
+			if(!isDisposed)
+			{ window.DrawTexture(textureID, Position, Rotation); }
+			else
+			{ Log.Error("couldn't draw Sprite: Sprite was disposed, or erroneously constructed"); }
 		}
 	};
 }

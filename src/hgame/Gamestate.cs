@@ -1,4 +1,5 @@
-﻿using heng.Audio;
+﻿using heng;
+using heng.Audio;
 using heng.Input;
 using heng.Physics;
 using heng.Time;
@@ -20,6 +21,8 @@ namespace hgame
 		public Gamestate(PlayerUnit playerUnit, Scenery scenery,
 			InputState input, PhysicsState physics, VideoState video, AudioState audio, TimeState time)
 		{
+			Assert.Ref(playerUnit, scenery, input, physics, video, audio, time);
+
 			PlayerUnit = playerUnit;
 			Scenery = scenery;
 

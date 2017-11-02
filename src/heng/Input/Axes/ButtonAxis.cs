@@ -15,8 +15,7 @@
 		/// <param name="positive">The button which, when pressed, adds a positive value to the axis.</param>
 		public ButtonAxis(IButton negative, IButton positive)
 		{
-			Assert.Ref(negative);
-			Assert.Ref(positive);
+			Assert.Ref(negative, positive);
 
 			this.negative = negative;
 			this.positive = positive;

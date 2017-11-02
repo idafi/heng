@@ -36,6 +36,8 @@ namespace heng.Input
 		/// <param name="newData"></param>
 		public void UpdateData(InputData newData)
 		{
+			Assert.Ref(newData);
+
 			this.lastData = this.newData ?? newData;
 			this.newData = newData;
 		}
@@ -48,7 +50,15 @@ namespace heng.Input
 		/// <param name="button">The virtual button to map.</param>
 		public void RemapButton(string name, IButton button)
 		{
-			buttons[name] = button;
+			if(name != null)
+			{
+				if(button != null)
+				{ buttons[name] = button; }
+				else
+				{ Log.Error("couldn't remap button: new button is null"); }
+			}
+			else
+			{ Log.Error("couldn't remap button: new button name is null"); }
 		}
 		
 		/// <summary>
@@ -59,7 +69,15 @@ namespace heng.Input
 		/// <param name="axis">The virtual axis to map.</param>
 		public void RemapAxis(string name, IAxis axis)
 		{
-			axes[name] = axis;
+			if(name != null)
+			{
+				if(axis != null)
+				{ axes[name] = axis; }
+				else
+				{ Log.Error("couldn't remap axis: new axis is null"); }
+			}
+			else
+			{ Log.Error("couldn't remap axis: new axis name is null"); }
 		}
 
 		/// <summary>
@@ -82,6 +100,8 @@ namespace heng.Input
 		/// <returns>Whether or not the button entered down state this frame.</returns>
 		public bool GetButtonPressed(string name)
 		{
+			Assert.Ref(name);
+
 			if(TryGetButton(name, out IButton button))
 			{ return (!button.GetValue(lastData) && button.GetValue(newData)); }
 		
@@ -153,25 +173,33 @@ namespace heng.Input
 	
 		bool TryGetButton(string name, out IButton button)
 		{
-			Assert.Ref(name);
-		
-			if(buttons.TryGetValue(name, out button))
-			{ return true; }
+			if(name != null)
+			{
+				if(buttons.TryGetValue(name, out button))
+				{ return true; }
+				else
+				{ Log.Error($"couldn't read button \"{name}\" - no button with that name is mapped"); }
+			}
 			else
-			{ Log.Error($"couldn't read button \"{name}\" - no button with that name is mapped"); }
-		
+			{ Log.Error("couldn't read button: name is null"); }
+
+			button = null;
 			return false;
 		}
 	
 		bool TryGetAxis(string name, out IAxis axis)
 		{
-			Assert.Ref(name);
-		
-			if(axes.TryGetValue(name, out axis))
-			{ return true; }
+			if(name != null)
+			{
+				if(axes.TryGetValue(name, out axis))
+				{ return true; }
+				else
+				{ Log.Error($"couldn't read axis \"{name}\" - no axis with that name is mapped"); }
+			}
 			else
-			{ Log.Error($"couldn't read axis \"{name}\" - no axis with that name is mapped"); }
-		
+			{ Log.Error("couldn't read axis: name is null"); }
+
+			axis = null;
 			return false;
 		}
 	

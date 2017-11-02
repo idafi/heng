@@ -29,16 +29,26 @@ namespace heng.Input
 		/// <param name="devices">The <see cref="InputDevice"/>s used to construct the new <see cref="InputState"/>.</param>
 		public InputState(IEnumerable<InputDevice> devices)
 		{
-			List<InputDevice> newDevices = new List<InputDevice>();
-			Data = new InputData();
-
-			foreach(InputDevice device in devices)
+			if(devices != null)
 			{
-				device.UpdateData(Data);
-				newDevices.Add(device);
-			}
+				List<InputDevice> newDevices = new List<InputDevice>();
+				Data = new InputData();
 
-			Devices = newDevices;
+				foreach(InputDevice device in devices)
+				{
+					if(device != null)
+					{
+						device.UpdateData(Data);
+						newDevices.Add(device);
+					}
+					else
+					{ Log.Error("couldn't add InputDevice to InputState: device is null"); }
+				}
+
+				Devices = newDevices;
+			}
+			else
+			{ Log.Error("couldn't construct InputState: devices collection is null"); }
 		}
 	};
 }

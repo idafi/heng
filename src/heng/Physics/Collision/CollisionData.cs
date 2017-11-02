@@ -7,6 +7,8 @@
 
 		public CollisionData(IPhysicsObject obj, Vector2 mtv)
 		{
+			Assert.Ref(obj);
+
 			Object = obj;
 			MTV = mtv;
 		}

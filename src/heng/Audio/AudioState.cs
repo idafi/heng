@@ -40,40 +40,60 @@ namespace heng.Audio
 		/// <param name="listener">The pixel-space position from which <see cref="SoundSource"/>s are heard.</param>
 		public AudioState(IEnumerable<SoundInstance> instances, IEnumerable<SoundSource> sources, Vector2 listener)
 		{
-			List<SoundSource> newSources = new List<SoundSource>();
-			Dictionary<int, SoundInstance> newInstances = new Dictionary<int, SoundInstance>();
-			ListenerPosition = listener;
-
-			Core.Audio.GetSnapshot(out Core.Audio.State coreState);
-
-			foreach(SoundInstance instc in instances)
+			if(instances != null)
 			{
-				ref Core.Audio.Mixer.Channels.MixerChannel ch = ref coreState.Mixer.Channels.Channels[instc.Channel];
-				SoundInstance newInstc = instc.Update(ch);
-
-				if(newInstc.Progress < 1)
-				{ newInstances.Add(newInstc.ID, newInstc); }
-			}
-
-			foreach(SoundSource source in sources)
-			{
-				SoundSource newSource = source;
-
-				foreach(int instanceID in source.SoundInstances)
+				if(sources != null)
 				{
-					if(newInstances.TryGetValue(instanceID, out SoundInstance instc))
-					{ newInstances[instanceID] = instc.Reposition(source.Position - ListenerPosition); }
-					else
-					{ newSource = source.StopSound(instanceID); }
+					List<SoundSource> newSources = new List<SoundSource>();
+					Dictionary<int, SoundInstance> newInstances = new Dictionary<int, SoundInstance>();
+					ListenerPosition = listener;
+
+					Core.Audio.GetSnapshot(out Core.Audio.State coreState);
+
+					foreach(SoundInstance instc in instances)
+					{
+						if(instc != null)
+						{
+							ref Core.Audio.Mixer.Channels.MixerChannel ch = ref coreState.Mixer.Channels.Channels[instc.Channel];
+							SoundInstance newInstc = instc.Update(ch);
+
+							if(newInstc.Progress < 1)
+							{ newInstances.Add(newInstc.ID, newInstc); }
+						}
+						else
+						{ Log.Error("couldn't add SoundInstance to AudioState: instance is null"); }
+					}
+
+					foreach(SoundSource source in sources)
+					{
+						if(source != null)
+						{
+							SoundSource newSource = source;
+
+							foreach(int instanceID in source.SoundInstances)
+							{
+								if(newInstances.TryGetValue(instanceID, out SoundInstance instc))
+								{ newInstances[instanceID] = instc.Reposition(source.Position - ListenerPosition); }
+								else
+								{ newSource = source.StopSound(instanceID); }
+							}
+
+							newSources.Add(source);
+						}
+						else
+						{ Log.Error("couldn't add SoundSource to AudioState: source is null"); }
+					}
+
+					SoundSources = newSources;
+					SoundInstances = newInstances;
+
+					Core.Audio.PushSound();
 				}
-
-				newSources.Add(source);
+				else
+				{ Log.Error("couldn't construct AudioState: sources collection is null"); }
 			}
-
-			SoundSources = newSources;
-			SoundInstances = newInstances;
-
-			Core.Audio.PushSound();
+			else
+			{ Log.Error("couldn't construct AudioState: instances collection is null"); }
 		}
 	};
 }

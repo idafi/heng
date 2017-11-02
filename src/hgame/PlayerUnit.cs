@@ -18,6 +18,8 @@ namespace hgame
 	
 		public PlayerUnit(GamestateBuilder newState)
 		{
+			Assert.Ref(newState);
+
 			InputDevice device = new InputDevice();
 			device.RemapAxis("Horizontal", new ButtonAxis(new Key(KeyCode.Left), new Key(KeyCode.Right)));
 			device.RemapAxis("Vertical", new ButtonAxis(new Key(KeyCode.Down), new Key(KeyCode.Up)));
@@ -36,6 +38,8 @@ namespace hgame
 	
 		public PlayerUnit(Gamestate oldState, GamestateBuilder newState)
 		{
+			Assert.Ref(oldState, newState);
+
 			PlayerUnit oldUnit = oldState.PlayerUnit;
 
 			InputDevice device = oldState.Input.Devices[oldUnit.inputDevice];

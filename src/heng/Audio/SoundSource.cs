@@ -32,6 +32,8 @@ namespace heng.Audio
 		
 		SoundSource(Vector2 position, IReadOnlyList<int> instances)
 		{
+			Assert.Ref(instances);
+
 			Position = position;
 			SoundInstances = instances;
 		}

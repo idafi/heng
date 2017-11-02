@@ -11,6 +11,8 @@ namespace hgame
 
 		public Scenery(GamestateBuilder newState)
 		{
+			Assert.Ref(newState);
+
 			Polygon collider = new Polygon(new Vector2(0, 0), new Vector2(32, 0), new Vector2(32, 32), new Vector2(0, 32));
 			StaticBody body = new StaticBody(new Vector2(320 - 16, 240 - 16), new ConvexCollider(collider));
 			Sprite spr = new Sprite("../../data/textest.bmp", (ScreenPoint)(body.Position), 0);
@@ -21,6 +23,8 @@ namespace hgame
 
 		public Scenery(Gamestate oldState, GamestateBuilder newState)
 		{
+			Assert.Ref(oldState, newState);
+
 			Scenery oldScenery = oldState.Scenery;
 			StaticBody body = oldState.Physics.StaticBodies[oldScenery.staticBody];
 			Sprite spr = oldState.Video.Sprites[oldScenery.sprite];

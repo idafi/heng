@@ -6,6 +6,8 @@ namespace heng.Physics
 	{
 		public IEnumerable<CollisionData> GetCollisions(IReadOnlyList<IPhysicsObject> objects)
 		{
+			Assert.Ref(objects);
+
 			// don't test if there's nothing to test
 			if(objects.Count > 1)
 			{
@@ -36,6 +38,8 @@ namespace heng.Physics
 
 		bool TestPair(IPhysicsObject a, IPhysicsObject b, out Vector2 mtv)
 		{
+			Assert.Ref(a, b);
+
 			// we're also returning the minimum translation vector
 			float minOverlap = float.MaxValue;
 			mtv = Vector2.Zero;
@@ -74,6 +78,8 @@ namespace heng.Physics
 		
 		IEnumerable<Vector2> GetAllSeperatingAxes(ICollider a, ICollider b)
 		{
+			Assert.Ref(a, b);
+
 			foreach(Vector2 v in a.GetSeperatingAxes())
 			{ yield return v; }
 			foreach(Vector2 v in b.GetSeperatingAxes())

@@ -49,23 +49,31 @@
 		/// <param name="sound">The <see cref="Sound"/> resource used to construct the new <see cref="SoundInstance"/>.</param>
 		public SoundInstance(Sound sound)
 		{
-			Channel = Core.Audio.Mixer.Channels.GetNextFreeChannel();
-			if(Channel > -1)
+			if(sound != null)
 			{
-				ID = nextID++;
-				Sound = sound;
-				
-				Progress = 0;
-				ListenerOffset = Vector2.Zero;
+				Channel = Core.Audio.Mixer.Channels.GetNextFreeChannel();
+				if(Channel > -1)
+				{
+					ID = nextID++;
+					Sound = sound;
 
-				Sound.PlayOn(Channel);
+					Progress = 0;
+					ListenerOffset = Vector2.Zero;
+
+					Sound.PlayOn(Channel);
+				}
+				else
+				{ Log.Error("couldn't construct SoundInstance: no free mixer channels"); }
 			}
 			else
-			{ Log.Error("couldn't create sound instance: no free mixer channels"); }
+			{ Log.Error("couldn't construct SoundInstance: source Sound is null"); }
 		}
 		
 		SoundInstance(int id, Sound sound, int channel, float progress, Vector2 offset)
 		{
+			Assert.Ref(sound);
+			Assert.Index(channel, Core.Audio.Mixer.Channels.AUDIO_MIXER_CHANNELS_MAX);
+
 			ID = id;
 			
 			Sound = sound;

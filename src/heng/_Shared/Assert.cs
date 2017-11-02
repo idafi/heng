@@ -21,9 +21,13 @@ namespace heng
 		/// Asserts that the given object reference is not null.
 		/// </summary>
 		/// <param name="reference">The reference that shouldn't be null.</param>
-		public static void Ref(object reference)
+		public static void Ref(params object[] references)
 		{
-			Debug.Assert(reference != null, "reference is null");
+			if(references != null)
+			{
+				foreach(object r in references)
+				{ Debug.Assert(r != null, "reference is null"); }
+			}
 		}
 		
 		/// <summary>

@@ -11,6 +11,7 @@ namespace heng.Audio
 	public class Sound : IDisposable
 	{
 		readonly int soundID;
+		bool isDisposed;
 		
 		/// <summary>
 		/// Creates a new <see cref="Sound"/> from the sound file at the given path.
@@ -21,17 +22,32 @@ namespace heng.Audio
 		public Sound(string filePath)
 		{
 			soundID = Core.Audio.Sounds.LoadSound(filePath);
+
+			// core will take care of error logging
+			if(soundID < 0)
+			{ isDisposed = true; }
 		}
 		
 		/// <inheritdoc />
 		public void Dispose()
 		{
-			Core.Audio.Sounds.FreeSound(soundID);
+			if(!isDisposed)
+			{
+				Core.Audio.Sounds.FreeSound(soundID);
+				isDisposed = true;
+			}
+			else
+			{ Log.Warning("tried to Dispose of an already-disposed Sound"); }
 		}
 		
 		internal void PlayOn(int channel)
 		{
-			Core.Audio.Mixer.Channels.SetSound(channel, soundID);
+			Assert.Index(channel, Core.Audio.Mixer.Channels.AUDIO_MIXER_CHANNELS_MAX);
+
+			if(!isDisposed)
+			{ Core.Audio.Mixer.Channels.SetSound(channel, soundID); }
+			else
+			{ Log.Error("couldn't play sound: sound was disposed, or erroneously constructed"); }
 		}
 	};
 }

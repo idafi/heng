@@ -20,7 +20,15 @@ namespace heng
 		/// <param name="points">The points with which to construct the new <see cref="Polygon"/>.</param>
 		public Polygon(params Vector2[] points)
 		{
-			this.points = points;
+			if(points != null)
+			{
+				this.points = points;
+			}
+			else
+			{
+				Log.Error("couldn't construct Polygon: points array is null");
+				this.points = new Vector2[0];
+			}
 		}
 
 		/// <summary>
@@ -29,7 +37,15 @@ namespace heng
 		/// <param name="points">The points with which to construct the new <see cref="Polygon"/>.</param>
 		public Polygon(IEnumerable<Vector2> points)
 		{
-			this.points = new List<Vector2>(points).ToArray();
+			if(points != null)
+			{
+				this.points = new List<Vector2>(points).ToArray();
+			}
+			else
+			{
+				Log.Error("couldn't construct Polygon: points collection is null");
+				this.points = new Vector2[0];
+			}
 		}
 		
 		/// <summary>

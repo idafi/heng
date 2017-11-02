@@ -55,12 +55,23 @@
 		/// <param name="rendererFlags">Configuration settings for the window's renderer.</param>
 		public Window(int id, string title, ScreenRect rect, WindowFlags windowFlags, RendererFlags rendererFlags)
 		{
-			ID = id;
-			Title = title;
+			if(id > -1)
+			{
+				if(title == null)
+				{
+					Log.Warning("new Window has null title");
+					title = "";
+				}
 
-			Rect = rect;
-			WindowFlags = windowFlags;
-			RendererFlags = rendererFlags;
+				ID = id;
+				Title = title;
+
+				Rect = rect;
+				WindowFlags = windowFlags;
+				RendererFlags = rendererFlags;
+			}
+			else
+			{ Log.Error("couldn't construct new Window: ID is negative"); }
 		}
 
 		/// <summary>
@@ -76,11 +87,16 @@
 		public Window(Window old, string title = null, ScreenRect? rect = null,
 			WindowFlags? windowFlags = null, RendererFlags? rendererFlags = null)
 		{
-			ID = old.ID;
-			Title = title ?? old.Title;
-			Rect = rect ?? old.Rect;
-			WindowFlags = windowFlags ?? old.WindowFlags;
-			RendererFlags = rendererFlags ?? old.RendererFlags;
+			if(old != null)
+			{
+				ID = old.ID;
+				Title = title ?? old.Title;
+				Rect = rect ?? old.Rect;
+				WindowFlags = windowFlags ?? old.WindowFlags;
+				RendererFlags = rendererFlags ?? old.RendererFlags;
+			}
+			else
+			{ Log.Error("couldn't construct new Window: old Window is null"); }
 		}
 
 		/// <summary>
@@ -121,6 +137,12 @@
 		/// <param name="color">The color of the points.</param>
 		public void DrawPoints(ScreenPoint[] points, Color color)
 		{
+			if(points == null)
+			{
+				Log.Warning("tried to draw null array of ScreenPoints to window " + ID);
+				points = new ScreenPoint[0];
+			}
+
 			Core.Video.Queue.DrawPoints(ID, color, points, points.Length);
 		}
 
@@ -132,7 +154,10 @@
 		/// <param name="rotation">The rotation, in degrees, with which to draw the texture.</param>
 		public void DrawTexture(int textureID, ScreenPoint position, float rotation)
 		{
-			Core.Video.Queue.DrawTexture(ID, textureID, position, rotation);
+			if(textureID > -1)
+			{ Core.Video.Queue.DrawTexture(ID, textureID, position, rotation); }
+			else
+			{ Log.Warning("tried to draw invalid texture to window " + ID); }
 		}
 
 		/// <summary>
@@ -143,7 +168,10 @@
 		/// <param name="spr">The <see cref="Sprite"/> to draw.</param>
 		public void DrawSprite(Sprite spr)
 		{
-			spr.Draw(this);
+			if(spr != null)
+			{ spr.Draw(this); }
+			else
+			{ Log.Warning("tried to draw null Sprite to window " + ID); }
 		}
 	};
 }

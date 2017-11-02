@@ -35,36 +35,48 @@ namespace hgame
 
 		public int AddInputDevice(InputDevice device)
 		{
+			Assert.Ref(device);
+
 			inputDevices.Add(device);
 			return inputDevices.Count - 1;
 		}
 
 		public int AddRigidBody(RigidBody body)
 		{
+			Assert.Ref(body);
+
 			rigidBodies.Add(body);
 			return rigidBodies.Count - 1;
 		}
 
 		public int AddStaticBody(StaticBody body)
 		{
+			Assert.Ref(body);
+
 			staticBodies.Add(body);
 			return staticBodies.Count - 1;
 		}
 
 		public int AddSprite(Sprite spr)
 		{
+			Assert.Ref(spr);
+
 			sprites.Add(spr);
 			return sprites.Count - 1;
 		}
 
 		public int AddSoundSource(SoundSource source)
 		{
+			Assert.Ref(source);
+
 			soundSources.Add(source);
 			return soundSources.Count - 1;
 		}
 
 		public int AddSoundInstance(SoundInstance instc)
 		{
+			Assert.Ref(instc);
+
 			soundInstances.Add(instc);
 			return instc.ID;
 		}
@@ -108,6 +120,8 @@ namespace hgame
 
 		Gamestate BuildGamestate(Gamestate old, PlayerUnit playerUnit, Scenery scenery, Window window)
 		{
+			Assert.Ref(playerUnit, scenery, window);
+
 			if(old != null)
 			{ soundInstances.AddRange(old.Audio.SoundInstances.Values); }
 

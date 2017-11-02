@@ -33,6 +33,9 @@
 		{
 			Position = position;
 			Collider = collider;
+
+			if(collider == null)
+			{ Log.Warning("constructed a StaticBody with no collider"); }
 		}
 	};
 }
