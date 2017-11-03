@@ -18,9 +18,9 @@ namespace heng
 		}
 		
 		/// <summary>
-		/// Asserts that the given object reference is not null.
+		/// Asserts that the given object references are not null.
 		/// </summary>
-		/// <param name="reference">The reference that shouldn't be null.</param>
+		/// <param name="references">The references that shouldn't be null.</param>
 		public static void Ref(params object[] references)
 		{
 			if(references != null)
