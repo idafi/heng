@@ -28,6 +28,8 @@ namespace hgame
 			config.Log.MinLevelConsole = LogLevel.Debug;
 			config.Log.MinLevelFile = LogLevel.Warning;
 
+			config.Events.EvLogMode = EventLogMode.Input;
+
 			config.Audio.Format = heng.Audio.AudioFormat.S16;
 			config.Audio.SampleRate = 44100;
 			config.Audio.Channels = 2;
