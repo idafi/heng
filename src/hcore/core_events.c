@@ -34,6 +34,9 @@ intern void HandleEvent(SDL_Event *ev)
 		case SDL_JOYDEVICEREMOVED:
 			Input_JoystickCloseEvent(&ev->jdevice);
 			break;
+		case SDL_WINDOWEVENT:
+			Video_Windows_Event(&ev->window);
+			break;
 		case SDL_QUIT:
 			quitRequested = true;
 			break;

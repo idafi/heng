@@ -90,6 +90,24 @@ intern void DestroyWindow(int windowID)
 	w->isOpen = false;
 }
 
+intern int GetWindowBySDLID(uint32 id)
+{
+	SDL_Window *sdlW = SDL_GetWindowFromID(id);
+	if(sdlW)
+	{
+		for(int i = 0; i < VIDEO_WINDOWS_MAX; i++)
+		{
+			window *w = &windows[i];
+			if(w->window == sdlW)
+			{ return i; }
+		}
+
+		LogError("couldn't locate window using SDL ID: %i", id);
+	}
+
+	return -1;
+}
+
 bool Video_Windows_Init()
 {
 	for(int i = 0; i < VIDEO_WINDOWS_MAX; i++)
@@ -103,6 +121,29 @@ void Video_Windows_Quit()
 {
 	for(int i = 0; i < VIDEO_WINDOWS_MAX; i++)
 	{ DestroyWindow(i); }
+}
+
+void Video_Windows_Event(SDL_WindowEvent *ev)
+{
+	AssertPtr(ev);
+
+	int wID = GetWindowBySDLID(ev->windowID);
+	if(wID > -1)
+	{
+		switch(ev->event)
+		{
+			case SDL_WINDOWEVENT_CLOSE:
+				Video_Windows_CloseWindow(wID);
+				break;
+			case SDL_WINDOWEVENT_MOVED:
+			case SDL_WINDOWEVENT_SIZE_CHANGED:
+			case SDL_WINDOWEVENT_RESIZED:
+			case SDL_WINDOWEVENT_MAXIMIZED:
+			case SDL_WINDOWEVENT_RESTORED:
+				UpdateWindowInfo(wID);
+				break;
+		}
+	}
 }
 
 HEXPORT(void) Video_Windows_OpenWindow(int windowID, char *title, screen_rect rect, uint32 windowFlags, uint32 rendererFlags)
