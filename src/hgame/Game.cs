@@ -54,13 +54,11 @@ namespace hgame
 
 		static bool ShouldQuit()
 		{
-			return Engine.IsQuitRequested();
+			return gamestate.Events.IsQuitRequested;
 		}
 
 		static void Frame()
 		{
-			Engine.PumpEvents();
-
 			gamestate = builder.Build(gamestate);
 		}
 

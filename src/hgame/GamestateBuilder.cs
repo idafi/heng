@@ -83,14 +83,22 @@ namespace hgame
 
 		public Gamestate Build(Gamestate old)
 		{
-			PlayerUnit playerUnit = BuildPlayerUnit(old);
-			Scenery scenery = BuildScenery(old);
-			Window window = BuildWindow(old);
+			EventsState events = new EventsState();
 
-			Gamestate g = BuildGamestate(old, playerUnit, scenery, window);
+			// we quit immediately when requested, so don't let the rest of the frame muck that up
+			if(!events.IsQuitRequested)
+			{
+				PlayerUnit playerUnit = BuildPlayerUnit(old);
+				Scenery scenery = BuildScenery(old);
+				Window window = BuildWindow(old);
 
-			Clear();
-			return g;
+				Gamestate g = BuildGamestate(old, events, playerUnit, scenery, window);
+
+				Clear();
+				return g;
+			}
+			else
+			{ return new Gamestate(old.PlayerUnit, old.Scenery, events, old.Input, old.Physics, old.Video, old.Audio, old.Time); }
 		}
 
 		PlayerUnit BuildPlayerUnit(Gamestate old)
@@ -118,7 +126,8 @@ namespace hgame
 			{ return old.Video.Windows[windowID]; }
 		}
 
-		Gamestate BuildGamestate(Gamestate old, PlayerUnit playerUnit, Scenery scenery, Window window)
+		// TODO: what a nightmarish signature. all of this should be cleaned soon
+		Gamestate BuildGamestate(Gamestate old, EventsState events, PlayerUnit playerUnit, Scenery scenery, Window window)
 		{
 			Assert.Ref(playerUnit, scenery, window);
 
@@ -131,7 +140,7 @@ namespace hgame
 			AudioState audio = new AudioState(soundInstances, soundSources, new Vector2(320, 240));
 			TimeState time = old?.Time.Update(0) ?? new TimeState();
 
-			return new Gamestate(playerUnit, scenery, input, physics, video, audio, time);
+			return new Gamestate(playerUnit, scenery, events, input, physics, video, audio, time);
 		}
 
 		void Clear()
