@@ -29,7 +29,7 @@ namespace heng
 		Window		= 0x04,
 
 		/// <summary>
-		/// The Quit event (<see cref="Engine.IsQuitRequested"/>) will be logged.
+		/// The Quit event (<see cref="EventsState.IsQuitRequested"/>) will be logged.
 		/// </summary>
 		Quit		= 0x08,
 
