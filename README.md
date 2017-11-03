@@ -28,9 +28,9 @@ Currently available:
 - Audio loading, playback, mixing, and attenuation, with automatic format conversion
 - Collision detection and resolution
 - Timekeeping and frametime-targeting
+- Event logging and re-simulating
 
 Planned:
-- Event logging and re-simulating
 - Virtualized coordinate system
 - Dynamic region-based resource un/loading
 - Lightweight, customizable physics model
