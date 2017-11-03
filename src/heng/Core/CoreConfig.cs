@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 using heng.Audio;
 using heng.Logging;
 
@@ -25,6 +26,18 @@ namespace heng
 			/// The engine core won't print messages less severe than this to the output file.
 			/// </summary>
 			public LogLevel MinLevelFile;
+		};
+
+		/// <summary>
+		/// Configuration settings for the engine core's event handling system.
+		/// </summary>
+		[StructLayout(LayoutKind.Sequential)]
+		public struct EventsConfig
+		{
+			/// <summary>
+			/// Configuration flags for the engine core's event log.
+			/// </summary>
+			public EventLogMode EvLogMode;
 		};
 
 		/// <summary>
@@ -101,6 +114,11 @@ namespace heng
 		/// Configuration settings for the engine core's logging system.
 		/// </summary>
 		public LogConfig Log;
+
+		/// <summary>
+		/// Configuration settings for the engine core's event handling system.
+		/// </summary>
+		public EventsConfig Events;
 
 		/// <summary>
 		/// Configuration settings for the engine core's audio system.
