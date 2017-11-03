@@ -125,7 +125,7 @@ DEL $(OUTDIR)*.tmp</Command>
       </AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
-      <ShowProgress>LinkVerboseLib</ShowProgress>
+      <ShowProgress>NotSet</ShowProgress>
     </Link>
     <PostBuildEvent>
       <Command>DEL $(OUTDIR)*.ilk
