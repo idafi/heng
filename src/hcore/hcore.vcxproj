@@ -208,6 +208,7 @@ DEL $(OUTDIR)*.tmp</Command>
     <ClCompile Include="audio_sounds_wav.c" />
     <ClCompile Include="core.c" />
     <ClCompile Include="core_events.c" />
+    <ClCompile Include="core_events_log.c" />
     <ClCompile Include="input.c" />
     <ClCompile Include="log.c" />
     <ClCompile Include="log_console.c" />

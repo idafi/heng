@@ -107,6 +107,9 @@
     <ClCompile Include="audio.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="core_events_log.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
