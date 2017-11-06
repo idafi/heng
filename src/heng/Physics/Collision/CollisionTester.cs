@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace heng.Physics
 {
@@ -8,27 +9,43 @@ namespace heng.Physics
 		{
 			Assert.Ref(objects);
 
-			// don't test if there's nothing to test
-			if(objects.Count > 1)
+			// only test objects in the same sector
+			// TODO: handle colliders intersecting multiple sectors
+			var groups = from obj in objects
+						 group obj by obj.Position.Sector;
+			
+			foreach(var group in groups)
 			{
-				// we're just checking each collider against those at larger indices
-				// (i.e., those which it hasn't yet been checked against)
-				for(int a = 0; a < objects.Count - 1; a++)
-				{
-					IPhysicsObject oa = objects[a];
+				IReadOnlyList<IPhysicsObject> groupedObjects = group.ToArray();
 
-					if(oa.Collider != null)
+				// don't test if there's nothing to test
+				if(groupedObjects.Count > 1)
+				{
+					foreach(CollisionData data in TestGroup(groupedObjects))
+					{ yield return data; }
+				}
+			}
+		}
+
+		IEnumerable<CollisionData> TestGroup(IReadOnlyList<IPhysicsObject> objects)
+		{
+			// we're just checking each collider against those at larger indices
+			// (i.e., those which it hasn't yet been checked against)
+			for(int a = 0; a < objects.Count - 1; a++)
+			{
+				IPhysicsObject oa = objects[a];
+
+				if(oa.Collider != null)
+				{
+					for(int b = a + 1; b < objects.Count; b++)
 					{
-						for(int b = a + 1; b < objects.Count; b++)
+						IPhysicsObject ob = objects[b];
+						if(ob.Collider != null)
 						{
-							IPhysicsObject ob = objects[b];
-							if(ob.Collider != null)
+							if(TestPair(oa, ob, out Vector2 mtv))
 							{
-								if(TestPair(oa, ob, out Vector2 mtv))
-								{
-									yield return new CollisionData(oa, mtv);
-									yield return new CollisionData(ob, -mtv);
-								}
+								yield return new CollisionData(oa, mtv);
+								yield return new CollisionData(ob, -mtv);
 							}
 						}
 					}
