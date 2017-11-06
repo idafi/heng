@@ -34,6 +34,11 @@
 		/// This WorldPoint's Subposition, as a <see cref="Vector2"/>.
 		/// </summary>
 		public Vector2 Subposition => new Vector2(X.Subposition, Y.Subposition);
+
+		/// <summary>
+		/// This WorldPoint's position in pixel space.
+		/// </summary>
+		public Vector2 PixelPosition => PixelDistance(WorldPoint.Zero);
 		
 		/// <summary>
 		/// Constructs a new <see cref="WorldPoint"/> using the given <see cref="WorldCoordinate"/>s.
@@ -67,6 +72,17 @@
 		{
 			X = new WorldCoordinate(HMath.FloorToInt(sector.X), subposition.X);
 			Y = new WorldCoordinate(HMath.FloorToInt(sector.Y), subposition.Y);
+		}
+
+		/// <summary>
+		/// Constructs a new <see cref="WorldPoint"/> at the given pixel-space position.
+		/// </summary>
+		/// <param name="pixelPos">The new <see cref="WorldPoint"/>'s pixel-space position.</param>
+		public WorldPoint(Vector2 pixelPos)
+		{
+			WorldPoint point = WorldPoint.Zero.PixelTranslate(pixelPos);
+			X = point.X;
+			Y = point.Y;
 		}
 
 		/// <inheritdoc />
