@@ -9,9 +9,9 @@ namespace heng.Audio
 	public class SoundSource
 	{
 		/// <summary>
-		/// The pixel-space positon of this <see cref="SoundSource"/>.
+		/// The world-space positon of this <see cref="SoundSource"/>.
 		/// </summary>
-		public readonly Vector2 Position;
+		public readonly WorldPoint Position;
 
 		/// <summary>
 		/// All <see cref="SoundInstance"/> IDs currently playing from this <see cref="SoundSource"/>.
@@ -23,14 +23,14 @@ namespace heng.Audio
 		/// <summary>
 		/// Creates a new <see cref="SoundSource"/> at the given pixel-space position.
 		/// </summary>
-		/// <param name="position">The pixel-space position at which to locate the new <see cref="SoundSource"/>.</param>
-		public SoundSource(Vector2 position)
+		/// <param name="position">The world-space position at which to locate the new <see cref="SoundSource"/>.</param>
+		public SoundSource(WorldPoint position)
 		{
 			Position = position;
 			SoundInstances = new int[0];
 		}
 		
-		SoundSource(Vector2 position, IReadOnlyList<int> instances)
+		SoundSource(WorldPoint position, IReadOnlyList<int> instances)
 		{
 			Assert.Ref(instances);
 
@@ -39,12 +39,12 @@ namespace heng.Audio
 		}
 		
 		/// <summary>
-		/// Moves the <see cref="SoundSource"/> to the given pixel-space position, preserving all
+		/// Moves the <see cref="SoundSource"/> to the given world-space position, preserving all
 		/// sound instances.
 		/// </summary>
 		/// <param name="position">The new position for the <see cref="SoundSource"/>.</param>
 		/// <returns>A new <see cref="SoundSource"/> at the new position.</returns>
-		public SoundSource Reposition(Vector2 position)
+		public SoundSource Reposition(WorldPoint position)
 		{
 			return new SoundSource(position, SoundInstances);
 		}

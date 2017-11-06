@@ -11,7 +11,7 @@
 		/// <summary>
 		/// The position at which the <see cref="StaticBody"/> is located.
 		/// </summary>
-		public readonly Vector2 Position;
+		public readonly WorldPoint Position;
 
 		/// <summary>
 		/// The collidable representation of this <see cref="StaticBody"/>.
@@ -19,7 +19,7 @@
 		public readonly ICollider Collider;
 
 		/// <inheritdoc />
-		Vector2 IPhysicsObject.Position => Position;
+		WorldPoint IPhysicsObject.Position => Position;
 
 		/// <inheritdoc />
 		ICollider IPhysicsObject.Collider => Collider;
@@ -29,7 +29,7 @@
 		/// </summary>
 		/// <param name="position">The position at which to construct the new <see cref="StaticBody"/>.</param>
 		/// <param name="collider">The collidable representation of the new <see cref="StaticBody"/>.</param>
-		public StaticBody(Vector2 position, ICollider collider)
+		public StaticBody(WorldPoint position, ICollider collider)
 		{
 			Position = position;
 			Collider = collider;

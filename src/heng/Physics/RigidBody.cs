@@ -9,9 +9,9 @@
 	public class RigidBody : IPhysicsObject
 	{
 		/// <summary>
-		/// The pixel-space position at which this <see cref="RigidBody"/> is located.
+		/// The world-space position at which this <see cref="RigidBody"/> is located.
 		/// </summary>
-		public readonly Vector2 Position;
+		public readonly WorldPoint Position;
 
 		/// <summary>
 		/// The collidable representation of this <see cref="RigidBody"/>.
@@ -20,12 +20,12 @@
 		public readonly ICollider Collider;
 
 		/// <summary>
-		/// The total accumulation of all impules forces to be applied on <see cref="PhysicsState"/> construction.
+		/// The total accumulation of all pixel-space impulse forces to be applied on <see cref="PhysicsState"/> construction.
 		/// </summary>
 		public readonly Vector2 TotalImpulse;
 
 		/// <inheritdoc />
-		Vector2 IPhysicsObject.Position => Position;
+		WorldPoint IPhysicsObject.Position => Position;
 
 		/// <inheritdoc />
 		ICollider IPhysicsObject.Collider => Collider;
@@ -36,7 +36,7 @@
 		/// <param name="position">The position at which to place the new <see cref="RigidBody"/>.</param>
 		/// <param name="collider">The collidable representation of the new <see cref="RigidBody"/>.
 		/// <para>This can be null if the <see cref="RigidBody"/> doesn't need to respond to collisions.</para></param>
-		public RigidBody(Vector2 position, ICollider collider)
+		public RigidBody(WorldPoint position, ICollider collider)
 		{
 			Position = position;
 			Collider = collider;
@@ -44,7 +44,7 @@
 			TotalImpulse = Vector2.Zero;
 		}
 		
-		RigidBody(Vector2 position, ICollider collider, Vector2 totalImpulse)
+		RigidBody(WorldPoint position, ICollider collider, Vector2 totalImpulse)
 		{
 			Position = position;
 			Collider = collider;
@@ -58,7 +58,7 @@
 		/// </summary>
 		/// <param name="translation">The movement vector by which to translate the <see cref="RigidBody"/>.</param>
 		/// <returns>A new <see cref="RigidBody"/>, translated by the movement vector.</returns>
-		public RigidBody Translate(Vector2 translation) => new RigidBody(Position + translation, Collider, TotalImpulse);
+		public RigidBody Translate(Vector2 translation) => new RigidBody(Position.PixelTranslate(translation), Collider, TotalImpulse);
 
 		/// <summary>
 		/// Adds an impulse force to this <see cref="RigidBody"/>.
@@ -78,6 +78,6 @@
 		/// rather than added to a persistent velocity.)
 		/// </summary>
 		/// <returns>A new <see cref="RigidBody"/>, translated by its accumulated <see cref="TotalImpulse"/>.</returns>
-		public RigidBody ApplyImpulses() => new RigidBody(Position + TotalImpulse, Collider, Vector2.Zero);
+		public RigidBody ApplyImpulses() => new RigidBody(Position.PixelTranslate(TotalImpulse), Collider, Vector2.Zero);
 	};
 }

@@ -22,11 +22,11 @@ namespace heng.Audio
 		public readonly IReadOnlyList<SoundSource> SoundSources;
 
 		/// <summary>
-		/// The pixel-space position from which <see cref="SoundSource"/>s are heard.
+		/// The world-space position from which <see cref="SoundSource"/>s are heard.
 		/// <para>Attenuation is calculated relative to the pixel-space position of the <see cref="SoundSource"/>s.</para>
 		/// In most cases, the center of the camera is the best place for this.
 		/// </summary>
-		public readonly Vector2 ListenerPosition;
+		public readonly WorldPoint ListenerPosition;
 
 		/// <summary>
 		/// Constructs a new <see cref="AudioState"/> using the given elements.
@@ -37,8 +37,8 @@ namespace heng.Audio
 		/// won't continue playing as the new state is constructed.</para>
 		/// </param>
 		/// <param name="sources">All <see cref="SoundSource"/>s available to the new state.</param>
-		/// <param name="listener">The pixel-space position from which <see cref="SoundSource"/>s are heard.</param>
-		public AudioState(IEnumerable<SoundInstance> instances, IEnumerable<SoundSource> sources, Vector2 listener)
+		/// <param name="listener">The world-space position from which <see cref="SoundSource"/>s are heard.</param>
+		public AudioState(IEnumerable<SoundInstance> instances, IEnumerable<SoundSource> sources, WorldPoint listener)
 		{
 			if(instances != null)
 			{
@@ -73,7 +73,10 @@ namespace heng.Audio
 							foreach(int instanceID in source.SoundInstances)
 							{
 								if(newInstances.TryGetValue(instanceID, out SoundInstance instc))
-								{ newInstances[instanceID] = instc.Reposition(source.Position - ListenerPosition); }
+								{
+									Vector2 offset = source.Position.PixelDistance(ListenerPosition);
+									newInstances[instanceID] = instc.Reposition(offset);
+								}
 								else
 								{ newSource = source.StopSound(instanceID); }
 							}

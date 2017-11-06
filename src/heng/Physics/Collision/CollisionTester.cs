@@ -40,6 +40,12 @@ namespace heng.Physics
 		{
 			Assert.Ref(a, b);
 
+			// collisions will be tested in a localized space, originating at the least common sector of both colliders
+			// (i think? this is easier than setting the origin at the collider vertex closest to 0,0)
+			WorldPoint origin = a.Position.LeastCommonSector(b.Position);
+			Vector2 posA = a.Position.PixelDistance(origin);
+			Vector2 posB = b.Position.PixelDistance(origin);
+
 			// we're also returning the minimum translation vector
 			float minOverlap = float.MaxValue;
 			mtv = Vector2.Zero;
@@ -48,8 +54,8 @@ namespace heng.Physics
 			foreach(Vector2 axis in GetAllSeperatingAxes(a.Collider, b.Collider))
 			{
 				// project colliders on this seperating axis
-				ColliderProjection projA = a.Collider.Project(a.Position, axis);
-				ColliderProjection projB = b.Collider.Project(b.Position, axis);
+				ColliderProjection projA = a.Collider.Project(posA, axis);
+				ColliderProjection projB = b.Collider.Project(posB, axis);
 
 				// find the overlap. if there is none, we're not colliding and can get out now
 				float overlap = ColliderProjection.GetOverlap(projA, projB);
@@ -67,7 +73,7 @@ namespace heng.Physics
 			}
 
 			// make sure mtv isn't negative
-			Vector2 diff = a.Position - b.Position;
+			Vector2 diff = posA - posB;
 			if(diff.Dot(mtv) < 0)
 			{ mtv = -mtv; }
 

@@ -8,9 +8,9 @@
 	public interface IPhysicsObject
 	{
 		/// <summary>
-		/// The pixel-space position at which the <see cref="IPhysicsObject"/> is located.
+		/// The world-space position at which the <see cref="IPhysicsObject"/> is located.
 		/// </summary>
-		Vector2 Position { get; }
+		WorldPoint Position { get; }
 		
 		/// <summary>
 		/// The <see cref="ICollider"/> representing this <see cref="IPhysicsObject"/>.
