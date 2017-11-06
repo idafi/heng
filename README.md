@@ -29,9 +29,9 @@ Currently available:
 - Collision detection and resolution
 - Timekeeping and frametime-targeting
 - Event logging and re-simulating
+- Virtualized coordinate system
 
 Planned:
-- Virtualized coordinate system
 - Dynamic region-based resource un/loading
 - Lightweight, customizable physics model
 - Full gamestate re/serialization
