@@ -8,6 +8,9 @@
 	/// </summary>
 	public struct WorldCoordinate
 	{
+		/// <summary>
+		/// How many pixels comprise a single sector.
+		/// </summary>
 		public const int PixelsPerSector = 200;
 
 		/// <summary>
