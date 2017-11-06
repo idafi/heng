@@ -123,6 +123,8 @@
     <Compile Include="_Shared\HMath.cs" />
     <Compile Include="_Shared\Polygon.cs" />
     <Compile Include="_Shared\Vector2.cs" />
+    <Compile Include="_Shared\WorldCoordinate.cs" />
+    <Compile Include="_Shared\WorldPoint.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
