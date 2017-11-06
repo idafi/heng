@@ -19,25 +19,25 @@ namespace heng.Video
 		public readonly IReadOnlyList<Window> Windows;
 		
 		/// <summary>
-		/// All sprites that were drawn to the open <see cref="Window"/>s.
+		/// All <see cref="IDrawable"/> objects that were drawn to the open <see cref="Window"/>s.
 		/// </summary>
-		public readonly IReadOnlyList<Sprite> Sprites;
+		public readonly IReadOnlyList<IDrawable> Drawables;
 
 		/// <summary>
 		/// Constructs a new snapshot of the video system's state.
 		/// </summary>
 		/// <param name="windows">The fully-constructed <see cref="Window"/>s to be shown this frame.</param>
-		/// <param name="sprites">All <see cref="Sprite"/>s to be drawn.</param>
-		public VideoState(IEnumerable<Window> windows, IEnumerable<Sprite> sprites)
+		/// <param name="drawables">All <see cref="IDrawable"/> objects to be drawn.</param>
+		public VideoState(IEnumerable<Window> windows, IEnumerable<IDrawable> drawables)
 		{
 			if(windows != null)
 			{
-				if(sprites != null)
+				if(drawables != null)
 				{
 					Core.Video.GetSnapshot(out Core.Video.State coreState);
 
 					List<Window> wnd = new List<Window>();
-					Sprites = new List<Sprite>(sprites);
+					Drawables = new List<IDrawable>(drawables);
 
 					foreach(Window w in windows)
 					{
@@ -53,8 +53,8 @@ namespace heng.Video
 
 								w.Clear(Color.White);
 
-								foreach(Sprite spr in sprites)
-								{ w.DrawSprite(spr); }
+								foreach(IDrawable drw in drawables)
+								{ drw.Draw(w); }
 
 								Core.Video.Queue.Pump(w.ID);
 							}
@@ -68,7 +68,7 @@ namespace heng.Video
 					Windows = wnd;
 				}
 				else
-				{ Log.Error("couldn't construct VideoState: sprites collection is null"); }
+				{ Log.Error("couldn't construct VideoState: drawables collection is null"); }
 			}
 			else
 			{ Log.Error("couldn't construct VideoState: windows collection is null"); }

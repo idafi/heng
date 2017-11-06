@@ -147,29 +147,31 @@
 		}
 
 		/// <summary>
-		/// Draws a texture to the window.
+		/// Draws a polygon to the window, whose vertices consist of the given points.
 		/// </summary>
-		/// <param name="textureID">The ID of the texture.</param>
-		/// <param name="position">The position at which to draw the texture.</param>
-		/// <param name="rotation">The rotation, in degrees, with which to draw the texture.</param>
-		public void DrawTexture(int textureID, ScreenPoint position, float rotation)
+		/// <param name="points">The vertices of the polygon.</param>
+		/// <param name="color">The color of the polygon.</param>
+		public void DrawPolygon(ScreenPoint[] points, Color color)
 		{
-			if(textureID > -1)
-			{ Core.Video.Queue.DrawTexture(ID, textureID, position, rotation); }
-			else
-			{ Log.Warning("tried to draw invalid texture to window " + ID); }
+			if(points == null)
+			{
+				Log.Warning("tried to draw null array of ScreenPoints to window " + ID);
+				points = new ScreenPoint[0];
+			}
+
+			Core.Video.Queue.DrawPolygon(ID, color, points, points.Length);
 		}
 
 		/// <summary>
-		/// Draws a <see cref="Sprite"/> to the window.
-		/// <para>This is functionally equivalent to calling <see cref="Sprite"/>.<see cref="Sprite.Draw"/>
-		/// with this <see cref="Window"/> as an argument.</para>
+		/// Draws a <see cref="Texture"/> to the window.
 		/// </summary>
-		/// <param name="spr">The <see cref="Sprite"/> to draw.</param>
-		public void DrawSprite(Sprite spr)
+		/// <param name="tex">The <see cref="Texture"/> to draw.</param>
+		/// <param name="position">The position at which to draw the <see cref="Texture"/>.</param>
+		/// <param name="rotation">The number of degrees the <see cref="Texture"/> should be rotated before drawn.</param>
+		public void DrawTexture(Texture tex, ScreenPoint position, float rotation)
 		{
-			if(spr != null)
-			{ spr.Draw(this); }
+			if(tex != null)
+			{ tex.Draw(this.ID, position, rotation); }
 			else
 			{ Log.Warning("tried to draw null Sprite to window " + ID); }
 		}
