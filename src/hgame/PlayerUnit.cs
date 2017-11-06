@@ -11,6 +11,9 @@ namespace hgame
 		// pixels per second
 		const float speed = 150;
 
+		readonly Texture texture;
+		readonly Sound sound;
+
 		readonly int inputDevice;
 		readonly int rigidBody;
 		readonly int sprite;
@@ -20,19 +23,24 @@ namespace hgame
 		{
 			Assert.Ref(newState);
 
+			texture = new Texture("../../data/textest.bmp");
+			sound = new Sound("../../data/sto.ogg");
+
 			InputDevice device = new InputDevice();
 			device.RemapAxis("Horizontal", new ButtonAxis(new Key(KeyCode.Left), new Key(KeyCode.Right)));
 			device.RemapAxis("Vertical", new ButtonAxis(new Key(KeyCode.Down), new Key(KeyCode.Up)));
 			device.RemapButton("SoundTest", new Key(KeyCode.Space));
+			
+			WorldPoint pos = new WorldPoint(new Vector2(280 - 16, 100 - 16));
 
 			Polygon collider = new Polygon(new Vector2(0, 0), new Vector2(32, 0), new Vector2(32, 32), new Vector2(0, 32));
-			RigidBody body = new RigidBody(new Vector2(280 - 16, 100 - 16), new ConvexCollider(collider));
-			Sprite spr = new Sprite("../../data/textest.bmp", (ScreenPoint)(body.Position), 0);
+			RigidBody body = new RigidBody(pos, new ConvexCollider(collider));
+			Sprite spr = new Sprite(texture, pos, 0);
 			SoundSource src = new SoundSource(body.Position);
 
 			inputDevice = newState.AddInputDevice(device);
 			rigidBody = newState.AddRigidBody(body);
-			sprite = newState.AddSprite(spr);
+			sprite = newState.AddDrawable(spr);
 			soundSource = newState.AddSoundSource(src);
 		}
 	
@@ -41,10 +49,12 @@ namespace hgame
 			Assert.Ref(oldState, newState);
 
 			PlayerUnit oldUnit = oldState.PlayerUnit;
+			texture = oldUnit.texture;
+			sound = oldUnit.sound;
 
 			InputDevice device = oldState.Input.Devices[oldUnit.inputDevice];
 			RigidBody body = oldState.Physics.RigidBodies[oldUnit.rigidBody];
-			Sprite spr = oldState.Video.Sprites[oldUnit.sprite];
+			Sprite spr = (Sprite)(oldState.Video.Drawables[oldUnit.sprite]);
 			SoundSource src = oldState.Audio.SoundSources[oldUnit.soundSource];
 		
 			float x = device.GetAxisFrac("Horizontal");
@@ -54,11 +64,10 @@ namespace hgame
 			
 			inputDevice = newState.AddInputDevice(device);
 			rigidBody = newState.AddRigidBody(body.AddImpulse(move));
-			sprite = newState.AddSprite(new Sprite(spr, (ScreenPoint)(body.Position)));
+			sprite = newState.AddDrawable(spr.Reposition(body.Position));
 
 			if(device.GetButtonPressed("SoundTest"))
 			{
-				Sound sound = new Sound("../../data/sto.ogg");
 				SoundInstance instc = new SoundInstance(sound);
 
 				int instcID = newState.AddSoundInstance(instc);

@@ -15,7 +15,7 @@ namespace hgame
 		readonly List<RigidBody> rigidBodies;
 		readonly List<StaticBody> staticBodies;
 		
-		readonly List<Sprite> sprites;
+		readonly List<IDrawable> drawables;
 
 		readonly List<SoundSource> soundSources;
 		readonly List<SoundInstance> soundInstances;
@@ -27,7 +27,7 @@ namespace hgame
 			rigidBodies = new List<RigidBody>();
 			staticBodies = new List<StaticBody>();
 
-			sprites = new List<Sprite>();
+			drawables = new List<IDrawable>();
 
 			soundSources = new List<SoundSource>();
 			soundInstances = new List<SoundInstance>();
@@ -57,12 +57,12 @@ namespace hgame
 			return staticBodies.Count - 1;
 		}
 
-		public int AddSprite(Sprite spr)
+		public int AddDrawable(IDrawable drw)
 		{
-			Assert.Ref(spr);
+			Assert.Ref(drw);
 
-			sprites.Add(spr);
-			return sprites.Count - 1;
+			drawables.Add(drw);
+			return drawables.Count - 1;
 		}
 
 		public int AddSoundSource(SoundSource source)
@@ -114,16 +114,19 @@ namespace hgame
 		Window BuildWindow(Gamestate old)
 		{
 			const int windowID = 0;
+			Window w;
 
 			if(old == null)
 			{
 				ScreenRect wRect = new ScreenRect(Window.Center, Window.Center, 640, 480);
 				WindowFlags wFlags = WindowFlags.Shown;
 				RendererFlags rFlags = RendererFlags.Accelerated | RendererFlags.PresentVSync;
-				return new Window(windowID, "heng", wRect, wFlags, rFlags);
+				w = new Window(windowID, "heng", wRect, wFlags, rFlags);
 			}
 			else
-			{ return old.Video.Windows[windowID]; }
+			{ w = old.Video.Windows[windowID]; }
+
+			return w;
 		}
 
 		// TODO: what a nightmarish signature. all of this should be cleaned soon
@@ -134,10 +137,12 @@ namespace hgame
 			if(old != null)
 			{ soundInstances.AddRange(old.Audio.SoundInstances.Values); }
 
+			drawables.AddRange(DebugDrawSectors(5));
+
 			InputState input = new InputState(inputDevices);
 			PhysicsState physics = new PhysicsState(rigidBodies, staticBodies);
-			VideoState video = new VideoState(new Window[] { window }, sprites);
-			AudioState audio = new AudioState(soundInstances, soundSources, new Vector2(320, 240));
+			VideoState video = new VideoState(new Window[] { window }, drawables);
+			AudioState audio = new AudioState(soundInstances, soundSources, new WorldPoint(new Vector2(320, 240)));
 			TimeState time = old?.Time.Update(0) ?? new TimeState();
 
 			return new Gamestate(playerUnit, scenery, events, input, physics, video, audio, time);
@@ -150,10 +155,27 @@ namespace hgame
 			rigidBodies.Clear();
 			staticBodies.Clear();
 
-			sprites.Clear();
+			drawables.Clear();
 
 			soundSources.Clear();
 			soundInstances.Clear();
+		}
+
+		IEnumerable<IDrawable> DebugDrawSectors(int count)
+		{
+			for(int y = 0; y < count; y++)
+			{
+				WorldPoint start = new WorldPoint(0, y, Vector2.Zero);
+				WorldPoint end = new WorldPoint(count, y, Vector2.Zero);
+				yield return new LineDrawable(start, end, Color.Blue);
+			}
+
+			for(int x = 0; x < count; x++)
+			{
+				WorldPoint start = new WorldPoint(x, 0, Vector2.Zero);
+				WorldPoint end = new WorldPoint(x, count, Vector2.Zero);
+				yield return new LineDrawable(start, end, Color.Blue);
+			}
 		}
 	};
 }
