@@ -38,13 +38,13 @@ namespace hgame
 			Sprite spr = new Sprite(texture, pos, 0);
 			SoundSource src = new SoundSource(body.Position);
 
-			inputDevice = newState.AddInputDevice(device);
-			rigidBody = newState.AddRigidBody(body);
-			sprite = newState.AddDrawable(spr);
-			soundSource = newState.AddSoundSource(src);
+			inputDevice = newState.Input.AddDevice(device);
+			rigidBody = newState.Physics.AddRigidBody(body);
+			sprite = newState.Video.AddDrawable(spr);
+			soundSource = newState.Audio.AddSoundSource(src);
 		}
-	
-		public PlayerUnit(Gamestate oldState, GamestateBuilder newState)
+
+		PlayerUnit(Gamestate oldState, GamestateBuilder newState)
 		{
 			Assert.Ref(oldState, newState);
 
@@ -62,19 +62,23 @@ namespace hgame
 			float spd = speed * oldState.Time.Delta;
 			Vector2 move = new Vector2(x, y).ClampMagnitude(0, 1) * spd;
 			
-			inputDevice = newState.AddInputDevice(device);
-			rigidBody = newState.AddRigidBody(body.AddImpulse(move));
-			sprite = newState.AddDrawable(spr.Reposition(body.Position));
-
 			if(device.GetButtonPressed("SoundTest"))
 			{
 				SoundInstance instc = new SoundInstance(sound);
 
-				int instcID = newState.AddSoundInstance(instc);
+				int instcID = newState.Audio.AddSoundInstance(instc);
 				src = src.PlaySound(instc.ID);
 			}
 
-			soundSource = newState.AddSoundSource(src.Reposition(body.Position));
+			inputDevice = newState.Input.AddDevice(device);
+			rigidBody = newState.Physics.AddRigidBody(body.AddImpulse(move));
+			sprite = newState.Video.AddDrawable(spr.Reposition(body.Position));
+			soundSource = newState.Audio.AddSoundSource(src.Reposition(body.Position));
+		}
+
+		public PlayerUnit Update(Gamestate oldState, GamestateBuilder newState)
+		{
+			return new PlayerUnit(oldState, newState);
 		}
 	};
 }

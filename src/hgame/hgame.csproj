@@ -69,7 +69,13 @@
   <ItemGroup>
     <Compile Include="Game.cs" />
     <Compile Include="Gamestate.cs" />
-    <Compile Include="GamestateBuilder.cs" />
+    <Compile Include="GamestateBuilder\AudioStateBuilder.cs" />
+    <Compile Include="GamestateBuilder\EventsStateBuilder.cs" />
+    <Compile Include="GamestateBuilder\GamestateBuilder.cs" />
+    <Compile Include="GamestateBuilder\InputStateBuilder.cs" />
+    <Compile Include="GamestateBuilder\PhysicsStateBuilder.cs" />
+    <Compile Include="GamestateBuilder\TimeStateBuilder.cs" />
+    <Compile Include="GamestateBuilder\VideoStateBuilder.cs" />
     <Compile Include="PlayerUnit.cs" />
     <Compile Include="Scenery.cs" />
   </ItemGroup>

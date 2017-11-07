@@ -45,6 +45,7 @@ namespace hgame
 
 				builder = new GamestateBuilder();
 				gamestate = builder.Build(null);
+				builder.Clear();
 
 				return true;
 			}
@@ -60,6 +61,7 @@ namespace hgame
 		static void Frame()
 		{
 			gamestate = builder.Build(gamestate);
+			builder.Clear();
 		}
 
 		static int Quit(int code)

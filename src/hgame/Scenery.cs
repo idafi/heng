@@ -23,11 +23,11 @@ namespace hgame
 			StaticBody body = new StaticBody(pos, new ConvexCollider(collider));
 			Sprite spr = new Sprite(texture, pos, 0);
 
-			staticBody = newState.AddStaticBody(body);
-			sprite = newState.AddDrawable(spr);
+			staticBody = newState.Physics.AddStaticBody(body);
+			sprite = newState.Video.AddDrawable(spr);
 		}
 
-		public Scenery(Gamestate oldState, GamestateBuilder newState)
+		Scenery(Gamestate oldState, GamestateBuilder newState)
 		{
 			Assert.Ref(oldState, newState);
 
@@ -37,8 +37,13 @@ namespace hgame
 			StaticBody body = oldState.Physics.StaticBodies[oldScenery.staticBody];
 			Sprite spr = (Sprite)(oldState.Video.Drawables[oldScenery.sprite]);
 
-			staticBody = newState.AddStaticBody(body);
-			sprite = newState.AddDrawable(spr);
+			staticBody = newState.Physics.AddStaticBody(body);
+			sprite = newState.Video.AddDrawable(spr);
+		}
+
+		public Scenery Update(Gamestate oldState, GamestateBuilder newState)
+		{
+			return new Scenery(oldState, newState);
 		}
 	};
 }
