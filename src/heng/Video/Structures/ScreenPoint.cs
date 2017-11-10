@@ -1,4 +1,6 @@
-﻿namespace heng.Video
+﻿using System;
+
+namespace heng.Video
 {
 	/// <summary>
 	/// Represents an integer-based, 2-dimensional pixel position.
@@ -69,7 +71,8 @@
 		/// <para>This is a float-to-int conversion, so expect data loss.</para>
 		/// </summary>
 		/// <param name="v">The <see cref="Vector2"/> to convert to a <see cref="ScreenPoint"/>.</param>
-		public static explicit operator ScreenPoint(Vector2 v) => new ScreenPoint((int)(v.X), (int)(v.Y));
+		public static explicit operator ScreenPoint(Vector2 v) =>
+			new ScreenPoint(HMath.RoundToInt(v.X), HMath.RoundToInt(v.Y));
 	
 		/// <inheritdoc />
 		public override bool Equals(object obj) => base.Equals(obj);
