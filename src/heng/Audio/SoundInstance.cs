@@ -2,24 +2,14 @@
 {
 	/// <summary>
 	/// Represents a paused or playing instance of a <see cref="heng.Audio.Sound"/> resource.
-	/// <para><see cref="SoundInstance"/>s are used with <see cref="SoundSource"/>s to construct
-	/// the <see cref="AudioState"/> for a frame. The <see cref="SoundInstance"/> thus provides a unique
-	/// <see cref="ID"/>, allowing you to read and carry over the <see cref="SoundInstance"/> from a previous
-	/// frame's <see cref="AudioState"/>.</para>
+	/// <para><see cref="SoundInstance"/>s are internally managed by <see cref="SoundSource"/>s and the
+	/// <see cref="AudioState"/>. You can't manipulate them yourself, but you can still read relevant
+	/// data, such as their total <see cref="Progress"/>.</para>
 	/// Once the <see cref="SoundInstance"/> has finished playing, the <see cref="AudioState"/> will automatically
-	/// filter it out when constructing the frame. Futher operations on the same <see cref="ID"/> will no longer be valid.
+	/// filter it out when constructing its parent <see cref="SoundSource"/>.
 	/// </summary>
 	public class SoundInstance
 	{
-		static int nextID;
-
-		/// <summary>
-		/// The unique ID for this <see cref="SoundInstance"/>.
-		/// <para>This is a key used to retrieve this <see cref="SoundInstance"/> from the <see cref="AudioState"/>'s
-		/// <see cref="AudioState.SoundInstances"/> collection.</para>
-		/// </summary>
-		public readonly int ID;
-		
 		/// <summary>
 		/// The <see cref="Sound"/> resource from which this <see cref="SoundInstance"/> was created.
 		/// </summary>
@@ -43,38 +33,28 @@
 		/// </summary>
 		public readonly Vector2 ListenerOffset;
 		
-		/// <summary>
-		/// Creates a new <see cref="SoundInstance"/> using the given <see cref="Sound"/> resource.
-		/// </summary>
-		/// <param name="sound">The <see cref="Sound"/> resource used to construct the new <see cref="SoundInstance"/>.</param>
-		public SoundInstance(Sound sound)
+		internal SoundInstance(Sound sound)
 		{
-			if(sound != null)
+			Assert.Ref(sound);
+
+			Channel = Core.Audio.Mixer.Channels.GetNextFreeChannel();
+			if(Channel > -1)
 			{
-				Channel = Core.Audio.Mixer.Channels.GetNextFreeChannel();
-				if(Channel > -1)
-				{
-					ID = nextID++;
-					Sound = sound;
+				Sound = sound;
 
-					Progress = 0;
-					ListenerOffset = Vector2.Zero;
+				Progress = 0;
+				ListenerOffset = Vector2.Zero;
 
-					Sound.PlayOn(Channel);
-				}
-				else
-				{ Log.Error("couldn't construct SoundInstance: no free mixer channels"); }
+				Sound.PlayOn(Channel);
 			}
 			else
-			{ Log.Error("couldn't construct SoundInstance: source Sound is null"); }
+			{ Log.Error("couldn't construct SoundInstance: no free mixer channels"); }
 		}
 		
-		SoundInstance(int id, Sound sound, int channel, float progress, Vector2 offset)
+		SoundInstance(Sound sound, int channel, float progress, Vector2 offset)
 		{
 			Assert.Ref(sound);
 			Assert.Index(channel, Core.Audio.Mixer.Channels.AUDIO_MIXER_CHANNELS_MAX);
-
-			ID = id;
 			
 			Sound = sound;
 			Channel = channel;
@@ -83,15 +63,9 @@
 			ListenerOffset = offset;
 		}
 		
-		/// <summary>
-		/// Repositions the <see cref="SoundInstance"/>'s listener offset.
-		/// </summary>
-		/// <param name="offset">The pixel-space offset of this <see cref="SoundInstance"/> relative to the
-		/// <see cref="AudioState"/>'s <see cref="AudioState.ListenerPosition"/>.</param>
-		/// <returns>A new <see cref="SoundInstance"/>, identical to this, repositioned at the new offset.</returns>
-		public SoundInstance Reposition(Vector2 offset)
+		internal SoundInstance Reposition(Vector2 offset)
 		{
-			return new SoundInstance(ID, Sound, Channel, Progress, offset);
+			return new SoundInstance(Sound, Channel, Progress, offset);
 		}
 		
 		internal SoundInstance Update(Core.Audio.Mixer.Channels.MixerChannel channelState)
@@ -106,7 +80,7 @@
 			else
 			{ Core.Audio.Mixer.Channels.SetSound(Channel, -1); }
 
-			return new SoundInstance(ID, Sound, Channel, progress, ListenerOffset);
+			return new SoundInstance(Sound, Channel, progress, ListenerOffset);
 		}
 	};
 }

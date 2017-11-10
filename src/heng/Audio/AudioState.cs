@@ -4,18 +4,13 @@ namespace heng.Audio
 {
 	/// <summary>
 	/// Represents an immutable snapshot of the audio system's current state.
-	/// <para>Each frame, <see cref="SoundInstance"/>s are attached to <see cref="SoundSource"/>s,
-	/// which are then automatically played, and attenuated relative to the <see cref="ListenerPosition"/>.</para>
-	/// Each extant <see cref="SoundInstance"/> should be carried over to new <see cref="AudioState"/> snapshots;
-	/// any instances that expire will then automatically be culled from the new state.
+	/// <para>Each frame, <see cref="Sound"/>s attached to <see cref="SoundSource"/>s -- via internally-managed
+	/// <see cref="SoundInstance"/>s -- are automatically played, and attenuated relative to the <see cref="ListenerPosition"/>.</para>
+	/// <see cref="SoundSource"/>s from previous <see cref="AudioState"/> instances need to be carried over to new state instnaces,
+	/// or they won't continue playing! When doing so, finished sounds will automatically be culled from their parent <see cref="SoundSource"/>s.
 	/// </summary>
 	public class AudioState
 	{
-		/// <summary>
-		/// All <see cref="SoundInstance"/>s currently paused or playing.
-		/// </summary>
-		public readonly IReadOnlyDictionary<int, SoundInstance> SoundInstances;
-
 		/// <summary>
 		/// All available <see cref="SoundSource"/>s.
 		/// </summary>
@@ -29,74 +24,42 @@ namespace heng.Audio
 		public readonly WorldPoint ListenerPosition;
 
 		/// <summary>
-		/// Constructs a new <see cref="AudioState"/> using the given elements.
+		/// Constructs a new <see cref="AudioState"/>.
 		/// </summary>
-		/// <param name="instances">
-		/// All <see cref="SoundInstance"/>s currently paused or playing.
-		/// <para>Don't forget to include the last <see cref="AudioState"/>'s <see cref="SoundInstance"/>s, or they
-		/// won't continue playing as the new state is constructed.</para>
-		/// </param>
 		/// <param name="sources">All <see cref="SoundSource"/>s available to the new state.</param>
 		/// <param name="listener">The world-space position from which <see cref="SoundSource"/>s are heard.</param>
-		public AudioState(IEnumerable<SoundInstance> instances, IEnumerable<SoundSource> sources, WorldPoint listener)
+		public AudioState(IEnumerable<SoundSource> sources, WorldPoint listener)
 		{
-			if(instances != null)
+			ListenerPosition = listener;
+			SoundSources = AddSources(sources);
+
+			Core.Audio.PushSound();
+		}
+
+		IReadOnlyList<SoundSource> AddSources(IEnumerable<SoundSource> sources)
+		{
+			if(sources != null)
 			{
-				if(sources != null)
+				List<SoundSource> newSources = new List<SoundSource>();
+				Core.Audio.GetSnapshot(out Core.Audio.State coreState);
+
+				foreach(SoundSource source in sources)
 				{
-					List<SoundSource> newSources = new List<SoundSource>();
-					Dictionary<int, SoundInstance> newInstances = new Dictionary<int, SoundInstance>();
-					ListenerPosition = listener;
-
-					Core.Audio.GetSnapshot(out Core.Audio.State coreState);
-
-					foreach(SoundInstance instc in instances)
+					if(source != null)
 					{
-						if(instc != null)
-						{
-							ref Core.Audio.Mixer.Channels.MixerChannel ch = ref coreState.Mixer.Channels.Channels[instc.Channel];
-							SoundInstance newInstc = instc.Update(ch);
-
-							if(newInstc.Progress < 1)
-							{ newInstances.Add(newInstc.ID, newInstc); }
-						}
-						else
-						{ Log.Error("couldn't add SoundInstance to AudioState: instance is null"); }
+						SoundSource newSource = source.UpdateInstances(ListenerPosition, coreState.Mixer.Channels);
+						newSources.Add(newSource);
 					}
-
-					foreach(SoundSource source in sources)
-					{
-						if(source != null)
-						{
-							SoundSource newSource = source;
-
-							foreach(int instanceID in source.SoundInstances)
-							{
-								if(newInstances.TryGetValue(instanceID, out SoundInstance instc))
-								{
-									Vector2 offset = source.Position.PixelDistance(ListenerPosition);
-									newInstances[instanceID] = instc.Reposition(offset);
-								}
-								else
-								{ newSource = source.StopSound(instanceID); }
-							}
-
-							newSources.Add(source);
-						}
-						else
-						{ Log.Error("couldn't add SoundSource to AudioState: source is null"); }
-					}
-
-					SoundSources = newSources;
-					SoundInstances = newInstances;
-
-					Core.Audio.PushSound();
+					else
+					{ Log.Error("couldn't add SoundSource to AudioState: source is null"); }
 				}
-				else
-				{ Log.Error("couldn't construct AudioState: sources collection is null"); }
+
+				return newSources;
 			}
 			else
-			{ Log.Error("couldn't construct AudioState: instances collection is null"); }
+			{ Log.Warning("AudioState constructed with null sources collection"); }
+
+			return new SoundSource[0];
 		}
 	};
 }

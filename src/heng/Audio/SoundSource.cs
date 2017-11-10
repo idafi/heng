@@ -3,7 +3,7 @@
 namespace heng.Audio
 {
 	/// <summary>
-	/// Represents a pixel-space source from which <see cref="SoundInstance"/>s can be heard
+	/// Represents a world-space source from which <see cref="Sound"/>s can be heard
 	/// by the <see cref="AudioState"/>'s <see cref="AudioState.ListenerPosition"/>.
 	/// </summary>
 	public class SoundSource
@@ -14,23 +14,23 @@ namespace heng.Audio
 		public readonly WorldPoint Position;
 
 		/// <summary>
-		/// All <see cref="SoundInstance"/> IDs currently playing from this <see cref="SoundSource"/>.
-		/// <para>The <see cref="AudioState"/> will automatically remove expired instances from this
-		/// list when constructed.</para>
+		/// All <see cref="SoundInstance"/>s currently playing from this <see cref="SoundSource"/>.
+		/// <para>Expired instances will automatically be removed from this list when the <see cref="SoundSource"/>
+		/// is constructed into the <see cref="AudioState"/>.</para>
 		/// </summary>
-		public readonly IReadOnlyList<int> SoundInstances;
+		public readonly IReadOnlyList<SoundInstance> SoundInstances;
 		
 		/// <summary>
-		/// Creates a new <see cref="SoundSource"/> at the given pixel-space position.
+		/// Creates a new <see cref="SoundSource"/> at the given world-space position.
 		/// </summary>
 		/// <param name="position">The world-space position at which to locate the new <see cref="SoundSource"/>.</param>
 		public SoundSource(WorldPoint position)
 		{
 			Position = position;
-			SoundInstances = new int[0];
+			SoundInstances = new SoundInstance[0];
 		}
 		
-		SoundSource(WorldPoint position, IReadOnlyList<int> instances)
+		SoundSource(WorldPoint position, IReadOnlyList<SoundInstance> instances)
 		{
 			Assert.Ref(instances);
 
@@ -40,7 +40,7 @@ namespace heng.Audio
 		
 		/// <summary>
 		/// Moves the <see cref="SoundSource"/> to the given world-space position, preserving all
-		/// sound instances.
+		/// <see cref="SoundInstance"/>s.
 		/// </summary>
 		/// <param name="position">The new position for the <see cref="SoundSource"/>.</param>
 		/// <returns>A new <see cref="SoundSource"/> at the new position.</returns>
@@ -50,32 +50,42 @@ namespace heng.Audio
 		}
 		
 		/// <summary>
-		/// Attaches a <see cref="SoundInstance"/> <see cref="SoundInstance.ID"/> to this <see cref="SoundSource"/>, allowing it
-		/// to be played and automatically attuned from the <see cref="SoundSource"/>'s <see cref="Position"/>.
+		/// Plays the given <see cref="Sound"/> on this <see cref="SoundSource"/>.
+		/// <para>A new <see cref="SoundInstance"/> using this <see cref="Sound"/> will be created and internally
+		/// managed. It'll then be automatically discarded when expired.</para>
 		/// </summary>
-		/// <param name="instance">The <see cref="SoundInstance"/>'s unique <see cref="SoundInstance.ID"/>.</param>
-		/// <returns>A new <see cref="SoundSource"/>, with the new instance's ID attached.</returns>
-		public SoundSource PlaySound(int instance)
+		/// <param name="sound">The <see cref="Sound"/> from which to create a new <see cref="SoundInstance"/>.</param>
+		/// <returns>A new <see cref="SoundSource"/>, playing the sound through a new <see cref="SoundInstance"/>.</returns>
+		public SoundSource PlaySound(Sound sound)
 		{
-			int[] instances = new int[SoundInstances.Count + 1];
-			instances[instances.Length - 1] = instance;
+			if(sound != null)
+			{
+				List<SoundInstance> instances = new List<SoundInstance>(SoundInstances);
+				instances.Add(new SoundInstance(sound));
+
+				return new SoundSource(Position, instances);
+			}
 			
-			return new SoundSource(Position, instances);
+			return this;
 		}
-		
-		/// <summary>
-		/// Stops a currently playing <see cref="SoundInstance"/>, detaching it from this <see cref="SoundSource"/>.
-		/// <para>If the same <see cref="SoundInstance"/> is still playing on another <see cref="SoundSource"/> for some
-		/// reason, it will continue to do so.</para>
-		/// </summary>
-		/// <param name="instance">The unique <see cref="SoundInstance.ID"/> of the <see cref="SoundInstance"/> to detach.</param>
-		/// <returns>A new <see cref="SoundSource"/>, with the instance's ID detached.</returns>
-		public SoundSource StopSound(int instance)
+
+		internal SoundSource UpdateInstances(WorldPoint listenerPos, Core.Audio.Mixer.Channels.State channelState)
 		{
-			List<int> instances = new List<int>(SoundInstances);
-			instances.Remove(instance);
-			
-			return new SoundSource(Position, instances);
+			List<SoundInstance> newInstances = new List<SoundInstance>();
+			foreach(SoundInstance instc in SoundInstances)
+			{
+				SoundInstance newInstc = instc.Update(channelState.Channels[instc.Channel]);
+
+				if(newInstc.Progress < 1)
+				{
+					Vector2 newOffset = Position.PixelDistance(listenerPos);
+					newInstc = newInstc.Reposition(newOffset);
+
+					newInstances.Add(newInstc);
+				}
+			}
+
+			return new SoundSource(Position, newInstances);
 		}
 	};
 };
