@@ -9,13 +9,11 @@ namespace hgame
 		public class AudioStateBuilder
 		{
 			readonly List<SoundSource> soundSources;
-			readonly List<SoundInstance> soundInstances;
 			WorldPoint listenerPos;
 
 			public AudioStateBuilder()
 			{
 				soundSources = new List<SoundSource>();
-				soundInstances = new List<SoundInstance>();
 			}
 
 			public int AddSoundSource(SoundSource source)
@@ -26,14 +24,6 @@ namespace hgame
 				return soundSources.Count - 1;
 			}
 
-			public int AddSoundInstance(SoundInstance instc)
-			{
-				Assert.Ref(instc);
-
-				soundInstances.Add(instc);
-				return instc.ID;
-			}
-
 			public void SetListenerPosition(WorldPoint position)
 			{
 				listenerPos = position;
@@ -41,16 +31,12 @@ namespace hgame
 
 			public AudioState Build(AudioState old)
 			{
-				if(old != null)
-				{ soundInstances.AddRange(old.SoundInstances.Values); }
-
-				return new AudioState(soundInstances, soundSources, listenerPos);
+				return new AudioState(soundSources, listenerPos);
 			}
 
 			public void Clear()
 			{
 				soundSources.Clear();
-				soundInstances.Clear();
 			}
 		};
 	};

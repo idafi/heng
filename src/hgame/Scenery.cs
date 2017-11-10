@@ -53,12 +53,7 @@ namespace hgame
 			SoundSource src = oldState.Audio.SoundSources[oldScenery.soundSource];
 
 			if(device.GetButtonPressed("SoundTest"))
-			{
-				SoundInstance instc = new SoundInstance(sound);
-
-				int instcID = newState.Audio.AddSoundInstance(instc);
-				src = src.PlaySound(instc.ID);
-			}
+			{ src = src.PlaySound(sound); }
 
 			inputDevice = newState.Input.AddDevice(device);
 			staticBody = newState.Physics.AddStaticBody(body);
