@@ -10,6 +10,7 @@ namespace hgame
 		{
 			readonly List<SoundSource> soundSources;
 			readonly List<SoundInstance> soundInstances;
+			WorldPoint listenerPos;
 
 			public AudioStateBuilder()
 			{
@@ -33,12 +34,17 @@ namespace hgame
 				return instc.ID;
 			}
 
+			public void SetListenerPosition(WorldPoint position)
+			{
+				listenerPos = position;
+			}
+
 			public AudioState Build(AudioState old)
 			{
 				if(old != null)
 				{ soundInstances.AddRange(old.SoundInstances.Values); }
 
-				return new AudioState(soundInstances, soundSources, new WorldPoint(new Vector2(320, 240)));
+				return new AudioState(soundInstances, soundSources, listenerPos);
 			}
 
 			public void Clear()
