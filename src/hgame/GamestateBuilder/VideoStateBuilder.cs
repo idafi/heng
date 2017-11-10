@@ -11,6 +11,7 @@ namespace hgame
 			const int windowID = 0;
 
 			readonly List<IDrawable> drawables;
+			Camera camera;
 
 			public VideoStateBuilder()
 			{
@@ -25,17 +26,34 @@ namespace hgame
 				return drawables.Count - 1;
 			}
 
+			public void SetCamera(Camera c)
+			{
+				Assert.Ref(c);
+
+				if(camera != null)
+				{ Log.Warning("VideoStateBuilder: a new camera was set even though an existing camera was already set"); }
+
+				camera = c;
+			}
+
 			public VideoState Build(VideoState old)
 			{
 				Window w = old?.Windows[windowID] ?? BuildWindow();
 				drawables.AddRange(DebugDrawSectors(5));
 
-				return new VideoState(new Window[] { w }, drawables);
+				if(camera == null)
+				{
+					Log.Warning("VideoStateBuilder: no camera was set; using default camera at world origin");
+					camera = new Camera(WorldPoint.Zero);
+				}
+
+				return new VideoState(new Window[] { w }, drawables, camera);
 			}
 
 			public void Clear()
 			{
 				drawables.Clear();
+				camera = null;
 			}
 
 			Window BuildWindow()

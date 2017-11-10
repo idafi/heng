@@ -42,6 +42,8 @@ namespace hgame
 			rigidBody = newState.Physics.AddRigidBody(body);
 			sprite = newState.Video.AddDrawable(spr);
 			soundSource = newState.Audio.AddSoundSource(src);
+
+			newState.Video.SetCamera(new Camera(body.Position));
 		}
 
 		PlayerUnit(Gamestate oldState, GamestateBuilder newState)
@@ -74,6 +76,11 @@ namespace hgame
 			rigidBody = newState.Physics.AddRigidBody(body.AddImpulse(move));
 			sprite = newState.Video.AddDrawable(spr.Reposition(body.Position));
 			soundSource = newState.Audio.AddSoundSource(src.Reposition(body.Position));
+
+			Window window = oldState.Video.Windows[0];
+			Vector2 centerOffset = new Vector2(window.Rect.W / 2, window.Rect.H / 2);
+			WorldPoint cameraPos = body.Position.PixelTranslate(-centerOffset);
+			newState.Video.SetCamera(new Camera(cameraPos));
 		}
 
 		public PlayerUnit Update(Gamestate oldState, GamestateBuilder newState)
