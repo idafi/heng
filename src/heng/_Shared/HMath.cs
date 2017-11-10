@@ -148,6 +148,26 @@ namespace heng
 		}
 
 		/// <summary>
+		/// Single-precision float wrapper around <see cref="Math.Round(double)"/>.
+		/// </summary>
+		/// <param name="f">The float to round.</param>
+		/// <returns>The rounded float.</returns>
+		public static float Round(float f)
+		{
+			return Convert.ToSingle(Math.Round(f));
+		}
+
+		/// <summary>
+		/// Single-precision float wrapper around <see cref="Math.Round(double)"/>, that returns as int.
+		/// </summary>
+		/// <param name="f">The float to round.</param>
+		/// <returns>The rounded float, as an int.</returns>
+		public static int RoundToInt(float f)
+		{
+			return Convert.ToInt32(Math.Round(f));
+		}
+
+		/// <summary>
 		/// Single-precision float wrapper around <see cref="Math.Sqrt(double)"/>.
 		/// </summary>
 		/// <param name="f">The float to sqrt.</param>
