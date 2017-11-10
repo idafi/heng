@@ -27,9 +27,9 @@
 		}
 
 		/// <inheritdoc />
-		public void Draw(Window window)
+		public void Draw(Window window, Camera camera)
 		{
-			ScreenPoint pixelPos = (ScreenPoint)(Position.PixelPosition);
+			ScreenPoint pixelPos = camera.WorldToViewportPosition(Position);
 			
 			window.DrawPoint(pixelPos, Color);
 		}

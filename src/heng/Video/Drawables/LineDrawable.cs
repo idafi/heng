@@ -34,10 +34,10 @@
 		}
 
 		/// <inheritdoc />
-		public void Draw(Window window)
+		public void Draw(Window window, Camera camera)
 		{
-			ScreenPoint pixelStart = (ScreenPoint)(Start.PixelPosition);
-			ScreenPoint pixelEnd = (ScreenPoint)(End.PixelPosition);
+			ScreenPoint pixelStart = camera.WorldToViewportPosition(Start);
+			ScreenPoint pixelEnd = camera.WorldToViewportPosition(End);
 			
 			window.DrawLine(new ScreenLine(pixelStart, pixelEnd), Color);
 		}

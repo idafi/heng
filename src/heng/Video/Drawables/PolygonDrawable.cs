@@ -34,11 +34,14 @@
 		}
 
 		/// <inheritdoc />
-		public void Draw(Window window)
+		public void Draw(Window window, Camera camera)
 		{
 			ScreenPoint[] points = new ScreenPoint[Polygon.Points.Count];
 			for(int i = 0; i < points.Length; i++)
-			{ points[i] = (ScreenPoint)(Polygon.Points[i] + Position.PixelPosition); }
+			{
+				WorldPoint pointPos = Position.PixelTranslate(Polygon.Points[i]);
+				points[i] = camera.WorldToViewportPosition(pointPos);
+			}
 
 			window.DrawPolygon(points, Color);
 		}

@@ -110,6 +110,7 @@
     <Compile Include="Physics\RigidBody.cs" />
     <Compile Include="Physics\StaticBody.cs" />
     <Compile Include="Time\TimeState.cs" />
+    <Compile Include="Video\Camera.cs" />
     <Compile Include="Video\Drawables\IDrawable.cs" />
     <Compile Include="Video\Drawables\LineDrawable.cs" />
     <Compile Include="Video\Drawables\PointDrawable.cs" />

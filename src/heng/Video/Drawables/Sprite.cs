@@ -47,11 +47,11 @@
 		}
 		
 		/// <inheritdoc />
-		public void Draw(Window window)
+		public void Draw(Window window, Camera camera)
 		{
 			Assert.Ref(window);
 
-			ScreenPoint pixelPos = (ScreenPoint)(Position.PixelPosition);
+			ScreenPoint pixelPos = camera.WorldToViewportPosition(Position);
 			window.DrawTexture(Texture, pixelPos, Rotation);
 		}
 	};
