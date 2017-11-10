@@ -63,7 +63,7 @@ namespace hgame
 
 			Window window = oldState.Video.Windows[0];
 			Vector2 centerOffset = new Vector2(window.Rect.W / 2, window.Rect.H / 2);
-			WorldPoint cameraPos = body.Position.PixelTranslate(-centerOffset);
+			WorldPoint cameraPos = body.Position.PixelTranslate(-centerOffset + new Vector2(16, 16));
 			newState.Video.SetCamera(new Camera(cameraPos));
 		}
 
