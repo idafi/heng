@@ -36,55 +36,82 @@ namespace heng.Video
 		/// <param name="camera">The <see cref="Video.Camera"/> used for drawing.</param>
 		public VideoState(IEnumerable<Window> windows, IEnumerable<IDrawable> drawables, Camera camera)
 		{
+			Windows = AddWindows(windows);
+			Camera = AddCamera(camera);
+			Drawables = AddDrawables(drawables);
+		}
+
+		IReadOnlyList<Window> AddWindows(IEnumerable<Window> windows)
+		{
 			if(windows != null)
 			{
-				if(drawables != null)
+				List<Window> wnd = new List<Window>();
+				Core.Video.GetSnapshot(out Core.Video.State coreState);
+
+				foreach(Window w in windows)
 				{
-					if(camera != null)
+					if(w != null)
 					{
-						Core.Video.GetSnapshot(out Core.Video.State coreState);
-
-						List<Window> wnd = new List<Window>();
-						Drawables = new List<IDrawable>(drawables);
-
-						Camera = camera;
-
-						foreach(Window w in windows)
+						if(w.ID > -1 && w.ID < Core.Video.Windows.Max)
 						{
-							if(w != null)
-							{
-								if(w.ID > -1 && w.ID < Core.Video.Windows.Max)
-								{
-									wnd.Add(w);
+							wnd.Add(w);
 
-									// open the window if it's not yet open
-									if(coreState.Windows.WindowInfo[w.ID].ID < 0)
-									{ Core.Video.Windows.OpenWindow(w.ID, w.Title, w.Rect, (UInt32)(w.WindowFlags), (UInt32)(w.RendererFlags)); }
-
-									w.Clear(Color.White);
-
-									foreach(IDrawable drw in drawables)
-									{ drw.Draw(w, Camera); }
-
-									Core.Video.Queue.Pump(w.ID);
-								}
-								else
-								{ Log.Error($"can't use window with ID {w.ID}: ID is invalid"); }
-							}
-							else
-							{ Log.Error("couldn't add Window to VideoState: window is null"); }
+							// open the window if it's not yet open
+							if(coreState.Windows.WindowInfo[w.ID].ID < 0)
+							{ Core.Video.Windows.OpenWindow(w.ID, w.Title, w.Rect, (UInt32)(w.WindowFlags), (UInt32)(w.RendererFlags)); }
 						}
-
-						Windows = wnd;
+						else
+						{ Log.Error($"can't use window with ID {w.ID}: ID is invalid"); }
 					}
 					else
-					{ Log.Error("couldn't construct VideoState: camera is null"); }
+					{ Log.Error("couldn't add Window to VideoState: window is null"); }
 				}
-				else
-				{ Log.Error("couldn't construct VideoState: drawables collection is null"); }
+
+				return wnd;
 			}
 			else
-			{ Log.Error("couldn't construct VideoState: windows collection is null"); }
+			{ Log.Warning("VideoState constructed with null windows collection"); }
+
+			return new Window[0];
+		}
+
+		IReadOnlyList<IDrawable> AddDrawables(IEnumerable<IDrawable> drawables)
+		{
+			if(drawables != null)
+			{
+				List<IDrawable> drw = new List<IDrawable>(drawables);
+				int rm = drw.RemoveAll(d => d == null);
+
+				if(rm > 0)
+				{ Log.Warning($"removed {rm} null IDrawable objects from VideoState"); }
+
+				foreach(Window w in Windows)
+				{
+					w.Clear(Color.White);
+
+					foreach(IDrawable d in drawables)
+					{ d.Draw(w, Camera); }
+
+					Core.Video.Queue.Pump(w.ID);
+
+					return drw;
+				}
+			}
+			else
+			{ Log.Warning("VideoState constructed with null drawables collection"); }
+
+			return new IDrawable[0];
+		}
+
+		Camera AddCamera(Camera camera)
+		{
+			if(camera == null)
+			{
+				Log.Warning("VideoState constructed with null Camera");
+				camera = new Camera(WorldPoint.Zero);
+			}
+
+			return camera;
 		}
 	};
 }
