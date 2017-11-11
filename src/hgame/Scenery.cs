@@ -26,7 +26,7 @@ namespace hgame
 			InputDevice device = new InputDevice();
 			device.RemapButton("SoundTest", new Key(KeyCode.Space));
 
-			WorldPoint pos = new WorldPoint(new Vector2(320 - 16, 240 - 16));
+			WorldPoint pos = new WorldPoint(new Vector2(340 - 16, 260 - 16));
 
 			Polygon collider = new Polygon(new Vector2(0, 0), new Vector2(32, 0), new Vector2(32, 32), new Vector2(0, 32));
 			StaticBody body = new StaticBody(pos, new ConvexCollider(collider));
@@ -34,7 +34,7 @@ namespace hgame
 			SoundSource src = new SoundSource(body.Position);
 
 			inputDevice = newState.Input.AddDevice(device);
-			staticBody = newState.Physics.AddStaticBody(body);
+			staticBody = newState.Physics.AddPhysicsObject(body);
 			sprite = newState.Video.AddDrawable(spr);
 			soundSource = newState.Audio.AddSoundSource(src);
 		}
@@ -48,7 +48,7 @@ namespace hgame
 			sound = oldScenery.sound;
 
 			InputDevice device = oldState.Input.Devices[oldScenery.inputDevice];
-			StaticBody body = oldState.Physics.StaticBodies[oldScenery.staticBody];
+			StaticBody body = (StaticBody)(oldState.Physics.PhysicsObjects[oldScenery.staticBody]);
 			Sprite spr = (Sprite)(oldState.Video.Drawables[oldScenery.sprite]);
 			SoundSource src = oldState.Audio.SoundSources[oldScenery.soundSource];
 
@@ -56,7 +56,7 @@ namespace hgame
 			{ src = src.PlaySound(sound); }
 
 			inputDevice = newState.Input.AddDevice(device);
-			staticBody = newState.Physics.AddStaticBody(body);
+			staticBody = newState.Physics.AddPhysicsObject(body);
 			sprite = newState.Video.AddDrawable(spr);
 			soundSource = newState.Audio.AddSoundSource(src);
 		}

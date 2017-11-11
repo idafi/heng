@@ -8,40 +8,29 @@ namespace hgame
 	{
 		public class PhysicsStateBuilder
 		{
-			readonly List<RigidBody> rigidBodies;
-			readonly List<StaticBody> staticBodies;
+			readonly List<IPhysicsObject> physicsObjects;
 
 			public PhysicsStateBuilder()
 			{
-				rigidBodies = new List<RigidBody>();
-				staticBodies = new List<StaticBody>();
+				physicsObjects = new List<IPhysicsObject>();
 			}
 
-			public int AddRigidBody(RigidBody body)
+			public int AddPhysicsObject(IPhysicsObject obj)
 			{
-				Assert.Ref(body);
+				Assert.Ref(obj);
 
-				rigidBodies.Add(body);
-				return rigidBodies.Count - 1;
-			}
-
-			public int AddStaticBody(StaticBody body)
-			{
-				Assert.Ref(body);
-
-				staticBodies.Add(body);
-				return staticBodies.Count - 1;
+				physicsObjects.Add(obj);
+				return physicsObjects.Count - 1;
 			}
 
 			public PhysicsState Build()
 			{
-				return new PhysicsState(rigidBodies, staticBodies);
+				return new PhysicsState(physicsObjects);
 			}
 
 			public void Clear()
 			{
-				rigidBodies.Clear();
-				staticBodies.Clear();
+				physicsObjects.Clear();
 			}
 		};
 	};

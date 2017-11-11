@@ -33,7 +33,7 @@ namespace hgame
 			Sprite spr = new Sprite(texture, pos, 0);
 
 			inputDevice = newState.Input.AddDevice(device);
-			rigidBody = newState.Physics.AddRigidBody(body);
+			rigidBody = newState.Physics.AddPhysicsObject(body);
 			sprite = newState.Video.AddDrawable(spr);
 			newState.Audio.SetListenerPosition(body.Position);
 
@@ -48,7 +48,7 @@ namespace hgame
 			texture = oldUnit.texture;
 
 			InputDevice device = oldState.Input.Devices[oldUnit.inputDevice];
-			RigidBody body = oldState.Physics.RigidBodies[oldUnit.rigidBody];
+			RigidBody body = (RigidBody)(oldState.Physics.PhysicsObjects[oldUnit.rigidBody]);
 			Sprite spr = (Sprite)(oldState.Video.Drawables[oldUnit.sprite]);
 
 			float x = device.GetAxisFrac("Horizontal");
@@ -57,7 +57,7 @@ namespace hgame
 			Vector2 move = new Vector2(x, y).ClampMagnitude(0, 1) * spd;
 
 			inputDevice = newState.Input.AddDevice(device);
-			rigidBody = newState.Physics.AddRigidBody(body.AddImpulse(move));
+			rigidBody = newState.Physics.AddPhysicsObject(body.AddImpulse(move));
 			sprite = newState.Video.AddDrawable(spr.Reposition(body.Position));
 			newState.Audio.SetListenerPosition(body.Position);
 
