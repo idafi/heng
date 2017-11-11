@@ -21,6 +21,7 @@ namespace heng.Physics
 		/// E.g., the <see cref="RigidBody"/> instances that will be present in the <see cref="PhysicsObjects"/>
 		/// collection will be in a new positon, after all impulses are applied and all collisions are resolved.
 		/// </summary>
+		/// <param name="physicsObjects">All <see cref="IPhysicsObject"/>s available to the new state.</param>
 		public PhysicsState(IEnumerable<IPhysicsObject> physicsObjects)
 		{
 			PhysicsObjects = AddPhysicsObjects(physicsObjects);
