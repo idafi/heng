@@ -78,6 +78,9 @@ namespace heng
 				[DllImport(coreLib, EntryPoint = "Video_Windows_DrawPoints")]
 				public static extern void DrawPoints(int windowID, PointsDrawMode mode, ScreenPoint[] points, int count);
 
+				[DllImport(coreLib, EntryPoint = "Video_Windows_DrawRect")]
+				public static extern void DrawRect(int windowID, ScreenRect rect, bool fill);
+
 				[DllImport(coreLib, EntryPoint = "Video_Windows_DrawTexture")]
 				public static extern void DrawTexture(int windowID, int textureID, ScreenPoint position, float rotation);
 			};
@@ -122,6 +125,7 @@ namespace heng
 					Points,
 					Line,
 					Polygon,
+					Rect,
 					Texture
 				};
 
@@ -164,6 +168,9 @@ namespace heng
 
 				[DllImport(coreLib, EntryPoint = "Video_Queue_DrawPolygon")]
 				public static extern void DrawPolygon(int windowID, Color color, ScreenPoint[] points, int count);
+
+				[DllImport(coreLib, EntryPoint = "Video_Queue_DrawRect")]
+				public static extern void DrawRect(int windowID, Color color, ScreenRect rect, bool fill);
 
 				[DllImport(coreLib, EntryPoint = "Video_Queue_DrawTexture")]
 				public static extern void DrawTexture(int windowID, int textureID, ScreenPoint position, float rotation);

@@ -163,6 +163,17 @@
 		}
 
 		/// <summary>
+		/// Draws a rect to the window, optionally filling it.
+		/// </summary>
+		/// <param name="rect">The rect to draw.</param>
+		/// <param name="fill">Whether to fill the rect with the given color.</param>
+		/// <param name="color">The color of the rect and, if applicable, its fill.</param>
+		public void DrawRect(ScreenRect rect, bool fill, Color color)
+		{
+			Core.Video.Queue.DrawRect(ID, color, rect, fill);
+		}
+
+		/// <summary>
 		/// Draws a <see cref="Texture"/> to the window.
 		/// </summary>
 		/// <param name="tex">The <see cref="Texture"/> to draw.</param>
