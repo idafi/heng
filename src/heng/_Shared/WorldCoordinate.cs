@@ -11,7 +11,7 @@
 		/// <summary>
 		/// How many pixels comprise a single sector.
 		/// </summary>
-		public const int PixelsPerSector = 200;
+		public const int PixelsPerSector = 512;
 
 		/// <summary>
 		/// This <see cref="WorldCoordinate"/>'s sector position.
