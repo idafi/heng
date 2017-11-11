@@ -40,6 +40,12 @@ typedef struct
 
 typedef struct
 {
+	screen_rect rect;
+	bool fill;
+} vid_command_rect;
+
+typedef struct
+{
 	int textureID;
 	screen_point position;
 	float rotation;
@@ -57,6 +63,7 @@ typedef struct
 		vid_command_points points;
 		vid_command_line line;
 		vid_command_polygon polygon;
+		vid_command_rect rect;
 		vid_command_texture texture;
 	};
 } vid_command;
@@ -204,6 +211,19 @@ HEXPORT(void) Video_Queue_DrawPolygon(int windowID, color color, screen_point *p
 	{ LogError("can't queue polygon: points array is NULL"); }
 }
 
+HEXPORT(void) Video_Queue_DrawRect(int windowID, color color, screen_rect rect, bool fill)
+{
+	vid_command *c = QueueNextFreeCommand(windowID);
+	if(c)
+	{
+		c->type = VID_COMMAND_RECT;
+		c->color = color;
+
+		c->rect.rect = rect;
+		c->rect.fill = fill;
+	}
+}
+
 HEXPORT(void) Video_Queue_DrawTexture(int windowID, int textureID, screen_point position, float rotation)
 {
 	if(Video_Textures_CheckTexture(textureID))
@@ -265,6 +285,10 @@ HEXPORT(void) Video_Queue_Pump(int windowID)
 					case VID_COMMAND_POLYGON:
 						Video_Windows_SetWindowColor(windowID, c->color);
 						Video_Windows_DrawPoints(windowID, POINTS_DRAW_LINES, c->polygon.points, c->polygon.pointCount);
+						break;
+					case VID_COMMAND_RECT:
+						Video_Windows_SetWindowColor(windowID, c->color);
+						Video_Windows_DrawRect(windowID, c->rect.rect, c->rect.fill);
 						break;
 					case VID_COMMAND_TEXTURE:
 						Video_Windows_DrawTexture(windowID, c->texture.textureID, c->texture.position, c->texture.rotation);

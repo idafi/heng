@@ -305,6 +305,22 @@ HEXPORT(void) Video_Windows_DrawPoints(int windowID, points_draw_mode mode, scre
 	{ LogError("couldn't draw points on window %i", windowID); }
 }
 
+HEXPORT(void) Video_Windows_DrawRect(int windowID, screen_rect rect, bool fill)
+{
+	if(Video_Windows_CheckWindow(windowID))
+	{
+		window *w = &windows[windowID];
+		int h = w->info.viewportRect.h;
+
+		// convert to sdl coordinates (y-down, top-left origin)
+		float y = h - (rect.y + rect.h);
+		SDL_Rect sdlRect = { .x = rect.x, .y = y, .w = rect.w, .h = rect.h };
+		(fill) ? SDL_RenderFillRect(w->renderer, &sdlRect) : SDL_RenderDrawRect(w->renderer, &sdlRect);
+	}
+	else
+	{ LogError("couldn't draw rect on window %i", windowID); }
+}
+
 HEXPORT(void) Video_Windows_DrawTexture(int windowID, int textureID, screen_point position, float rotation)
 {
 	if(Video_Windows_CheckWindow(windowID))

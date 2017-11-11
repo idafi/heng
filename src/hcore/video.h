@@ -85,6 +85,7 @@ HEXPORT(void) Video_Windows_PresentWindow(int windowID);
 HEXPORT(void) Video_Windows_DrawPoint(int windowID, screen_point point);
 HEXPORT(void) Video_Windows_DrawLine(int windowID, screen_line line);
 HEXPORT(void) Video_Windows_DrawPoints(int windowID, points_draw_mode mode, screen_point *points, int count);
+HEXPORT(void) Video_Windows_DrawRect(int windowID, screen_rect rect, bool fill);
 HEXPORT(void) Video_Windows_DrawTexture(int windowID, int textureID, screen_point position, float rotation);
 
 // - - - - - -
@@ -113,6 +114,7 @@ typedef enum
 	VID_COMMAND_POINTS,
 	VID_COMMAND_LINE,
 	VID_COMMAND_POLYGON,
+	VID_COMMAND_RECT,
 	VID_COMMAND_TEXTURE
 } vid_command_type;
 
@@ -127,6 +129,7 @@ HEXPORT(void) Video_Queue_DrawPoint(int windowID, color color, screen_point poin
 HEXPORT(void) Video_Queue_DrawLine(int windowID, color color, screen_line line);
 HEXPORT(void) Video_Queue_DrawPoints(int windowID, color color, screen_point *points, int count);
 HEXPORT(void) Video_Queue_DrawPolygon(int windowID, color color, screen_point *points, int count);
+HEXPORT(void) Video_Queue_DrawRect(int windowID, color color, screen_rect rect, bool fill);
 HEXPORT(void) Video_Queue_DrawTexture(int windowID, int textureID, screen_point position, float rotation);
 
 HEXPORT(void) Video_Queue_Pump(int windowID);
