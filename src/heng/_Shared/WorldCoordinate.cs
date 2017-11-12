@@ -2,7 +2,7 @@
 {
 	/// <summary>
 	/// A virtualized coordinate position.
-	/// <para>A WorldCoordinate is represented as an integer-based "sector," and a 0-1 fractional "subposition"
+	/// <para>A WorldCoordinate is represented as an integer-based "sector" position, and a 0-1 fractional "subposition"
 	/// within that sector.</para>
 	/// A sector's actual size is determined by the <see cref="PixelsPerSector"/> constant.
 	/// </summary>
@@ -30,7 +30,7 @@
 
 		/// <summary>
 		/// Constructs a new WorldCoordinate at the given position.
-		/// <para>If clampSubposition is false, subposition values greater than 1 will be added to the
+		/// <para>If clampSubposition is false, subposition values not within 0-1 will be added to the
 		/// new <see cref="WorldCoordinate"/>'s sector position.</para>
 		/// For instance, setting the sector to 1 and subposition 1.5 would place the new <see cref="WorldCoordinate"/>
 		/// at sector 2, subposition 0.5.

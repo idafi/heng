@@ -4,7 +4,7 @@ namespace heng.Physics
 {
 	/// <summary>
 	/// Represents a collider shaped as a convex <see cref="Polygon"/>.
-	/// <para>Natrually, sending this a concave <see cref="Polygon"/> will cause bad things to happen,
+	/// <para>Naturally, sending this a concave <see cref="Polygon"/> will cause bad things to happen,
 	/// so don't do it.</para>
 	/// </summary>
 	public class ConvexCollider : ICollider

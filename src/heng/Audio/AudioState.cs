@@ -18,7 +18,7 @@ namespace heng.Audio
 
 		/// <summary>
 		/// The world-space position from which <see cref="SoundSource"/>s are heard.
-		/// <para>Attenuation is calculated relative to the pixel-space position of the <see cref="SoundSource"/>s.</para>
+		/// <para>Attenuation is calculated relative to the world-space position of the <see cref="SoundSource"/>s.</para>
 		/// In most cases, the center of the camera is the best place for this.
 		/// </summary>
 		public readonly WorldPoint ListenerPosition;

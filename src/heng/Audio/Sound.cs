@@ -15,8 +15,7 @@ namespace heng.Audio
 		
 		/// <summary>
 		/// Creates a new <see cref="Sound"/> from the sound file at the given path.
-		/// <para>A sound is just a loaded resource. To play it, create a <see cref="SoundInstance"/>, and use it with
-		/// a <see cref="SoundSource"/>.</para>
+		/// <para>A sound is just a loaded resource. To play it, send it through a <see cref="SoundSource"/>.</para>
 		/// </summary>
 		/// <param name="filePath">The file from which to create the new <see cref="Sound"/>.</param>
 		public Sound(string filePath)

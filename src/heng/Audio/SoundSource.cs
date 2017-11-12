@@ -9,7 +9,7 @@ namespace heng.Audio
 	public class SoundSource
 	{
 		/// <summary>
-		/// The world-space positon of this <see cref="SoundSource"/>.
+		/// The world-space position of this <see cref="SoundSource"/>.
 		/// </summary>
 		public readonly WorldPoint Position;
 

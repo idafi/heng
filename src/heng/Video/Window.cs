@@ -2,15 +2,14 @@
 {
 	/// <summary>
 	/// Represents an engine-managed window, for use by a <see cref="VideoState"/> instance.
-	/// <para>Each frame, you should use construct new <see cref="Window"/>s, draw what needs to be drawn,
-	/// and use those <see cref="Window"/>s to construct a new <see cref="VideoState"/> instance for the frame.</para>
+	/// <para>New <see cref="Window"/>s should be constructed each frame, and built into the <see cref="VideoState"/>.</para>
 	/// The underlying engine then uses each <see cref="Window"/>'s <see cref="ID"/> to automatically handle
 	/// OS-level window management.
 	/// </summary>
 	public class Window
 	{
 		/// <summary>
-		/// Use this magic SDL2 constant in the window's <see cref="Rect"/> to specify a centered window coordinate.
+		/// Use this magic SDL2 constant in a <see cref="Window"/>'s <see cref="Rect"/> to specify a centered window coordinate.
 		/// <para>E.g., setting the rect's position to (<see cref="Center"/>, <see cref="Center"/>) will position the
 		/// window in the center of the screen.</para>
 		/// </summary>
@@ -18,10 +17,10 @@
 
 		/// <summary>
 		/// Unique ID of this window.
-		/// <para>The engine uses window IDs to manage opening and closing actual OS windows. If a window
-		/// with the same ID already exists when a new <see cref="VideoState"/> is constructed, 
+		/// <para>The engine uses window IDs to manage opening and closing actual OS windows.</para>
+		/// If a window with the same ID already exists when a new <see cref="VideoState"/> is constructed, 
 		/// the OS window will simply be modified to reflect the new <see cref="Window"/> instance's
-		/// settings, rather than literally closing and reconstructing the OS window anew.</para>
+		/// settings, rather than literally closing and reconstructing the OS window anew.
 		/// </summary>
 		public readonly int ID;
 

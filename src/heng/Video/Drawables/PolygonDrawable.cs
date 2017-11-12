@@ -1,7 +1,7 @@
 ﻿namespace heng.Video
 {
 	/// <summary>
-	/// A world-space positioned <see cref="heng.Polygon"/> that can be drawn to a <see cref="Window"/>.
+	/// A world-space-positioned <see cref="heng.Polygon"/> that can be drawn to a <see cref="Window"/>.
 	/// </summary>
 	public class PolygonDrawable : IDrawable
 	{

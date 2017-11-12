@@ -6,7 +6,7 @@ namespace heng.Input
 	// consider trying System.Collections.Immutable again, i guess
 
 	/// <summary>
-	/// A "virtual device" that can be used with the <see cref="InputState"/>to interpret <see cref="InputData"/>.
+	/// A "virtual device" that can be used with the <see cref="InputState"/> to interpret <see cref="InputData"/>.
 	/// <para>An <see cref="InputDevice"/> consists of string-keyed sets of virtual buttons and axes.</para>
 	/// The <see cref="IButton"/> and <see cref="IAxis"/> interfaces can be used to construct new button/axis
 	/// representations, if existing implementations like <see cref="Key"/> and <see cref="ButtonAxis"/> aren't enough.

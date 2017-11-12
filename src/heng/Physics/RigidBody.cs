@@ -2,7 +2,7 @@
 {
 	/// <summary>
 	/// Represents a physics object that can accumulate and respond to forces.
-	/// <para>Move a RigidBody by applying impluses through <see cref="AddImpulse(Vector2)"/>.</para>
+	/// <para>Move a RigidBody by applying impulses through <see cref="AddImpulse(Vector2)"/>.</para>
 	/// All applied forces will then be resolved, including collisions, when the <see cref="RigidBody"/> is
 	/// is constructed alongside other <see cref="IPhysicsObject"/>s into the <see cref="PhysicsState"/>.
 	/// </summary>
