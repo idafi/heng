@@ -5,7 +5,7 @@
 	/// <para>A WorldPoint is represented as an integer-based "sector" position, and a 0-1 fractional
 	/// "subposition" within that sector.</para>
 	/// A sector's actual size is determined by the <see cref="WorldCoordinate.PixelsPerSector"/> constant.
-	/// <para>WorldPoints can interact with pixel-space  <see cref="Vector2"/> values using
+	/// <para>WorldPoints can interact with pixel-space <see cref="Vector2"/> values using
 	/// <see cref="PixelDistance(WorldPoint)"/> and <see cref="PixelTranslate(Vector2)"/></para>
 	/// </summary>
 	public struct WorldPoint
@@ -37,6 +37,8 @@
 
 		/// <summary>
 		/// This WorldPoint's position in pixel space.
+		/// <para>Since this defeats the purpose of virtualized coordinates, try to avoid it
+		/// unless necessary -- use relative <see cref="PixelDistance(WorldPoint)"/> values instead.</para>
 		/// </summary>
 		public Vector2 PixelPosition => PixelDistance(WorldPoint.Zero);
 		
@@ -116,6 +118,35 @@
 			return new WorldPoint(x, y);
 		}
 
+		/// <summary>
+		/// Finds the least common sector between a set of <see cref="WorldPoint"/>s.
+		/// </summary>
+		/// <param name="points">The set of <see cref="WorldPoint"/>s.</param>
+		/// <returns>A new <see cref="WorldPoint"/>, located at the origin of the least common sector.</returns>
+		public static WorldPoint LeastCommonSector(params WorldPoint[] points)
+		{
+			if(points != null && points.Length > 0)
+			{
+				int[] x = new int[points.Length];
+				int[] y = new int[points.Length];
+
+				for(int i = 0; i < points.Length; i++)
+				{
+					x[i] = points[i].X.Sector;
+					y[i] = points[i].Y.Sector;
+				}
+
+				int xSec = HMath.Min(x);
+				int ySec = HMath.Min(y);
+
+				return new WorldPoint(new WorldCoordinate(xSec, 0), new WorldCoordinate(ySec, 0));
+			}
+			else
+			{ Log.Error("couldn't find least common sector: WorldPoint array is null or 0-length"); }
+
+			return WorldPoint.Zero;
+		}
+
 		/// <inheritdoc />
 		public override bool Equals(object obj) => base.Equals(obj);
 
@@ -163,19 +194,6 @@
 			float y = this.Y.PixelDistance(other.Y);
 			
 			return new Vector2(x, y);
-		}
-		
-		/// <summary>
-		/// Finds the least common sector between this <see cref="WorldPoint"/> and another.
-		/// </summary>
-		/// <param name="other">The other <see cref="WorldPoint"/>.</param>
-		/// <returns>A new <see cref="WorldPoint"/>, located at the origin of the least common sector.</returns>
-		public WorldPoint LeastCommonSector(WorldPoint other)
-		{
-			int xSec = HMath.Min(this.X.Sector, other.X.Sector);
-			int ySec = HMath.Min(this.Y.Sector, other.Y.Sector);
-
-			return new WorldPoint(new WorldCoordinate(xSec, 0), new WorldCoordinate(ySec, 0));
 		}
 	};
 }

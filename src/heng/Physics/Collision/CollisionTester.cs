@@ -59,7 +59,7 @@ namespace heng.Physics
 
 			// collisions will be tested in a localized space, originating at the least common sector of both colliders
 			// (i think? this is easier than setting the origin at the collider vertex closest to 0,0)
-			WorldPoint origin = a.Position.LeastCommonSector(b.Position);
+			WorldPoint origin = WorldPoint.LeastCommonSector(a.Position, b.Position);
 			Vector2 posA = a.Position.PixelDistance(origin);
 			Vector2 posB = b.Position.PixelDistance(origin);
 
