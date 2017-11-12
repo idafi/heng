@@ -7,8 +7,8 @@ namespace hgame
 {
 	public class PlayerUnit
 	{
-		// pixels per second
-		const float speed = 150;
+		// pixels/s/s
+		const float accel = 150f;
 
 		readonly Texture texture;
 
@@ -29,7 +29,7 @@ namespace hgame
 			WorldPoint pos = new WorldPoint(new Vector2(280 - 16, 100 - 16));
 
 			Polygon collider = new Polygon(new Vector2(0, 0), new Vector2(32, 0), new Vector2(32, 32), new Vector2(0, 32));
-			RigidBody body = new RigidBody(pos, new ConvexCollider(collider));
+			RigidBody body = new RigidBody(pos, new ConvexCollider(collider), 1f);
 			Sprite spr = new Sprite(texture, pos, 0);
 
 			inputDevice = newState.Input.AddDevice(device);
@@ -53,8 +53,7 @@ namespace hgame
 
 			float x = device.GetAxisFrac("Horizontal");
 			float y = device.GetAxisFrac("Vertical");
-			float spd = speed * oldState.Time.Delta;
-			Vector2 move = new Vector2(x, y).ClampMagnitude(0, 1) * spd;
+			Vector2 move = new Vector2(x, y).ClampMagnitude(0, 1) * accel;
 
 			inputDevice = newState.Input.AddDevice(device);
 			rigidBody = newState.Physics.AddPhysicsObject(body.AddImpulse(move));

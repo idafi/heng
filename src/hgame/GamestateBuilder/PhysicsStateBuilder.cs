@@ -23,9 +23,9 @@ namespace hgame
 				return physicsObjects.Count - 1;
 			}
 
-			public PhysicsState Build()
+			public PhysicsState Build(float deltaT)
 			{
-				return new PhysicsState(physicsObjects);
+				return new PhysicsState(physicsObjects, deltaT);
 			}
 
 			public void Clear()

@@ -37,7 +37,7 @@ namespace hgame
 				Scenery scenery = old?.Scenery.Update(old, this) ?? new Scenery(this);
 
 				InputState input = Input.Build();
-				PhysicsState physics = Physics.Build();
+				PhysicsState physics = Physics.Build(old?.Time.Delta ?? 0);
 				VideoState video = Video.Build(old?.Video);
 				AudioState audio = Audio.Build(old?.Audio);
 				TimeState time = Time.Build(old?.Time);
