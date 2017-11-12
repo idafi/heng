@@ -6,7 +6,6 @@ namespace heng.Physics
 	/// Represents an immutable snapshot of the physics system's current state.
 	/// <para>Each frame, the provided <see cref="IPhysicsObject"/> instances apply
 	/// any forces they've accumulated, before testing and resolving collisions.</para>
-	/// (This is a really pathetic and egregiously inaccurate representation of "physics," but it works for now.)
 	/// </summary>
 	public class PhysicsState
 	{
@@ -17,21 +16,21 @@ namespace heng.Physics
 
 		/// <summary>
 		/// Constructs a new <see cref="PhysicsState"/> using the provided physics objects.
-		/// <para>All physics-related transformations and calculations will take place during this construction.</para>
-		/// E.g., the <see cref="RigidBody"/> instances that will be present in the <see cref="PhysicsObjects"/>
-		/// collection will be in a new positon, after all impulses are applied and all collisions are resolved.
+		/// <para>During construction, <see cref="RigidBody"/> forces will be applied, and collisions will be resolved.</para>
+		/// An accurate delta-time value is needed to ensure even movement across variable framerates.
 		/// </summary>
 		/// <param name="physicsObjects">All <see cref="IPhysicsObject"/>s available to the new state.</param>
-		public PhysicsState(IEnumerable<IPhysicsObject> physicsObjects)
+		/// <param name="deltaT">The time, in seconds, since the last <see cref="PhysicsState"/> was built.</param>
+		public PhysicsState(IEnumerable<IPhysicsObject> physicsObjects, float deltaT)
 		{
-			PhysicsObjects = AddPhysicsObjects(physicsObjects);
+			PhysicsObjects = AddPhysicsObjects(physicsObjects, deltaT);
 		}
 
-		IReadOnlyList<IPhysicsObject> AddPhysicsObjects(IEnumerable<IPhysicsObject> objects)
+		IReadOnlyList<IPhysicsObject> AddPhysicsObjects(IEnumerable<IPhysicsObject> objects, float deltaT)
 		{
 			if(objects != null)
 			{
-				List<IPhysicsObject> newObjects = ImpulsePass(objects);
+				List<IPhysicsObject> newObjects = ImpulsePass(objects, deltaT);
 				IReadOnlyList<IPhysicsObject> finalObjects = CollisionPass(newObjects);
 
 				return finalObjects;
@@ -42,7 +41,7 @@ namespace heng.Physics
 			return new IPhysicsObject[0];
 		}
 
-		List<IPhysicsObject> ImpulsePass(IEnumerable<IPhysicsObject> objects)
+		List<IPhysicsObject> ImpulsePass(IEnumerable<IPhysicsObject> objects, float deltaT)
 		{
 			Assert.Ref(objects);
 
@@ -53,7 +52,7 @@ namespace heng.Physics
 				if(obj != null)
 				{
 					if(obj is RigidBody rb)
-					{ newObjects.Add(rb.ApplyImpulses()); }
+					{ newObjects.Add(rb.Update(deltaT)); }
 					else
 					{ newObjects.Add(obj); }
 				}

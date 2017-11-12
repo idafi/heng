@@ -1,83 +1,124 @@
 ﻿namespace heng.Physics
 {
 	/// <summary>
-	/// Represents a physics object that can accumulate and respond to impulse forces.
-	/// <para>Rather than directly translating the object, movement should be effected through
-	/// applying impulses to the <see cref="RigidBody"/> via <see cref="AddImpulse(Vector2)"/>.</para>
-	/// Accumulated impulses will then be resolved when the <see cref="PhysicsState"/> is constructed.
+	/// Represents a physics object that can accumulate and respond to forces.
+	/// <para>Move a RigidBody by applying impluses through <see cref="AddImpulse(Vector2)"/>.</para>
+	/// All applied forces will then be resolved, including collisions, when the <see cref="RigidBody"/> is
+	/// is constructed alongside other <see cref="IPhysicsObject"/>s into the <see cref="PhysicsState"/>.
 	/// </summary>
 	public class RigidBody : IPhysicsObject
 	{
 		/// <summary>
-		/// The world-space position at which this <see cref="RigidBody"/> is located.
+		/// The <see cref="RigidBody"/>'s world-space position.
 		/// </summary>
 		public readonly WorldPoint Position;
 
 		/// <summary>
-		/// The collidable representation of this <see cref="RigidBody"/>.
-		/// <para>If null, the <see cref="RigidBody"/> can still move, but won't respond to collisions.</para>
+		/// The <see cref="RigidBody"/>'s collidable representation.
+		/// <para>If null, the <see cref="RigidBody"/> can still move, but it won't respond to collisions.</para>
 		/// </summary>
 		public readonly ICollider Collider;
 
 		/// <summary>
-		/// The total accumulation of all pixel-space impulse forces to be applied on <see cref="PhysicsState"/> construction.
+		/// The <see cref="RigidBody"/>'s total mass, in grams.
+		/// <para>The higher the mass, the more force is required to change the velocity.</para>
 		/// </summary>
-		public readonly Vector2 TotalImpulse;
+		public readonly float Mass;
 
-		/// <inheritdoc />
+		/// <summary>
+		/// The <see cref="RigidBody"/>'s current velocity, in pixels.
+		/// </summary>
+		public readonly Vector2 Velocity;
+
+		/// <summary>
+		/// Forces added to the <see cref="RigidBody"/>, but not yet applied by the <see cref="PhysicsState"/>.
+		/// <para>This will always be set to (0, 0) after the <see cref="RigidBody"/> is processed
+		/// by the <see cref="PhysicsState"/>.</para>
+		/// </summary>
+		public readonly Vector2 TotalForce;
+
 		WorldPoint IPhysicsObject.Position => Position;
-
-		/// <inheritdoc />
 		ICollider IPhysicsObject.Collider => Collider;
-	
+
 		/// <summary>
-		/// Constructs a new <see cref="RigidBody"/> at the provided position, using the provided collider shape.
+		/// Constructs a new <see cref="RigidBody"/>.
 		/// </summary>
-		/// <param name="position">The position at which to place the new <see cref="RigidBody"/>.</param>
-		/// <param name="collider">The collidable representation of the new <see cref="RigidBody"/>.
-		/// <para>This can be null if the <see cref="RigidBody"/> doesn't need to respond to collisions.</para></param>
-		public RigidBody(WorldPoint position, ICollider collider)
+		/// <param name="position">The new <see cref="RigidBody"/>'s world-space position.</param>
+		/// <param name="collider">The new <see cref="RigidBody"/>'s collidable representation.</param>
+		/// <param name="mass">The new <see cref="RigidBody"/>'s mass, in grams.</param>
+		public RigidBody(WorldPoint position, ICollider collider, float mass)
 		{
 			Position = position;
 			Collider = collider;
-
-			TotalImpulse = Vector2.Zero;
+			Mass = mass;
 		}
 		
-		RigidBody(WorldPoint position, ICollider collider, Vector2 totalImpulse)
+		RigidBody(WorldPoint position, ICollider collider, float mass, Vector2 velocity, Vector2 totalForce)
 		{
 			Position = position;
 			Collider = collider;
+			Mass = mass;
 
-			TotalImpulse = totalImpulse;
+			Velocity = velocity;
+			TotalForce = totalForce;
 		}
 		
 		/// <summary>
-		/// Directly translates the <see cref="RigidBody"/> by the given movement vector.
-		/// <para>Avoid this whenever possible. Add impulses through <see cref="AddImpulse(Vector2)"/> instead.</para>
+		/// Adds an impulse force to the <see cref="RigidBody"/>.
+		/// <para>When constructed into the <see cref="PhysicsState"/>, all accumulated forces
+		/// will be applied, moving the <see cref="RigidBody"/>.</para>
 		/// </summary>
-		/// <param name="translation">The movement vector by which to translate the <see cref="RigidBody"/>.</param>
-		/// <returns>A new <see cref="RigidBody"/>, translated by the movement vector.</returns>
-		public RigidBody Translate(Vector2 translation) => new RigidBody(Position.PixelTranslate(translation), Collider, TotalImpulse);
-
-		/// <summary>
-		/// Adds an impulse force to this <see cref="RigidBody"/>.
-		/// <para>Impulses will be cumulatively applied when constructing a new <see cref="PhysicsState"/>
-		/// with this <see cref="RigidBody"/>.</para>
-		/// </summary>
-		/// <param name="impulse">The impulse force to add to the <see cref="RigidBody"/>.</param>
-		/// <returns>A new <see cref="RigidBody"/>, whose total accumlated impulse includes the new force.</returns>
-		public RigidBody AddImpulse(Vector2 impulse) => new RigidBody(Position, Collider, TotalImpulse + impulse);
+		/// <param name="impulse">The total impulse to apply.</param>
+		/// <returns>A new <see cref="RigidBody"/>, with the impulse applied.</returns>
+		public RigidBody AddImpulse(Vector2 impulse)
+		{
+			return new RigidBody(Position, Collider, Mass, Velocity, TotalForce + impulse);
+		}
 		
 		/// <summary>
-		/// Applies all accumulated impulses to the <see cref="RigidBody"/>, translating it by
-		/// the total impulse vector.
-		/// <para>This is automatically invoked when the <see cref="PhysicsState"/> is constructed.
-		/// You should never have to do it.</para>
-		/// (in the current pathetic not-"physics" representation, the total impulse is cleared each update,
-		/// rather than added to a persistent velocity.)
+		/// Sets the <see cref="RigidBody"/>'s total mass.
+		/// <para>The higher the mass, the more force is required to change the velocity.</para>
 		/// </summary>
-		/// <returns>A new <see cref="RigidBody"/>, translated by its accumulated <see cref="TotalImpulse"/>.</returns>
-		public RigidBody ApplyImpulses() => new RigidBody(Position.PixelTranslate(TotalImpulse), Collider, Vector2.Zero);
+		/// <param name="mass">The new mass, in grams.</param>
+		/// <returns>A new <see cref="RigidBody"/>, with the new mass.</returns>
+		public RigidBody SetMass(float mass)
+		{
+			return new RigidBody(Position, Collider, mass, Velocity, TotalForce);
+		}
+
+		internal RigidBody Update(float t)
+		{
+			WorldPoint secOrigin = new WorldPoint(Position.Sector, Vector2.Zero);
+
+			Vector2 a = GetAccel(TotalForce, Mass);
+			Vector2 p = Position.PixelDistance(secOrigin);
+			Vector2 newP = GetNewPosition(p, a, Velocity, t);
+
+			WorldPoint newPosition = secOrigin.PixelTranslate(newP);
+			Vector2 newVelocity = GetNewVelocity(a, Velocity, t);
+
+			return new RigidBody(newPosition, Collider, Mass, newVelocity, Vector2.Zero);
+		}
+
+		internal RigidBody Translate(Vector2 translation)
+		{
+			WorldPoint p = Position.PixelTranslate(translation);
+			return new RigidBody(p, Collider, Mass, Velocity, TotalForce);
+		}
+
+		Vector2 GetAccel(Vector2 f, float m)
+		{
+			return f * (1 / m);
+		}
+
+		Vector2 GetNewPosition(Vector2 p, Vector2 a, Vector2 v, float t)
+		{
+			return (a * 0.5f * HMath.Square(t)) + (v * t) + p;
+		}
+
+		Vector2 GetNewVelocity(Vector2 a, Vector2 v, float t)
+		{
+			return (a * t) + v;
+		}
 	};
 }
