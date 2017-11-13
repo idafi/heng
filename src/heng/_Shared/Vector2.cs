@@ -208,9 +208,9 @@ namespace heng
 		/// <returns>The projected vector.</returns>
 		public Vector2 Project(Vector2 other)
 		{
-			float dot = this.Dot(other);
-			float x = (dot / other.SqrMagnitude) * other.X;
-			float y = (dot / other.SqrMagnitude) * other.Y;
+			float dot = other.Dot(this);
+			float x = (dot / this.Magnitude) * this.X;
+			float y = (dot / this.Magnitude) * this.Y;
 
 			return new Vector2(x, y);
 		}
