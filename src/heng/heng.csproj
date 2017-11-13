@@ -116,6 +116,7 @@
     <Compile Include="Video\Drawables\PointDrawable.cs" />
     <Compile Include="Video\Drawables\PolygonDrawable.cs" />
     <Compile Include="Video\Drawables\RectDrawable.cs" />
+    <Compile Include="Video\Drawables\VectorDrawable.cs" />
     <Compile Include="Video\RendererFlags.cs" />
     <Compile Include="Video\Drawables\Sprite.cs" />
     <Compile Include="Video\Structures\Color.cs" />
