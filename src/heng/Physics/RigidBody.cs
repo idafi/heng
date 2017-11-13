@@ -46,15 +46,16 @@
 		/// <param name="position">The new <see cref="RigidBody"/>'s world-space position.</param>
 		/// <param name="collider">The new <see cref="RigidBody"/>'s collidable representation.</param>
 		/// <param name="mass">The new <see cref="RigidBody"/>'s mass, in grams.</param>
-		public RigidBody(WorldPoint position, ICollider collider, float mass)
-		{
-			Position = position;
-			Collider = collider;
-			Mass = mass;
-		}
+		public RigidBody(WorldPoint position, ICollider collider, float mass) :
+			this(position, collider, mass, Vector2.Zero, Vector2.Zero) { }
 		
 		RigidBody(WorldPoint position, ICollider collider, float mass, Vector2 velocity, Vector2 totalForce)
 		{
+			if(mass <= 0)
+			{
+				Log.Warning("RigidBody mass must be greater than 0");
+				mass = float.Epsilon;
+			}
 			Position = position;
 			Collider = collider;
 			Mass = mass;
