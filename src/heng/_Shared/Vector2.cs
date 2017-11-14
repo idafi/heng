@@ -218,8 +218,8 @@ namespace heng
 			if(thisMag > 0)
 			{
 				float dot = other.Dot(this);
-				float x = (dot / this.Magnitude) * this.X;
-				float y = (dot / this.Magnitude) * this.Y;
+				float x = (dot / thisMag) * this.X;
+				float y = (dot / thisMag) * this.Y;
 
 				return new Vector2(x, y);
 			}
