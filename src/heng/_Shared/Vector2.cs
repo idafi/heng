@@ -208,11 +208,17 @@ namespace heng
 		/// <returns>The projected vector.</returns>
 		public Vector2 Project(Vector2 other)
 		{
-			float dot = other.Dot(this);
-			float x = (dot / this.Magnitude) * this.X;
-			float y = (dot / this.Magnitude) * this.Y;
+			float thisMag = this.Magnitude;
+			if(thisMag > 0)
+			{
+				float dot = other.Dot(this);
+				float x = (dot / this.Magnitude) * this.X;
+				float y = (dot / this.Magnitude) * this.Y;
 
-			return new Vector2(x, y);
+				return new Vector2(x, y);
+			}
+			else
+			{ return Vector2.Zero; }
 		}
 
 		/// <summary>
