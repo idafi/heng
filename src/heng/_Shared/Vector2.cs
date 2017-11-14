@@ -138,6 +138,12 @@ namespace heng
 		public static bool operator !=(Vector2 a, Vector2 b) => (a.X != b.X || a.Y != b.Y);
 
 		/// <summary>
+		/// Converts a (float, float) <see cref="System.ValueTuple"/> to a <see cref="Vector2"/>.
+		/// </summary>
+		/// <param name="tuple">The tuple to convert.</param>
+		public static implicit operator Vector2((float, float) tuple) => new Vector2(tuple.Item1, tuple.Item2);
+
+		/// <summary>
 		/// Linearly interpolates betweent two <see cref="Vector2"/>s.
 		/// </summary>
 		/// <param name="a">The interpolation start point.</param>
