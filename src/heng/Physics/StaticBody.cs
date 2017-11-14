@@ -19,11 +19,14 @@
 		public readonly ICollider Collider;
 
 		/// <inheritdoc />
-		WorldPoint IPhysicsObject.Position => Position;
+		public float Mass => float.PositiveInfinity;
 
 		/// <inheritdoc />
+		public Vector2 Velocity => Vector2.Zero;
+
+		WorldPoint IPhysicsObject.Position => Position;
 		ICollider IPhysicsObject.Collider => Collider;
-	
+
 		/// <summary>
 		/// Constructs a new <see cref="StaticBody"/> at the given position, using the given <see cref="ICollider"/>.
 		/// </summary>

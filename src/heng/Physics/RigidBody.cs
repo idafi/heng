@@ -1,4 +1,6 @@
-﻿namespace heng.Physics
+﻿using System.Collections.Generic;
+
+namespace heng.Physics
 {
 	/// <summary>
 	/// Represents a physics object that can accumulate and respond to forces.
@@ -39,6 +41,8 @@
 
 		WorldPoint IPhysicsObject.Position => Position;
 		ICollider IPhysicsObject.Collider => Collider;
+		float IPhysicsObject.Mass => Mass;
+		Vector2 IPhysicsObject.Velocity => Velocity;
 
 		/// <summary>
 		/// Constructs a new <see cref="RigidBody"/>.
@@ -56,6 +60,7 @@
 				Log.Warning("RigidBody mass must be greater than 0");
 				mass = float.Epsilon;
 			}
+
 			Position = position;
 			Collider = collider;
 			Mass = mass;
@@ -87,24 +92,34 @@
 			return new RigidBody(Position, Collider, mass, Velocity, TotalForce);
 		}
 
-		internal RigidBody Update(float t)
+		internal IPhysicsObject ImpulsePass(float t)
 		{
 			WorldPoint secOrigin = new WorldPoint(Position.Sector, Vector2.Zero);
 
 			Vector2 a = GetAccel(TotalForce, Mass);
 			Vector2 p = Position.PixelDistance(secOrigin);
 			Vector2 newP = GetNewPosition(p, a, Velocity, t);
+			Vector2 newVelocity = GetNewVelocity(a, Velocity, t);
 
 			WorldPoint newPosition = secOrigin.PixelTranslate(newP);
-			Vector2 newVelocity = GetNewVelocity(a, Velocity, t);
 
 			return new RigidBody(newPosition, Collider, Mass, newVelocity, Vector2.Zero);
 		}
 
-		internal RigidBody Translate(Vector2 translation)
+		internal IPhysicsObject CollisionPass(IEnumerable<CollisionData> collisions)
 		{
-			WorldPoint p = Position.PixelTranslate(translation);
-			return new RigidBody(p, Collider, Mass, Velocity, TotalForce);
+			WorldPoint secOrigin = new WorldPoint(Position.Sector, Vector2.Zero);
+
+			Vector2 newPosition = Position.PixelDistance(secOrigin);
+			Vector2 newVelocity = Velocity;
+
+			foreach(CollisionData collision in collisions)
+			{
+				newVelocity = collision.VelocityChange;
+				newPosition += collision.MTV;	// compensate for collider intersection
+			}
+
+			return new RigidBody(secOrigin.PixelTranslate(newPosition), Collider, Mass, newVelocity, TotalForce);
 		}
 
 		Vector2 GetAccel(Vector2 f, float m)

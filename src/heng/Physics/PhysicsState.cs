@@ -52,7 +52,7 @@ namespace heng.Physics
 				if(obj != null)
 				{
 					if(obj is RigidBody rb)
-					{ newObjects.Add(rb.Update(deltaT)); }
+					{ newObjects.Add(rb.ImpulsePass(deltaT)); }
 					else
 					{ newObjects.Add(obj); }
 				}
@@ -68,13 +68,14 @@ namespace heng.Physics
 			Assert.Ref(newObjects);
 
 			CollisionTester tester = new CollisionTester();
-			foreach(CollisionData collision in tester.GetCollisions(newObjects))
+			var allCollisions = tester.GetCollisions(newObjects);
+
+			for(int i = 0; i < newObjects.Count; i++)
 			{
-				if(collision.Object is RigidBody rb)
+				if(allCollisions.TryGetValue(newObjects[i], out IReadOnlyList<CollisionData> collisions))
 				{
-					// FIXME: slow FIXME FIXME slow FIXME slow slow slow slow slow FIXME
-					int i = newObjects.FindIndex(r => r == rb);
-					newObjects[i] = rb.Translate(collision.MTV);
+					if(newObjects[i] is RigidBody rb)
+					{ newObjects[i] = rb.CollisionPass(collisions); }
 				}
 			}
 

@@ -2,15 +2,20 @@
 {
 	internal struct CollisionData
 	{
-		public readonly IPhysicsObject Object;
+		public readonly IPhysicsObject Other;
+
 		public readonly Vector2 MTV;
+		public readonly Vector2 Normal;
+		public readonly Vector2 VelocityChange;
 
-		public CollisionData(IPhysicsObject obj, Vector2 mtv)
+		public CollisionData(IPhysicsObject other, Vector2 mtv, Vector2 normal, Vector2 change)
 		{
-			Assert.Ref(obj);
+			Assert.Ref(other);
 
-			Object = obj;
+			Other = other;
 			MTV = mtv;
+			Normal = normal;
+			VelocityChange = change;
 		}
 	};
 }

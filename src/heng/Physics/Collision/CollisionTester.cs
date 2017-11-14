@@ -5,29 +5,36 @@ namespace heng.Physics
 {
 	internal class CollisionTester
 	{
-		public IEnumerable<CollisionData> GetCollisions(IReadOnlyList<IPhysicsObject> objects)
+		// FIXME: this is the ugliest method ever devised and should be cleaned and improved immediately
+		public IReadOnlyDictionary<IPhysicsObject, IReadOnlyList<CollisionData>> GetCollisions(IReadOnlyList<IPhysicsObject> objects)
 		{
 			Assert.Ref(objects);
 
-			// only test objects in the same sector
-			// TODO: handle colliders intersecting multiple sectors
-			var groups = from obj in objects
-						 group obj by obj.Position.Sector;
-			
-			foreach(var group in groups)
-			{
-				IReadOnlyList<IPhysicsObject> groupedObjects = group.ToArray();
+			var grouped = from IPhysicsObject obj in objects
+						  group obj by obj.Position.Sector;
 
-				// don't test if there's nothing to test
-				if(groupedObjects.Count > 1)
+			var collisions = new Dictionary<IPhysicsObject, List<CollisionData>>();
+
+			foreach(var group in grouped)
+			{
+				IReadOnlyList<IPhysicsObject> g = new List<IPhysicsObject>(group);
+				foreach((IPhysicsObject, CollisionData) collision in TestGroup(g))
 				{
-					foreach(CollisionData data in TestGroup(groupedObjects))
-					{ yield return data; }
+					if(!collisions.ContainsKey(collision.Item1))
+					{ collisions[collision.Item1] = new List<CollisionData>(); }
+
+					collisions[collision.Item1].Add(collision.Item2);
 				}
 			}
+
+			var outDict = new Dictionary<IPhysicsObject, IReadOnlyList<CollisionData>>();
+			foreach(var pair in collisions)
+			{ outDict.Add(pair.Key, pair.Value); }
+
+			return outDict;
 		}
 
-		IEnumerable<CollisionData> TestGroup(IReadOnlyList<IPhysicsObject> objects)
+		IEnumerable<(IPhysicsObject, CollisionData)> TestGroup(IReadOnlyList<IPhysicsObject> objects)
 		{
 			// we're just checking each collider against those at larger indices
 			// (i.e., those which it hasn't yet been checked against)
@@ -44,8 +51,25 @@ namespace heng.Physics
 						{
 							if(TestPair(oa, ob, out Vector2 mtv))
 							{
-								yield return new CollisionData(oa, mtv);
-								yield return new CollisionData(ob, -mtv);
+								// get collision normals
+								Vector2 aN = mtv.Normalize();
+								Vector2 bN = -aN;
+
+								// use them to isolate other-collider-facing component of velocity
+								Vector2 aV = aN.Project(oa.Velocity);
+								Vector2 bV = bN.Project(ob.Velocity);
+
+								// transfer that component's momentum
+								Vector2 aT = TransferMomentum(aV, oa.Mass, bV, ob.Mass);
+								Vector2 bT = TransferMomentum(bV, ob.Mass, aV, oa.Mass);
+
+								// remove old pre-collision component, replace with newly-computed component
+								aV = (oa.Velocity - aV + aT);
+								bV = (ob.Velocity - bV + bT);
+
+								// return
+								yield return (oa, new CollisionData(ob, mtv, aN, aV));
+								yield return (ob, new CollisionData(oa, -mtv, bN, bV));
 							}
 						}
 					}
@@ -107,6 +131,17 @@ namespace heng.Physics
 			{ yield return v; }
 			foreach(Vector2 v in b.GetSeperatingAxes())
 			{ yield return v; }
+		}
+
+		Vector2 TransferMomentum(Vector2 aV, float aM, Vector2 bV, float bM)
+		{
+			// handle infinite mass objects (i.e. StaticBody)
+			if(aM == float.PositiveInfinity)
+			{ return Vector2.Zero; }
+			if(bM == float.PositiveInfinity)
+			{ return -aV; }
+
+			return (aV * (aM - bM) + ((bV * bM) * 2)) * (1 / (aM + bM));
 		}
 	};
 }
