@@ -78,6 +78,7 @@
     <Compile Include="GamestateBuilder\VideoStateBuilder.cs" />
     <Compile Include="PlayerUnit.cs" />
     <Compile Include="Scenery.cs" />
+    <Compile Include="Unit.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -33,7 +33,8 @@ namespace hgame
 			// we quit immediately on quit request, so don't bother building if we got one
 			if(!events.IsQuitRequested)
 			{
-				PlayerUnit unit = old?.PlayerUnit.Update(old, this) ?? new PlayerUnit(this);
+				PlayerUnit pUnit = old?.PlayerUnit.Update(old, this) ?? new PlayerUnit(this);
+				Unit unit = old?.Unit.Update(old, this) ?? new Unit(this);
 				Scenery scenery = old?.Scenery.Update(old, this) ?? new Scenery(this);
 
 				InputState input = Input.Build();
@@ -42,10 +43,10 @@ namespace hgame
 				AudioState audio = Audio.Build(old?.Audio);
 				TimeState time = Time.Build(old?.Time);
 
-				return new Gamestate(unit, scenery, events, input, physics, video, audio, time);
+				return new Gamestate(pUnit, unit, scenery, events, input, physics, video, audio, time);
 			}
 
-			return new Gamestate(old.PlayerUnit, old.Scenery, events, old.Input, old.Physics, old.Video, old.Audio, old.Time);
+			return new Gamestate(old.PlayerUnit, old.Unit, old.Scenery, events, old.Input, old.Physics, old.Video, old.Audio, old.Time);
 		}
 
 		public void Clear()

@@ -10,6 +10,7 @@ namespace hgame
 	public class Gamestate
 	{
 		public readonly PlayerUnit PlayerUnit;
+		public readonly Unit Unit;
 		public readonly Scenery Scenery;
 
 		public readonly EventsState Events;
@@ -19,13 +20,14 @@ namespace hgame
 		public readonly AudioState Audio;
 		public readonly TimeState Time;
 	
-		public Gamestate(PlayerUnit playerUnit, Scenery scenery,
+		public Gamestate(PlayerUnit playerUnit, Unit unit, Scenery scenery,
 			EventsState events, InputState input, PhysicsState physics, VideoState video, AudioState audio, TimeState time)
 		{
-			Assert.Ref(playerUnit, scenery, events, input, physics, video, audio, time);
+			Assert.Ref(playerUnit, unit, scenery, events, input, physics, video, audio, time);
 
 			PlayerUnit = playerUnit;
 			Scenery = scenery;
+			Unit = unit;
 
 			Events = events;
 			Input = input;
