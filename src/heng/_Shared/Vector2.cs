@@ -113,6 +113,14 @@ namespace heng
 		public static Vector2 operator *(Vector2 v, float s) => new Vector2(v.X * s, v.Y * s);
 
 		/// <summary>
+		/// Scales a <see cref="Vector2"/> by the given scalar.
+		/// </summary>
+		/// <param name="s">The scalar.</param>
+		/// <param name="v">The vector to scale.</param>
+		/// <returns>A new <see cref="Vector2"/>, scaled by the scalar.</returns>
+		public static Vector2 operator *(float s, Vector2 v) => new Vector2(v.X * s, v.Y * s);
+
+		/// <summary>
 		/// Inverts a <see cref="Vector2"/>'s components, reflecting it over its normal.
 		/// </summary>
 		/// <param name="v">The vector to invert.</param>
@@ -167,6 +175,18 @@ namespace heng
 		/// <param name="v">The other vector.</param>
 		/// <returns>The dot product of the two vectors.</returns>
 		public float Dot(Vector2 v) => (this.X * v.X) + (this.Y * v.Y);
+
+		/// <summary>
+		/// Checks if the vector is almost equal to another.
+		/// </summary>
+		/// <param name="v">The other vector.</param>
+		/// <param name="tolerance">The component-wise range to be considered "almost equal."</param>
+		/// <returns>True if the vector is almost equal to the other; false if not.</returns>
+		public bool IsApproximately(Vector2 v, float tolerance)
+		{
+			return (this.X < v.X + tolerance && this.X > v.X - tolerance)
+				&& (this.Y < v.Y + tolerance && this.Y > v.Y - tolerance);
+		}
 
 		/// <summary>
 		/// Calculates a new <see cref="Vector2"/> from this vector, clamping the magnitude between the given values.
