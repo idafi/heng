@@ -105,7 +105,8 @@
     <Compile Include="Physics\Collision\CollisionTester.cs" />
     <Compile Include="Physics\Collision\ConvexCollider.cs" />
     <Compile Include="Physics\Collision\ICollider.cs" />
-    <Compile Include="Physics\IPhysicsObject.cs" />
+    <Compile Include="Physics\IPhysicsBody.cs" />
+    <Compile Include="Physics\PhysicsMaterial.cs" />
     <Compile Include="Physics\PhysicsState.cs" />
     <Compile Include="Physics\RigidBody.cs" />
     <Compile Include="Physics\StaticBody.cs" />

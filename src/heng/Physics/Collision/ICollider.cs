@@ -3,7 +3,7 @@
 namespace heng.Physics
 {
 	/// <summary>
-	/// A collidable shape representing an <see cref="IPhysicsObject"/>.
+	/// A collidable shape representing an <see cref="IPhysicsBody"/>.
 	/// <para>Collisions are tested using the seperating axis theorem; the <see cref="ICollider"/>
 	/// provides the per-collider data necessary to detect collisions via SAT.</para>
 	/// </summary>

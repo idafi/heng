@@ -3,57 +3,67 @@
 namespace heng.Physics
 {
 	/// <summary>
-	/// Represents a physics object that can accumulate and respond to forces.
-	/// <para>Move a RigidBody by applying impulses through <see cref="AddImpulse(Vector2)"/>.</para>
-	/// All applied forces will then be resolved, including collisions, when the <see cref="RigidBody"/> is
-	/// is constructed alongside other <see cref="IPhysicsObject"/>s into the <see cref="PhysicsState"/>.
+	/// An <see cref="IPhysicsBody"/> that can accumulate impulses and resolve collisions.
+	/// <para>Rather than teleporting to new positions, a <see cref="RigidBody"/> is moved by adding
+	/// impulses via <see cref="AddImpulse(Vector2)"/>.</para>
+	/// After all impulses (including gravity) are applied, the <see cref="RigidBody"/> will then respond
+	/// to any consequent collisions.
 	/// </summary>
-	public class RigidBody : IPhysicsObject
+	public class RigidBody : IPhysicsBody
 	{
 		/// <summary>
-		/// The <see cref="RigidBody"/>'s world-space position.
+		/// The world-space position of the <see cref="RigidBody"/>.
 		/// </summary>
 		public readonly WorldPoint Position;
 
 		/// <summary>
-		/// The <see cref="RigidBody"/>'s collidable representation.
-		/// <para>If null, the <see cref="RigidBody"/> can still move, but it won't respond to collisions.</para>
+		/// The collidable representation of the <see cref="RigidBody"/>.
+		/// <para>If null, the <see cref="RigidBody"/> won't create or respond to collisions,
+		/// but it can still receive impulses.</para>
 		/// </summary>
 		public readonly ICollider Collider;
 
 		/// <summary>
-		/// The <see cref="RigidBody"/>'s total mass, in grams.
-		/// <para>The higher the mass, the more force is required to change the velocity.</para>
+		/// The total mass of the <see cref="RigidBody"/>.
+		/// <para>Higher values require stronger impulses to alter velocity.</para>
 		/// </summary>
 		public readonly float Mass;
 
 		/// <summary>
-		/// The <see cref="RigidBody"/>'s current velocity, in pixels.
+		/// The <see cref="PhysicsMaterial"/> representing the <see cref="RigidBody"/>.
+		/// </summary>
+		public readonly PhysicsMaterial Material;
+
+		/// <summary>
+		/// The current pixel-space velocity of the <see cref="RigidBody"/>.
 		/// </summary>
 		public readonly Vector2 Velocity;
 
 		/// <summary>
-		/// Forces added to the <see cref="RigidBody"/>, but not yet applied by the <see cref="PhysicsState"/>.
-		/// <para>This will always be set to (0, 0) after the <see cref="RigidBody"/> is processed
-		/// by the <see cref="PhysicsState"/>.</para>
+		/// All impulses yet to be applied to the <see cref="RigidBody"/>.
+		/// <para>This will be zero once the <see cref="RigidBody"/> is constructed into
+		/// the <see cref="PhysicsState"/>.</para>
 		/// </summary>
-		public readonly Vector2 TotalForce;
+		public readonly Vector2 Forces;
 
-		WorldPoint IPhysicsObject.Position => Position;
-		ICollider IPhysicsObject.Collider => Collider;
-		float IPhysicsObject.Mass => Mass;
-		Vector2 IPhysicsObject.Velocity => Velocity;
+		WorldPoint IPhysicsBody.Position => Position;
+		ICollider IPhysicsBody.Collider => Collider;
+		float IPhysicsBody.Mass => Mass;
+		PhysicsMaterial IPhysicsBody.Material => Material;
+		Vector2 IPhysicsBody.Velocity => Velocity;
 
 		/// <summary>
 		/// Constructs a new <see cref="RigidBody"/>.
 		/// </summary>
-		/// <param name="position">The new <see cref="RigidBody"/>'s world-space position.</param>
-		/// <param name="collider">The new <see cref="RigidBody"/>'s collidable representation.</param>
-		/// <param name="mass">The new <see cref="RigidBody"/>'s mass, in grams.</param>
-		public RigidBody(WorldPoint position, ICollider collider, float mass) :
-			this(position, collider, mass, Vector2.Zero, Vector2.Zero) { }
+		/// <param name="position">The world-space position of the new <see cref="RigidBody"/>.</param>
+		/// <param name="collider">The collidable representation of the new <see cref="RigidBody"/>.</param>
+		/// <param name="mass">The total mass of the new <see cref="RigidBody"/>.</param>
+		/// <param name="material">The <see cref="PhysicsMaterial"/> representing the new <see cref="RigidBody"/>.</param>
+		public RigidBody(WorldPoint position, ICollider collider, float mass, PhysicsMaterial material)
+			: this(null, position, collider, mass, material, Vector2.Zero, Vector2.Zero) { }
 		
-		RigidBody(WorldPoint position, ICollider collider, float mass, Vector2 velocity, Vector2 totalForce)
+		RigidBody(RigidBody old, WorldPoint? position = null, ICollider collider = null, float? mass = null,
+			PhysicsMaterial material = null, Vector2? velocity = null, Vector2? forces = null)
 		{
 			if(mass <= 0)
 			{
@@ -61,65 +71,67 @@ namespace heng.Physics
 				mass = float.Epsilon;
 			}
 
-			Position = position;
-			Collider = collider;
-			Mass = mass;
+			Position = position ?? old?.Position ?? WorldPoint.Zero;
+			Collider = collider ?? old?.Collider;
 
-			Velocity = velocity;
-			TotalForce = totalForce;
+			Mass = mass ?? old?.Mass ?? 1;
+			Material = material ?? old?.Material ?? new PhysicsMaterial(0, 0, 1);
+
+			Velocity = velocity ?? old?.Velocity ?? Vector2.Zero;
+			Forces = forces ?? old?.Forces ?? Vector2.Zero;
 		}
-		
+
+		/// <summary>
+		/// Changes the collidable representation of the <see cref="RigidBody"/>.
+		/// <para>If set to null, the <see cref="RigidBody"/> will no longer create or respond to collisions.</para>
+		/// </summary>
+		/// <param name="collider">The new collider, or null if the <see cref="RigidBody"/> shouldn't collide.</param>
+		/// <returns>A new <see cref="RigidBody"/>, with the new <see cref="ICollider"/> assigned.</returns>
+		public RigidBody SetCollider(ICollider collider) => new RigidBody(this, collider: collider);
+
+		/// <summary>
+		/// Changes the mass of the <see cref="RigidBody"/>.
+		/// </summary>
+		/// <param name="mass">The new mass value.</param>
+		/// <returns>A new <see cref="RigidBody"/>, using the new mass value.</returns>
+		public RigidBody SetMass(float mass) => new RigidBody(this, mass: mass);
+
 		/// <summary>
 		/// Adds an impulse force to the <see cref="RigidBody"/>.
-		/// <para>When constructed into the <see cref="PhysicsState"/>, all accumulated forces
-		/// will be applied, moving the <see cref="RigidBody"/>.</para>
+		/// <para>This will be applied when the <see cref="RigidBody"/> is constructed into
+		/// the <see cref="PhysicsState"/>.</para>
 		/// </summary>
-		/// <param name="impulse">The total impulse to apply.</param>
-		/// <returns>A new <see cref="RigidBody"/>, with the impulse applied.</returns>
-		public RigidBody AddImpulse(Vector2 impulse)
-		{
-			return new RigidBody(Position, Collider, Mass, Velocity, TotalForce + impulse);
-		}
-		
-		/// <summary>
-		/// Sets the <see cref="RigidBody"/>'s total mass.
-		/// <para>The higher the mass, the more force is required to change the velocity.</para>
-		/// </summary>
-		/// <param name="mass">The new mass, in grams.</param>
-		/// <returns>A new <see cref="RigidBody"/>, with the new mass.</returns>
-		public RigidBody SetMass(float mass)
-		{
-			return new RigidBody(Position, Collider, mass, Velocity, TotalForce);
-		}
+		/// <param name="impulse">The impulse to add.</param>
+		/// <returns>A new <see cref="RigidBody"/>, with the impulse force added.</returns>
+		public RigidBody AddImpulse(Vector2 impulse) => new RigidBody(this, forces: Forces + impulse);
 
-		internal IPhysicsObject ImpulsePass(float t)
+		IPhysicsBody IPhysicsBody.ImpulsePass(Vector2 gravity, float deltaT)
 		{
 			WorldPoint secOrigin = new WorldPoint(Position.Sector, Vector2.Zero);
+			Vector2 f = Forces + gravity;
 
-			Vector2 a = GetAccel(TotalForce, Mass);
+			Vector2 a = GetAccel(f, Mass);
 			Vector2 p = Position.PixelDistance(secOrigin);
-			Vector2 newP = GetNewPosition(p, a, Velocity, t);
-			Vector2 newVelocity = GetNewVelocity(a, Velocity, t);
+			Vector2 newP = GetNewPosition(p, a, Velocity, deltaT);
+			Vector2 newVelocity = GetNewVelocity(a, Velocity, deltaT);
 
 			WorldPoint newPosition = secOrigin.PixelTranslate(newP);
 
-			return new RigidBody(newPosition, Collider, Mass, newVelocity, Vector2.Zero);
+			return new RigidBody(this, position: newPosition, velocity: newVelocity, forces: Vector2.Zero);
 		}
 
-		internal IPhysicsObject CollisionPass(IEnumerable<CollisionData> collisions)
+		IPhysicsBody IPhysicsBody.CollisionPass(IEnumerable<CollisionData> collisions)
 		{
-			WorldPoint secOrigin = new WorldPoint(Position.Sector, Vector2.Zero);
-
-			Vector2 newPosition = Position.PixelDistance(secOrigin);
+			WorldPoint newPosition = Position;
 			Vector2 newVelocity = Velocity;
 
 			foreach(CollisionData collision in collisions)
 			{
-				newVelocity = collision.VelocityChange;
-				newPosition += collision.MTV;	// compensate for collider intersection
+				newPosition = newPosition.PixelTranslate(collision.MTV);
+				newVelocity = GetMomentumChange(this, collision) + GetFriction(this, collision);
 			}
 
-			return new RigidBody(secOrigin.PixelTranslate(newPosition), Collider, Mass, newVelocity, TotalForce);
+			return new RigidBody(this, position: newPosition, velocity: newVelocity);
 		}
 
 		Vector2 GetAccel(Vector2 f, float m)
@@ -127,14 +139,84 @@ namespace heng.Physics
 			return f * (1 / m);
 		}
 
+		Vector2 GetNewVelocity(Vector2 a, Vector2 v, float t)
+		{
+			return (a * t) + v;
+		}
+
 		Vector2 GetNewPosition(Vector2 p, Vector2 a, Vector2 v, float t)
 		{
 			return (a * 0.5f * HMath.Square(t)) + (v * t) + p;
 		}
 
-		Vector2 GetNewVelocity(Vector2 a, Vector2 v, float t)
+		Vector2 GetMomentumChange(IPhysicsBody body, CollisionData collision)
 		{
-			return (a * t) + v;
+			// only deal with velocity along the collision normal
+			Vector2 aV = collision.Normal.Project(body.Velocity);
+			Vector2 bV = collision.Normal.Project(collision.Other.Velocity);
+
+			float aM = body.Mass;
+			float bM = collision.Other.Mass;
+
+			// get net restitution coefficient (higher values means more "bouncy")
+			float c = GetRestitutionCoefficient(body, collision.Other);
+
+			Vector2 change;
+
+			// handle infinite mass
+			if(body.Mass == float.PositiveInfinity)
+			{ change = Vector2.Zero; }	// this body has inifinte mass - no energy is sent back
+			else if(collision.Other.Mass == float.PositiveInfinity)
+			{ change = -(aV * c); }		// the other body has infinite mass - all energy not lost is sent back
+			else
+			{ change = ((aV * aM) + (bV * bM) + ((bV - aV) * bM * c)) * (1 / (aM + bM)); }
+
+			// replace old velocity component with the calculated momentum-shifted velocity
+			return ((body.Velocity - aV) + change);
+		}
+
+		Vector2 GetFriction(IPhysicsBody body, CollisionData collision)
+		{
+			// get relative momentum, use it to project normal force & calculate tangent
+			Vector2 v = (body.Velocity - collision.Other.Velocity) * body.Mass;
+			Vector2 fN = collision.Normal.Project(v);
+			Vector2 t = v - fN;
+
+			// get coefficient
+			float c = GetFrictionCoefficient(body, collision.Other, t);
+
+			// friction force is normalized tangent inverse * normal force magnitude * coefficient
+			Vector2 fF = -(t.Normalize() * fN.Magnitude * c);
+			fF = fF.ClampMagnitude(0, t.Magnitude);	// don't let the friction force exceed the tangent's magnitude
+
+			return fF;
+		}
+
+		float GetRestitutionCoefficient(IPhysicsBody a, IPhysicsBody b)
+		{
+			float c = a.Material.Restitution + b.Material.Restitution;
+			return (c / 2f);
+		}
+
+		float GetFrictionCoefficient(IPhysicsBody a, IPhysicsBody b, Vector2 t)
+		{
+			// TODO: user defined
+			const float fudge = 0.002f;
+
+			float uA, uB;
+
+			if(t.IsApproximately(Vector2.Zero, fudge))
+			{
+				uA = a.Material.StaticFriction;
+				uB = b.Material.StaticFriction;
+			}
+			else
+			{
+				uA = a.Material.KineticFriction;
+				uB = b.Material.KineticFriction;
+			}
+
+			return (uA + uB) / 2;
 		}
 	};
 }

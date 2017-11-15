@@ -6,19 +6,19 @@ namespace heng.Physics
 	internal class CollisionTester
 	{
 		// FIXME: this is the ugliest method ever devised and should be cleaned and improved immediately
-		public IReadOnlyDictionary<IPhysicsObject, IReadOnlyList<CollisionData>> GetCollisions(IReadOnlyList<IPhysicsObject> objects)
+		public IReadOnlyDictionary<IPhysicsBody, IReadOnlyList<CollisionData>> GetCollisions(IReadOnlyList<IPhysicsBody> objects)
 		{
 			Assert.Ref(objects);
 
-			var grouped = from IPhysicsObject obj in objects
+			var grouped = from IPhysicsBody obj in objects
 						  group obj by obj.Position.Sector;
 
-			var collisions = new Dictionary<IPhysicsObject, List<CollisionData>>();
+			var collisions = new Dictionary<IPhysicsBody, List<CollisionData>>();
 
 			foreach(var group in grouped)
 			{
-				IReadOnlyList<IPhysicsObject> g = new List<IPhysicsObject>(group);
-				foreach((IPhysicsObject, CollisionData) collision in TestGroup(g))
+				IReadOnlyList<IPhysicsBody> g = new List<IPhysicsBody>(group);
+				foreach((IPhysicsBody, CollisionData) collision in TestGroup(g))
 				{
 					if(!collisions.ContainsKey(collision.Item1))
 					{ collisions[collision.Item1] = new List<CollisionData>(); }
@@ -27,49 +27,38 @@ namespace heng.Physics
 				}
 			}
 
-			var outDict = new Dictionary<IPhysicsObject, IReadOnlyList<CollisionData>>();
+			var outDict = new Dictionary<IPhysicsBody, IReadOnlyList<CollisionData>>();
 			foreach(var pair in collisions)
 			{ outDict.Add(pair.Key, pair.Value); }
 
 			return outDict;
 		}
 
-		IEnumerable<(IPhysicsObject, CollisionData)> TestGroup(IReadOnlyList<IPhysicsObject> objects)
+		IEnumerable<(IPhysicsBody, CollisionData)> TestGroup(IReadOnlyList<IPhysicsBody> objects)
 		{
 			// we're just checking each collider against those at larger indices
 			// (i.e., those which it hasn't yet been checked against)
 			for(int a = 0; a < objects.Count - 1; a++)
 			{
-				IPhysicsObject oa = objects[a];
+				IPhysicsBody oa = objects[a];
 
 				if(oa.Collider != null)
 				{
 					for(int b = a + 1; b < objects.Count; b++)
 					{
-						IPhysicsObject ob = objects[b];
+						IPhysicsBody ob = objects[b];
 						if(ob.Collider != null)
 						{
-							if(TestPair(oa, ob, out Vector2 mtv))
+							// don't bother checking collisions between non-moving objects
+							// (this will implicitly factor out StaticBodies)
+							if(oa.Velocity != Vector2.Zero || ob.Velocity != Vector2.Zero)
 							{
-								// get collision normals
-								Vector2 aN = mtv.Normalize();
-								Vector2 bN = -aN;
-
-								// use them to isolate other-collider-facing component of velocity
-								Vector2 aV = aN.Project(oa.Velocity);
-								Vector2 bV = bN.Project(ob.Velocity);
-
-								// transfer that component's momentum
-								Vector2 aT = TransferMomentum(aV, oa.Mass, bV, ob.Mass);
-								Vector2 bT = TransferMomentum(bV, ob.Mass, aV, oa.Mass);
-
-								// remove old pre-collision component, replace with newly-computed component
-								aV = (oa.Velocity - aV + aT);
-								bV = (ob.Velocity - bV + bT);
-
-								// return
-								yield return (oa, new CollisionData(ob, mtv, aN, aV));
-								yield return (ob, new CollisionData(oa, -mtv, bN, bV));
+								if(TestPair(oa, ob, out Vector2 mtv))
+								{
+									// return
+									yield return (oa, new CollisionData(ob, mtv));
+									yield return (ob, new CollisionData(oa, -mtv));
+								}
 							}
 						}
 					}
@@ -77,7 +66,7 @@ namespace heng.Physics
 			}
 		}
 
-		bool TestPair(IPhysicsObject a, IPhysicsObject b, out Vector2 mtv)
+		bool TestPair(IPhysicsBody a, IPhysicsBody b, out Vector2 mtv)
 		{
 			Assert.Ref(a, b);
 
@@ -133,15 +122,15 @@ namespace heng.Physics
 			{ yield return v; }
 		}
 
-		Vector2 TransferMomentum(Vector2 aV, float aM, Vector2 bV, float bM)
+		Vector2 TransferMomentum(Vector2 aV, float aM, Vector2 bV, float bM, float c)
 		{
 			// handle infinite mass objects (i.e. StaticBody)
 			if(aM == float.PositiveInfinity)
 			{ return Vector2.Zero; }
 			if(bM == float.PositiveInfinity)
-			{ return -aV; }
+			{ return -aV * c; }
 
-			return (aV * (aM - bM) + ((bV * bM) * 2)) * (1 / (aM + bM));
+			return (aV * aM) + (bV * bM) + ((bV - aV) * bM * c) * (1 / (aM + bM));
 		}
 	};
 }

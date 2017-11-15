@@ -4,82 +4,76 @@ namespace heng.Physics
 {
 	/// <summary>
 	/// Represents an immutable snapshot of the physics system's current state.
-	/// <para>Each frame, the provided <see cref="IPhysicsObject"/> instances apply
-	/// any forces they've accumulated, before testing and resolving collisions.</para>
+	/// <para>Each frame, <see cref="IPhysicsBody"/> instances are placed in the simulation,
+	/// applying any forces they've accumulated, and resolving any resulting collisions.</para>
 	/// </summary>
 	public class PhysicsState
 	{
 		/// <summary>
-		/// All <see cref="IPhysicsObject"/> instances in use.
+		/// All <see cref="IPhysicsBody"/> instances being simulated.
 		/// </summary>
-		public readonly IReadOnlyList<IPhysicsObject> PhysicsObjects;
+		public readonly IReadOnlyList<IPhysicsBody> PhysicsBodies;
 
 		/// <summary>
-		/// Constructs a new <see cref="PhysicsState"/> using the provided physics objects.
-		/// <para>During construction, <see cref="RigidBody"/> forces will be applied, and collisions will be resolved.</para>
-		/// An accurate delta-time value is needed to ensure even movement across variable framerates.
+		/// The overall gravity force applied to the simulation.
 		/// </summary>
-		/// <param name="physicsObjects">All <see cref="IPhysicsObject"/>s available to the new state.</param>
-		/// <param name="deltaT">The time, in seconds, since the last <see cref="PhysicsState"/> was built.</param>
-		public PhysicsState(IEnumerable<IPhysicsObject> physicsObjects, float deltaT)
+		public readonly Vector2 Gravity;
+
+		/// <summary>
+		/// Constructs a new snapshot of the physics system's state.
+		/// </summary>
+		/// <param name="physicsBodies">All <see cref="IPhysicsBody"/> instances to be simulated.</param>
+		/// <param name="gravity">The total force of gravity applied to the simulation.</param>
+		/// <param name="deltaT">Seconds since the previous <see cref="PhysicsState"/> was constructed.</param>
+		public PhysicsState(IEnumerable<IPhysicsBody> physicsBodies, Vector2 gravity, float deltaT)
 		{
-			PhysicsObjects = AddPhysicsObjects(physicsObjects, deltaT);
+			Gravity = gravity;
+			PhysicsBodies = AddBodies(physicsBodies, deltaT);
 		}
 
-		IReadOnlyList<IPhysicsObject> AddPhysicsObjects(IEnumerable<IPhysicsObject> objects, float deltaT)
+		IReadOnlyList<IPhysicsBody> AddBodies(IEnumerable<IPhysicsBody> bodies, float deltaT)
 		{
-			if(objects != null)
+			if(bodies != null)
 			{
-				List<IPhysicsObject> newObjects = ImpulsePass(objects, deltaT);
-				IReadOnlyList<IPhysicsObject> finalObjects = CollisionPass(newObjects);
+				IReadOnlyList<IPhysicsBody> newBodies = ImpulsePass(bodies, deltaT);
+				newBodies = CollisionPass(newBodies);
 
-				return finalObjects;
-			}
-			else
-			{ Log.Warning("PhysicsState constructed will null physics objects collection"); }
-
-			return new IPhysicsObject[0];
-		}
-
-		List<IPhysicsObject> ImpulsePass(IEnumerable<IPhysicsObject> objects, float deltaT)
-		{
-			Assert.Ref(objects);
-
-			List<IPhysicsObject> newObjects = new List<IPhysicsObject>();
-
-			foreach(IPhysicsObject obj in objects)
-			{
-				if(obj != null)
-				{
-					if(obj is RigidBody rb)
-					{ newObjects.Add(rb.ImpulsePass(deltaT)); }
-					else
-					{ newObjects.Add(obj); }
-				}
-				else
-				{ Log.Error("couldn't add IPhysicsObject to PhysicsState: object is null"); }
+				return newBodies;
 			}
 
-			return newObjects;
+			return new IPhysicsBody[0];
 		}
 
-		IReadOnlyList<IPhysicsObject> CollisionPass(List<IPhysicsObject> newObjects)
+		IReadOnlyList<IPhysicsBody> ImpulsePass(IEnumerable<IPhysicsBody> bodies, float deltaT)
 		{
-			Assert.Ref(newObjects);
+			List<IPhysicsBody> newBodies = new List<IPhysicsBody>();
+
+			foreach(IPhysicsBody body in bodies)
+			{
+				if(body != null)
+				{ newBodies.Add(body.ImpulsePass(Gravity, deltaT)); }
+			}
+
+			return newBodies;
+		}
+
+		IReadOnlyList<IPhysicsBody> CollisionPass(IReadOnlyList<IPhysicsBody> bodies)
+		{
+			List<IPhysicsBody> newBodies = new List<IPhysicsBody>();
 
 			CollisionTester tester = new CollisionTester();
-			var allCollisions = tester.GetCollisions(newObjects);
+			var collisions = tester.GetCollisions(bodies);
 
-			for(int i = 0; i < newObjects.Count; i++)
+			foreach(IPhysicsBody body in bodies)
 			{
-				if(allCollisions.TryGetValue(newObjects[i], out IReadOnlyList<CollisionData> collisions))
-				{
-					if(newObjects[i] is RigidBody rb)
-					{ newObjects[i] = rb.CollisionPass(collisions); }
-				}
+				IPhysicsBody newBody = body;
+				if(collisions.TryGetValue(body, out IReadOnlyList<CollisionData> bodyCollisions))
+				{ newBody = body.CollisionPass(bodyCollisions); }
+
+				newBodies.Add(newBody);
 			}
 
-			return newObjects;
+			return newBodies;
 		}
 	};
 }
