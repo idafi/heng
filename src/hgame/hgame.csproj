@@ -76,6 +76,7 @@
     <Compile Include="GamestateBuilder\PhysicsStateBuilder.cs" />
     <Compile Include="GamestateBuilder\TimeStateBuilder.cs" />
     <Compile Include="GamestateBuilder\VideoStateBuilder.cs" />
+    <Compile Include="PhysicsMaterialLibrary.cs" />
     <Compile Include="PlayerUnit.cs" />
     <Compile Include="Scenery.cs" />
     <Compile Include="Unit.cs" />

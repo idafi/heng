@@ -8,7 +8,7 @@ namespace hgame
 	public class PlayerUnit
 	{
 		// pixels/s/s
-		const float accel = 150f;
+		const float accel = 350f;
 
 		readonly Texture texture;
 
@@ -26,10 +26,10 @@ namespace hgame
 			device.RemapAxis("Horizontal", new ButtonAxis(new Key(KeyCode.Left), new Key(KeyCode.Right)));
 			device.RemapAxis("Vertical", new ButtonAxis(new Key(KeyCode.Down), new Key(KeyCode.Up)));
 			
-			WorldPoint pos = new WorldPoint(new Vector2(280 - 16, 100 - 16));
+			WorldPoint pos = new WorldPoint(new Vector2(280 - 16, 200 - 16));
 
 			Polygon collider = new Polygon(new Vector2(0, 0), new Vector2(32, 0), new Vector2(32, 32), new Vector2(0, 32));
-			RigidBody body = new RigidBody(pos, new ConvexCollider(collider), 1f);
+			RigidBody body = new RigidBody(pos, new ConvexCollider(collider), 1f, PhysicsMaterialLibrary.Steel);
 			Sprite spr = new Sprite(texture, pos, 0);
 
 			inputDevice = newState.Input.AddDevice(device);
@@ -48,15 +48,17 @@ namespace hgame
 			texture = oldUnit.texture;
 
 			InputDevice device = oldState.Input.Devices[oldUnit.inputDevice];
-			RigidBody body = (RigidBody)(oldState.Physics.PhysicsObjects[oldUnit.rigidBody]);
+			RigidBody body = (RigidBody)(oldState.Physics.PhysicsBodies[oldUnit.rigidBody]);
 			Sprite spr = (Sprite)(oldState.Video.Drawables[oldUnit.sprite]);
 
 			float x = device.GetAxisFrac("Horizontal");
 			float y = device.GetAxisFrac("Vertical");
 			Vector2 move = new Vector2(x, y).ClampMagnitude(0, 1) * accel;
 
+			body = body.AddImpulse(move);
+
 			inputDevice = newState.Input.AddDevice(device);
-			rigidBody = newState.Physics.AddPhysicsObject(body.AddImpulse(move));
+			rigidBody = newState.Physics.AddPhysicsObject(body);
 			sprite = newState.Video.AddDrawable(spr.Reposition(body.Position));
 			newState.Audio.SetListenerPosition(body.Position);
 

@@ -8,29 +8,36 @@ namespace hgame
 	{
 		public class PhysicsStateBuilder
 		{
-			readonly List<IPhysicsObject> physicsObjects;
+			readonly List<IPhysicsBody> physicsBodies;
+			Vector2 gravity;
 
 			public PhysicsStateBuilder()
 			{
-				physicsObjects = new List<IPhysicsObject>();
+				physicsBodies = new List<IPhysicsBody>();
+				gravity = new Vector2(0, -550);
 			}
 
-			public int AddPhysicsObject(IPhysicsObject obj)
+			public int AddPhysicsObject(IPhysicsBody obj)
 			{
 				Assert.Ref(obj);
 
-				physicsObjects.Add(obj);
-				return physicsObjects.Count - 1;
+				physicsBodies.Add(obj);
+				return physicsBodies.Count - 1;
+			}
+
+			public void SetGravity(Vector2 gravity)
+			{
+				this.gravity = gravity;
 			}
 
 			public PhysicsState Build(float deltaT)
 			{
-				return new PhysicsState(physicsObjects, deltaT);
+				return new PhysicsState(physicsBodies, gravity, deltaT);
 			}
 
 			public void Clear()
 			{
-				physicsObjects.Clear();
+				physicsBodies.Clear();
 			}
 		};
 	};

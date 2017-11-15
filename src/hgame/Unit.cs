@@ -20,10 +20,10 @@ namespace hgame
 
 			texture = new Texture("../../data/textest.bmp");
 
-			WorldPoint pos = new WorldPoint((116, 80));
+			WorldPoint pos = new WorldPoint((116, 200 - 16));
 
 			Polygon collider = new Polygon(new Vector2(0, 0), new Vector2(32, 0), new Vector2(32, 32), new Vector2(0, 32));
-			RigidBody body = new RigidBody(pos, new ConvexCollider(collider), 1f);
+			RigidBody body = new RigidBody(pos, new ConvexCollider(collider), 1f, PhysicsMaterialLibrary.Steel);
 			Sprite spr = new Sprite(texture, pos, 0);
 
 			rigidBody = newState.Physics.AddPhysicsObject(body);
@@ -35,7 +35,7 @@ namespace hgame
 			Unit oldUnit = oldState.Unit;
 			texture = oldUnit.texture;
 
-			RigidBody body = (RigidBody)(oldState.Physics.PhysicsObjects[oldUnit.rigidBody]);
+			RigidBody body = (RigidBody)(oldState.Physics.PhysicsBodies[oldUnit.rigidBody]);
 			Sprite spr = (Sprite)(oldState.Video.Drawables[oldUnit.sprite]);
 
 			rigidBody = newState.Physics.AddPhysicsObject(body);
