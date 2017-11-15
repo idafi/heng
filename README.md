@@ -26,14 +26,13 @@ Currently available:
 - Input reading and filtering, through string-keyed virtual devices
 - Multi-window management and hardware rendering
 - Audio loading, playback, mixing, and attenuation, with automatic format conversion
-- Collision detection and resolution
+- Lightweight, customizable physics model, including collision resolution
 - Timekeeping and frametime-targeting
 - Event logging and re-simulating
 - Virtualized coordinate system
 
 Planned:
 - Dynamic region-based resource un/loading
-- Lightweight, customizable physics model
 - Full gamestate re/serialization
 - Tilemap system
 
