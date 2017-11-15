@@ -92,6 +92,10 @@ namespace heng.Video
 					foreach(IDrawable d in drawables)
 					{ d.Draw(w, Camera); }
 
+					// no-op if DEBUG is not defined
+					foreach(IDrawable d in DebugDraw.PumpDrawables())
+					{ d.Draw(w, Camera); }
+
 					Core.Video.Queue.Pump(w.ID);
 
 					return drw;
